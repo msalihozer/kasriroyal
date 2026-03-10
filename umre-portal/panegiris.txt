@@ -1,0 +1,4 @@
+Veritabanı başlangıç verileri (Seed) oluşturuldu. Aşağıdaki bilgilerle giriş yapabilirsiniz:
+
+E-posta: admin@site.com
+Şifre: Admin123!
