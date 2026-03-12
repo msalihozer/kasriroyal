@@ -103,10 +103,10 @@ async function main() {
                data: {
                    title: `Hotel ${i}`,
                    slug: `hotel-${i}`,
-                   city: i % 2 === 0 ? 'MEKKE' : 'MEDINE',
+                   locationText: i % 2 === 0 ? 'Mekke' : 'Medine',
                    stars: 5,
                    description: '<p>Otel açıklaması...</p>',
-                   amenities: ['Wifi', 'Restaurant', 'Transfer'],
+                   // removed amenities
                    isFeatured: i <= 2,
                    status: 'published'
                }
