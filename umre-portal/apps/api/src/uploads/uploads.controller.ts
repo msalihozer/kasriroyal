@@ -38,8 +38,7 @@ export class UploadsController {
     @ApiBody({ schema: { type: 'object', properties: { file: { type: 'string', format: 'binary' } } } })
     async uploadFile(@UploadedFile() file: any) {
         const url = `/uploads/${file.filename}`;
-        const fullUrl = `http://localhost:4000${url}`;
-
+        
         // Save to DB
         await this.uploadsService.create({
             url,
@@ -48,7 +47,7 @@ export class UploadsController {
         });
 
         return {
-            url: fullUrl,
+            url: url,
             filename: file.filename,
         };
     }

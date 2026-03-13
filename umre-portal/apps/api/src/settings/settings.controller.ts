@@ -35,7 +35,8 @@ export class SiteSettingsController {
     async getLogo(@Res() res: Response) {
         const settings = await this.settingsService.getSettings();
         if (settings?.logoUrl) {
-            const url = settings.logoUrl.startsWith('http') ? settings.logoUrl : `http://localhost:4000${settings.logoUrl}`;
+            const apiBase = process.env.API_BASE_URL || '';
+            const url = settings.logoUrl.startsWith('http') ? settings.logoUrl : `${apiBase}${settings.logoUrl}`;
             return res.redirect(url);
         }
         return res.status(404).send('Not found');
@@ -45,7 +46,8 @@ export class SiteSettingsController {
     async getFavicon(@Res() res: Response) {
         const settings = await this.settingsService.getSettings();
         if (settings?.faviconUrl) {
-            const url = settings.faviconUrl.startsWith('http') ? settings.faviconUrl : `http://localhost:4000${settings.faviconUrl}`;
+            const apiBase = process.env.API_BASE_URL || '';
+            const url = settings.faviconUrl.startsWith('http') ? settings.faviconUrl : `${apiBase}${settings.faviconUrl}`;
             return res.redirect(url);
         }
         return res.status(404).send('Not found');
@@ -55,7 +57,8 @@ export class SiteSettingsController {
     async getFooterDiyanetImage(@Res() res: Response) {
         const settings = await this.settingsService.getSettings();
         if (settings?.footerDiyanetImageUrl) {
-            const url = settings.footerDiyanetImageUrl.startsWith('http') ? settings.footerDiyanetImageUrl : `http://localhost:4000${settings.footerDiyanetImageUrl}`;
+            const apiBase = process.env.API_BASE_URL || '';
+            const url = settings.footerDiyanetImageUrl.startsWith('http') ? settings.footerDiyanetImageUrl : `${apiBase}${settings.footerDiyanetImageUrl}`;
             return res.redirect(url);
         }
         return res.status(404).send('Not found');
@@ -65,7 +68,8 @@ export class SiteSettingsController {
     async getFooterAgencyImage(@Res() res: Response) {
         const settings = await this.settingsService.getSettings();
         if (settings?.footerAgencyImageUrl) {
-            const url = settings.footerAgencyImageUrl.startsWith('http') ? settings.footerAgencyImageUrl : `http://localhost:4000${settings.footerAgencyImageUrl}`;
+            const apiBase = process.env.API_BASE_URL || '';
+            const url = settings.footerAgencyImageUrl.startsWith('http') ? settings.footerAgencyImageUrl : `${apiBase}${settings.footerAgencyImageUrl}`;
             return res.redirect(url);
         }
         return res.status(404).send('Not found');
