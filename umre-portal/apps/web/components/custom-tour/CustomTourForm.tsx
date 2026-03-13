@@ -29,7 +29,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                 setError(null);
                 try {
                     // Try defaulting to localhost:4000 if env var is missing
-                    const API_BASE = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`;
+                    const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || ''}/api`;
                     console.log(`Fetching from ${API_BASE}...`);
 
                     const [hRes, vRes] = await Promise.all([

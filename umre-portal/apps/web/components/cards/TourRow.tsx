@@ -286,7 +286,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                     <Info size={18} /> Önemli Bilgiler
                                 </button>
                             )}
-                            <div className="flex gap-3">
+                            <div className="flex gap-3 ml-auto">
                                 <a
                                     href={`https://wa.me/905555555555?text=Merhaba, ${tour.title} turu hakkında teklif almak istiyorum.`}
                                     target="_blank"

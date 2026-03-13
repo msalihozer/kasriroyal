@@ -20,7 +20,7 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
         e.preventDefault();
         setLoading(true);
 
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`;
+        const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || ''}/api`;
 
         try {
             const res = await fetch(`${API_BASE}/testimonials/public`, {

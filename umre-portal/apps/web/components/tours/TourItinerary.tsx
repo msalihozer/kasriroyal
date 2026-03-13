@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
+import { getImageUrl } from '@/utils/image-url';
 
 export default function TourItinerary({ itinerary }: { itinerary: any[] }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -42,7 +43,7 @@ export default function TourItinerary({ itinerary }: { itinerary: any[] }) {
                                             {item.hotel.imageUrl && (
                                                 <div className="w-12 h-12 shrink-0 rounded-md overflow-hidden relative">
                                                     <Image
-                                                        src={item.hotel.imageUrl}
+                                                        src={getImageUrl(item.hotel.imageUrl)}
                                                         alt={item.hotel.title}
                                                         fill
                                                         sizes="48px"
