@@ -56,6 +56,13 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
     }, {});
 
 
+    // Safe URL resolver
+    const getFullUrl = (url?: string) => {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
+    };
+
     // Date formatting
     const formatDate = (dateString?: string) => {
         if (!dateString) return null;
@@ -72,7 +79,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
             <div className="relative h-[60vh] bg-gray-900 border-b-222">
                 {tour.gallery && tour.gallery.length > 0 ? (
                     <Image
-                        src={tour.gallery[0] || '/images/placeholder-tour.jpg'}
+                        src={getFullUrl(tour.gallery[0]) || '/images/placeholder-tour.jpg'}
                         alt={tour.title}
                         fill
                         sizes="100vw"

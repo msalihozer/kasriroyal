@@ -53,7 +53,6 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
     // Parse pricing
     const pricing = tour.pricing ? (typeof tour.pricing === 'string' ? JSON.parse(tour.pricing) : tour.pricing) : {};
 
-    // Helper for Star Rating
     const renderStars = (count: number) => {
         return (
             <div className="flex text-yellow-400 text-xs">
@@ -62,6 +61,12 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                 ))}
             </div>
         );
+    };
+
+    const getFullUrl = (url?: string | null) => {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url.startsWith('/') ? '' : '/'}${url}`;
     };
 
     return (
@@ -97,7 +102,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                             <div className="flex gap-2.5 mt-auto">
                                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-md bg-gray-100 overflow-hidden shrink-0 relative flex items-center justify-center border border-gray-100">
                                     {getLocationInfo(stays[0].locationId).imageUrl ? (
-                                        <img src={getLocationInfo(stays[0].locationId).imageUrl} alt={getLocationInfo(stays[0].locationId).name} className="w-full h-full object-cover" />
+                                        <img src={getFullUrl(getLocationInfo(stays[0].locationId).imageUrl)} alt={getLocationInfo(stays[0].locationId).name} className="w-full h-full object-cover" />
                                     ) : <MapPin className="text-gray-400" size={16} />}
                                 </div>
                                 <div className="min-w-0">
@@ -122,7 +127,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                             <div className="flex gap-2.5 mt-auto">
                                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-md bg-gray-100 overflow-hidden shrink-0 relative flex items-center justify-center border border-gray-100">
                                     {getLocationInfo(stays[1].locationId).imageUrl ? (
-                                        <img src={getLocationInfo(stays[1].locationId).imageUrl} alt={getLocationInfo(stays[1].locationId).name} className="w-full h-full object-cover" />
+                                        <img src={getFullUrl(getLocationInfo(stays[1].locationId).imageUrl)} alt={getLocationInfo(stays[1].locationId).name} className="w-full h-full object-cover" />
                                     ) : <MapPin className="text-gray-400" size={16} />}
                                 </div>
                                 <div className="min-w-0">
@@ -218,12 +223,12 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                             <div key={idx} className="flex gap-4 items-start">
                                                 <div className="w-24 h-24 rounded-lg bg-gray-100 overflow-hidden shrink-0 border border-gray-100 shadow-sm">
                                                     {hotel?.imageUrl ? (
-                                                        <img src={hotel.imageUrl} alt={hotel.title} className="w-full h-full object-cover" />
+                                                        <img src={getFullUrl(hotel.imageUrl)} alt={hotel.title} className="w-full h-full object-cover" />
                                                     ) : (
                                                         hotel?.gallery && Array.isArray(hotel.gallery) && hotel.gallery[0] ? (
-                                                            <img src={hotel.gallery[0]} alt={hotel.title} className="w-full h-full object-cover" />
+                                                            <img src={getFullUrl(hotel.gallery[0])} alt={hotel.title} className="w-full h-full object-cover" />
                                                         ) : (
-                                                            loc.imageUrl ? <img src={loc.imageUrl} alt={loc.name} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center"><Hotel className="text-gray-400" /></div>
+                                                            loc.imageUrl ? <img src={getFullUrl(loc.imageUrl)} alt={loc.name} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center"><Hotel className="text-gray-400" /></div>
                                                         )
                                                     )}
                                                 </div>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getImageUrl } from '@/utils/image-url';
 
 async function getVehicles() {
     try {
@@ -30,7 +31,7 @@ export default async function VehiclesPage() {
                     <div key={vehicle.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
                         {vehicle.imageUrl ? (
                             <img
-                                src={vehicle.imageUrl}
+                                src={getImageUrl(vehicle.imageUrl)}
                                 alt={vehicle.modelName}
                                 className="w-full h-56 object-cover"
                             />
