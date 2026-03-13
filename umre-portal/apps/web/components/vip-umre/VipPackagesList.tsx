@@ -30,12 +30,10 @@ export default function VipPackagesList({ vipPages }: { vipPages: any[] }) {
                             >
                                 <div className="aspect-[16/9] md:aspect-[4/3] max-w-sm mx-auto relative rounded-xl overflow-hidden shadow-lg">
                                     {page.imageUrl ? (
-                                        <Image
-                                            src={getImageUrl(page.imageUrl)}
-                                            alt={page.title}
-                                            fill
-                                            className="object-cover hover:scale-105 transition-transform duration-[1.5s]"
-                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                        <div 
+                                            className="w-full h-full bg-cover bg-center bg-no-repeat bg-fixed hover:scale-105 transition-transform duration-[1.5s]"
+                                            style={{ backgroundImage: `url('${getImageUrl(page.imageUrl)}')` }}
+                                            title={page.title}
                                         />
                                     ) : (
                                         <div className="w-full h-full bg-gray-100 flex items-center justify-center">

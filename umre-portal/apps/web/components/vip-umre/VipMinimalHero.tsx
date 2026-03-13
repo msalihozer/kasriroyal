@@ -10,7 +10,7 @@ interface VipMinimalHeroProps {
 
 export default function VipMinimalHero({ title, summary, content }: VipMinimalHeroProps) {
     return (
-        <section className="relative w-full bg-[#FAFAFA] pt-16 pb-12 md:pt-20 px-4 flex flex-col items-center justify-center text-center overflow-hidden">
+        <section className="relative w-full bg-[#FAFAFA] pt-16 pb-32 md:pt-20 md:pb-36 px-4 flex flex-col items-center justify-center text-center overflow-hidden">
             {/* Subtle background decoration */}
             <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
                 <div className="absolute -top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-[#bda569] blur-[150px]"></div>
