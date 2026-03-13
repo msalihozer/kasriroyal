@@ -114,10 +114,9 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
         toStr(h.location).includes('medine')
     );
 
-    // If filtering fails (empty), fallback to showing all in both lists (or handle gracefully)
-    // If hotels is empty, these will be empty too.
-    const effectiveMekkeHotels = mekkeHotels.length > 0 ? mekkeHotels : hotels;
-    const effectiveMedineHotels = medineHotels.length > 0 ? medineHotels : hotels;
+    // Removing the fallback to prevent showing Mekke hotels in Medine list when Medine is empty.
+    const effectiveMekkeHotels = mekkeHotels;
+    const effectiveMedineHotels = medineHotels;
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -346,6 +345,12 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                             <div className="mb-8">
                                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><MapPin size={20} className="text-gray-400" /> Mekke Oteli Seçimi</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {effectiveMekkeHotels.length === 0 && (
+                                        <div className="md:col-span-2 lg:col-span-3 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100 text-sm flex items-center gap-2">
+                                            <Info size={16} className="shrink-0" />
+                                            Sistemde gösterilecek Mekke oteli bulunamadı. Lütfen &quot;Farklı Bir Otel İstiyorum&quot; seçeneğiyle devam edin.
+                                        </div>
+                                    )}
                                     {effectiveMekkeHotels.map(hotel => (
                                         <div key={hotel.id}
                                             onClick={() => handleSelection('selectedMekkeHotelId', String(hotel.id))}
@@ -400,6 +405,12 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                             <div className="mb-8">
                                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><MapPin size={20} className="text-gray-400" /> Medine Oteli Seçimi</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {effectiveMedineHotels.length === 0 && (
+                                        <div className="md:col-span-2 lg:col-span-3 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100 text-sm flex items-center gap-2">
+                                            <Info size={16} className="shrink-0" />
+                                            Sistemde gösterilecek Medine oteli bulunamadı. Lütfen &quot;Farklı Bir Otel İstiyorum&quot; seçeneğiyle devam edin.
+                                        </div>
+                                    )}
                                     {effectiveMedineHotels.map(hotel => (
                                         <div key={hotel.id}
                                             onClick={() => handleSelection('selectedMedineHotelId', String(hotel.id))}
