@@ -65,7 +65,8 @@ export default function VehicleFormPage({ params }: { params: { id: string } }) 
                 },
                 body: JSON.stringify({
                     ...formData,
-                    features: featuresArray
+                    features: featuresArray,
+                    capacity: formData.capacity === '' ? null : Number(formData.capacity)
                 })
             });
 
@@ -103,7 +104,7 @@ export default function VehicleFormPage({ params }: { params: { id: string } }) 
                             type="number"
                             className="w-full border rounded-lg p-2"
                             value={formData.capacity}
-                            onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) })}
+                            onChange={(e) => setFormData({ ...formData, capacity: e.target.value === '' ? '' as any : parseInt(e.target.value) })}
                         />
                     </div>
                 </div>

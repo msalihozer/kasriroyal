@@ -93,6 +93,15 @@ export default function HotelFormPage({ params }: { params: { id: string } }) {
         e.preventDefault();
         setSaving(true);
 
+        // Sanitize data for Prisma backend
+        const payload = {
+            ...formData,
+            lat: formData.lat === '' ? null : parseFloat(formData.lat),
+            lng: formData.lng === '' ? null : parseFloat(formData.lng),
+            stars: formData.stars ? parseInt(formData.stars as any) : null,
+            locationId: formData.locationId === '' ? null : formData.locationId,
+        };
+
         try {
             const token = localStorage.getItem('token');
             const url = isNew
@@ -105,7 +114,7 @@ export default function HotelFormPage({ params }: { params: { id: string } }) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
 
             if (res.ok) {

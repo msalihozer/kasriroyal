@@ -183,6 +183,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                 returnDate: formData.returnDate ? new Date(formData.returnDate).toISOString() : null,
                 durationDays: Number(formData.durationDays),
                 durationNights: Number(formData.durationNights),
+                priceFrom: formData.priceFrom === '' ? null : parseFloat(formData.priceFrom),
             };
 
             const res = await fetch(url, {
