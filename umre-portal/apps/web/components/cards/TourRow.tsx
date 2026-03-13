@@ -188,7 +188,13 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
             {/* NEW Full-Featured Quick View Modal */}
             {isQuickViewOpen && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm" style={{ margin: 0 }}>
-                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh]">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh] relative">
+                        <button
+                            onClick={toggleQuickView}
+                            className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 text-white rounded-full transition-colors z-10"
+                        >
+                            <X size={20} />
+                        </button>
                         {/* 1. Header */}
                         <div className="bg-[#bda569] text-white p-4 text-center font-bold text-lg uppercase tracking-wide">
                             {tour.title} &gt; {tour.durationNights} GECE - {tour.durationDays} GÜN
