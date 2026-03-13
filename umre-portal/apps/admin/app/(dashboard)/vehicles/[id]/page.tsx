@@ -66,7 +66,7 @@ export default function VehicleFormPage({ params }: { params: { id: string } }) 
                 body: JSON.stringify({
                     ...formData,
                     features: featuresArray,
-                    capacity: formData.capacity === '' ? null : Number(formData.capacity)
+                    capacity: (formData.capacity as any) === '' ? null : Number(formData.capacity)
                 })
             });
 
