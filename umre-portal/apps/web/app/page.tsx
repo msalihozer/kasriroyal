@@ -1,5 +1,8 @@
 import BlockRenderer from '../components/blocks/BlockRenderer';
 
+export const dynamic = 'force-dynamic';
+
+
 async function getHomePageData() {
     // In a real production app, use absolute URL from env
     const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || ''}/api`;
@@ -23,7 +26,7 @@ async function getHomePageData() {
             safeFetch(`${API_BASE}/hotels`),
             safeFetch(`${API_BASE}/testimonials`),
             safeFetch(`${API_BASE}/faq`),
-            safeFetch(`${API_BASE}/posts`),
+            safeFetch(`${API_BASE}/posts?status=published`),
             safeFetch(`${API_BASE}/site-settings`),
             safeFetch(`${API_BASE}/pages`),
         ]);
