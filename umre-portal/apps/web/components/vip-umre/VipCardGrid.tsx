@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getImageUrl } from '@/utils/image-url';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -40,7 +41,7 @@ export default function VipCardGrid({ vipPages }: { vipPages: any[] }) {
                             <div className="h-48 relative overflow-hidden bg-gray-200">
                                 {page.imageUrl ? (
                                     <Image
-                                        src={page.imageUrl}
+                                        src={getImageUrl(page.imageUrl)}
                                         alt={page.title}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getImageUrl } from '@/utils/image-url';
 import { ArrowRight, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -30,7 +31,7 @@ export default function VipPackagesList({ vipPages }: { vipPages: any[] }) {
                                 <div className="aspect-[16/9] md:aspect-[4/3] max-w-sm mx-auto relative rounded-xl overflow-hidden shadow-lg">
                                     {page.imageUrl ? (
                                         <Image
-                                            src={page.imageUrl}
+                                            src={getImageUrl(page.imageUrl)}
                                             alt={page.title}
                                             fill
                                             className="object-cover hover:scale-105 transition-transform duration-[1.5s]"

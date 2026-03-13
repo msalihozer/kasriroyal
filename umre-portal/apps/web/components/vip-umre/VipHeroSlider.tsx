@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { getImageUrl } from '@/utils/image-url';
 import { motion, AnimatePresence } from "framer-motion";
 
 interface VipHeroSliderProps {
@@ -40,7 +41,7 @@ export default function VipHeroSlider({ title, summary, content, images }: VipHe
                     className="absolute inset-0 z-0"
                 >
                     <Image
-                        src={images[currentIndex]}
+                        src={getImageUrl(images[currentIndex])}
                         alt="VIP Umre"
                         fill
                         sizes="100vw"
