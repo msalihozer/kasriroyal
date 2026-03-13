@@ -12,6 +12,12 @@ export default function RichTextEditor({ value, onChange, label = "İçerik" }: 
     const quillRef = useRef<any>(null);
     const loadedRef = useRef(false);
 
+    const onChangeRef = useRef(onChange);
+
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
+
     // Load Quill from CDN
     useEffect(() => {
         if (loadedRef.current) return;
@@ -88,7 +94,7 @@ export default function RichTextEditor({ value, onChange, label = "İçerik" }: 
         // Handle changes
         quillRef.current.on('text-change', () => {
             const html = editorRef.current?.querySelector('.ql-editor')?.innerHTML;
-            onChange(html || '');
+            onChangeRef.current(html || '');
         });
     };
 
