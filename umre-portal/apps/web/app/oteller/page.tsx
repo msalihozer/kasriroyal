@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getImageUrl } from '@/utils/image-url';
 
 export default function HotelsPage() {
     const [locations, setLocations] = useState<any[]>([]);
@@ -80,9 +81,7 @@ export default function HotelsPage() {
                         <div key={hotel.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group h-[450px]">
                             <div className="h-56 bg-gray-200 relative overflow-hidden">
                                 <img
-                                    src={(hotel.gallery && hotel.gallery[0])
-                                        ? (hotel.gallery[0].startsWith('http') ? hotel.gallery[0] : `${process.env.NEXT_PUBLIC_API_URL || ''}${hotel.gallery[0]}`)
-                                        : '/placeholder-hotel.jpg'}
+                                    src={(hotel.gallery && hotel.gallery[0]) ? getImageUrl(hotel.gallery[0]) : '/placeholder-hotel.jpg'}
                                     alt={hotel.title}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     onError={(e) => { e.currentTarget.src = '/placeholder-hotel.jpg'; }}

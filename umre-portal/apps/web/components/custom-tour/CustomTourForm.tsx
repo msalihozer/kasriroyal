@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, Users, Plane, Hotel, Car, MessageSquare, CheckCircle, ChevronRight, ChevronLeft, MapPin, ExternalLink, Info } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getImageUrl } from '@/utils/image-url';
 
 interface CustomTourFormProps {
     hotels: any[];
@@ -164,7 +165,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
         };
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`}/custom-tour-requests`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/custom-tour-requests`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -352,7 +353,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                         >
                                             <div className="aspect-video relative bg-gray-100">
                                                 <img
-                                                    src={hotel.imageUrl || 'https://images.unsplash.com/photo-1565552629477-09be08370df4?q=80&w=2000'}
+                                                    src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : 'https://images.unsplash.com/photo-1565552629477-09be08370df4?q=80&w=2000'}
                                                     alt={hotel.title || 'Otel'}
                                                     className="object-cover w-full h-full"
                                                 />
@@ -406,7 +407,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                         >
                                             <div className="aspect-video relative bg-gray-100">
                                                 <img
-                                                    src={hotel.imageUrl || 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?q=80&w=2000'}
+                                                    src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?q=80&w=2000'}
                                                     alt={hotel.title || 'Otel'}
                                                     className="object-cover w-full h-full"
                                                 />
@@ -459,7 +460,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                         >
                                             <div className="w-24 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                                                 <img
-                                                    src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2000'}
+                                                    src={vehicle.imageUrl ? getImageUrl(vehicle.imageUrl) : 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2000'}
                                                     alt={vehicle.modelName}
                                                     className="object-cover w-full h-full"
                                                 />
