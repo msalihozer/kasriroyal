@@ -25,7 +25,7 @@ export default function FaqFormPage({ params }: { params: { id: string } }) {
     const fetchFaq = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/faq/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/faq/${params.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -44,8 +44,8 @@ export default function FaqFormPage({ params }: { params: { id: string } }) {
         try {
             const token = localStorage.getItem('token');
             const url = isNew
-                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/faq`
-                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/faq/${params.id}`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || ''}/api/faq`
+                : `${process.env.NEXT_PUBLIC_API_URL || ''}/api/faq/${params.id}`;
 
             const res = await fetch(url, {
                 method: isNew ? 'POST' : 'PATCH',

@@ -26,7 +26,7 @@ export default function TestimonialFormPage({ params }: { params: { id: string }
     const fetchTestimonial = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/testimonials/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/testimonials/${params.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -45,8 +45,8 @@ export default function TestimonialFormPage({ params }: { params: { id: string }
         try {
             const token = localStorage.getItem('token');
             const url = isNew
-                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/testimonials`
-                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/testimonials/${params.id}`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || ''}/api/testimonials`
+                : `${process.env.NEXT_PUBLIC_API_URL || ''}/api/testimonials/${params.id}`;
 
             const res = await fetch(url, {
                 method: isNew ? 'POST' : 'PATCH',

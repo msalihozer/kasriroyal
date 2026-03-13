@@ -20,7 +20,7 @@ export default function HotelsPage() {
 
     const fetchLocations = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`);
             if (res.ok) {
                 const data = await res.json();
                 setLocations(data || []);
@@ -36,7 +36,7 @@ export default function HotelsPage() {
     const fetchHotels = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels?locationId=${activeLocation}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/hotels?locationId=${activeLocation}`);
             if (res.ok) {
                 const data = await res.json();
                 setHotels(data || []);
@@ -81,7 +81,7 @@ export default function HotelsPage() {
                             <div className="h-56 bg-gray-200 relative overflow-hidden">
                                 <img
                                     src={(hotel.gallery && hotel.gallery[0])
-                                        ? (hotel.gallery[0].startsWith('http') ? hotel.gallery[0] : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${hotel.gallery[0]}`)
+                                        ? (hotel.gallery[0].startsWith('http') ? hotel.gallery[0] : `${process.env.NEXT_PUBLIC_API_URL || ''}${hotel.gallery[0]}`)
                                         : '/placeholder-hotel.jpg'}
                                     alt={hotel.title}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

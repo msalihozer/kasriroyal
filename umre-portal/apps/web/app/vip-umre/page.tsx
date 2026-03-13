@@ -9,7 +9,7 @@ import path from 'path';
 
 async function getPages() {
     try {
-        const res = await fetch(`${process.env.API_BASE_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`}/pages`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.API_BASE_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`}/pages`, { cache: 'no-store' });
         if (!res.ok) return [];
         return await res.json();
     } catch (e) {

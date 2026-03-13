@@ -70,10 +70,10 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
     const fetchResources = async () => {
         try {
             const [typesRes, vehiclesRes, locsRes, hotelsRes] = await Promise.all([
-                fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tour-types`),
-                fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/vehicles`),
-                fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`),
-                fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels?status=all`)
+                fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tour-types`),
+                fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/vehicles`),
+                fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`),
+                fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/hotels?status=all`)
             ]);
 
             if (typesRes.ok) setTourTypes(await typesRes.json());
@@ -89,7 +89,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
     const fetchTour = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tours/${params.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -172,8 +172,8 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
         try {
             const token = localStorage.getItem('token');
             const url = isNew
-                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours`
-                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours/${params.id}`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || ''}/api/tours`
+                : `${process.env.NEXT_PUBLIC_API_URL || ''}/api/tours/${params.id}`;
 
             // Prepare payload with correct types
             const payload = {

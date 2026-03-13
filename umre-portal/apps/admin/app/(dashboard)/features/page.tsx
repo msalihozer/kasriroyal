@@ -27,7 +27,7 @@ export default function FeaturesPage() {
 
     const fetchFeatures = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/features`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/features`);
             if (res.ok) {
                 const data = await res.json();
                 setFeatures(data || []);
@@ -44,8 +44,8 @@ export default function FeaturesPage() {
         try {
             const token = localStorage.getItem('token');
             const url = editingFeature
-                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/features/${editingFeature.id}`
-                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/features`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || ''}/api/features/${editingFeature.id}`
+                : `${process.env.NEXT_PUBLIC_API_URL || ''}/api/features`;
 
             const method = editingFeature ? 'PATCH' : 'POST';
 
@@ -73,7 +73,7 @@ export default function FeaturesPage() {
         if (!confirm('Bu özelliği silmek istediğinizden emin misiniz?')) return;
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/features/${feature.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/features/${feature.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

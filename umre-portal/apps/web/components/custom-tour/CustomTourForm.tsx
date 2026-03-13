@@ -29,7 +29,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                 setError(null);
                 try {
                     // Try defaulting to localhost:4000 if env var is missing
-                    const API_BASE = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`;
+                    const API_BASE = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`;
                     console.log(`Fetching from ${API_BASE}...`);
 
                     const [hRes, vRes] = await Promise.all([
@@ -164,7 +164,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
         };
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`}/custom-tour-requests`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`}/custom-tour-requests`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -329,7 +329,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                     <p className="font-bold mb-1">Uyarı: Otel listesi boş.</p>
                                     <p className="text-sm">Veritabanında otel bulunamadı veya bağlantı sağlanamadı.</p>
                                     <p className="text-xs text-gray-500 mt-2 font-mono">
-                                        API: {process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`}
+                                        API: {process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`}
                                     </p>
                                 </div>
                             )}

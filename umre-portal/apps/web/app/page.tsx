@@ -2,7 +2,7 @@ import BlockRenderer from '../components/blocks/BlockRenderer';
 
 async function getHomePageData() {
     // In a real production app, use absolute URL from env
-    const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`;
+    const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || ''}/api`;
 
     // Helper for safe fetch
     const safeFetch = (url: string) =>

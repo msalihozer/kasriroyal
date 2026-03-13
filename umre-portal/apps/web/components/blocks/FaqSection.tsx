@@ -17,7 +17,7 @@ export default function FaqSection() {
     useEffect(() => {
         const fetchFaqs = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`}/faq`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`}/faq`);
                 if (res.ok) {
                     const data = await res.json();
                     // Take only first 4 items

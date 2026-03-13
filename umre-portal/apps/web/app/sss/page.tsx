@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 async function getFaqs() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`}/faq`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`}/faq`, { cache: 'no-store' });
         if (!res.ok) return [];
         return res.json();
     } catch (error) {

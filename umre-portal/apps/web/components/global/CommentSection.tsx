@@ -33,7 +33,7 @@ export default function CommentSection({ type, entityId, entityName }: CommentSe
 
     const fetchComments = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/comments/public?type=${type}&entityId=${entityId}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/comments/public?type=${type}&entityId=${entityId}`);
             if (res.ok) {
                 const data = await res.json();
                 setComments(data);
@@ -48,7 +48,7 @@ export default function CommentSection({ type, entityId, entityName }: CommentSe
         setStatus('submitting');
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/comments`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/comments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

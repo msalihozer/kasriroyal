@@ -14,7 +14,7 @@ export default function MediaPage() {
 
     const fetchMedia = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/media`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/media`);
             if (res.ok) {
                 const data = await res.json();
                 setMedia(data.data || []);
@@ -31,7 +31,7 @@ export default function MediaPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/media/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/media/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -48,7 +48,7 @@ export default function MediaPage() {
     };
 
     const copyToClipboard = (url: string) => {
-        const fullUrl = `http://localhost:4000${url}`;
+        const fullUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
         navigator.clipboard.writeText(fullUrl);
         alert('URL Kopyalandı: ' + fullUrl);
     };
@@ -81,7 +81,7 @@ export default function MediaPage() {
                     <div key={item.id} className="group relative bg-white rounded-lg shadow overflow-hidden border hover:shadow-md transition-shadow">
                         <div className="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
                             {item.type === 'image' ? (
-                                <img src={`http://localhost:4000${item.url}`} alt={item.altText} className="w-full h-full object-cover" />
+                                <img src={`${process.env.NEXT_PUBLIC_API_URL || ''}${item.url}`} alt={item.altText} className="w-full h-full object-cover" />
                             ) : (
                                 <span className="text-gray-400 font-medium uppercase tracking-wider">{item.type}</span>
                             )}

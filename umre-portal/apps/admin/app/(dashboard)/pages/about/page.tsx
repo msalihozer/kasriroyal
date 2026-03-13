@@ -27,7 +27,7 @@ export default function AboutPageAdmin() {
     const fetchSettings = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/site-settings`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/site-settings`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -49,7 +49,7 @@ export default function AboutPageAdmin() {
         setSaving(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/site-settings`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/site-settings`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

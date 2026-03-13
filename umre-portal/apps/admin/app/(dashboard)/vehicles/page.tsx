@@ -16,7 +16,7 @@ export default function VehiclesPage() {
     const fetchVehicles = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/vehicles`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/vehicles`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -39,7 +39,7 @@ export default function VehiclesPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/vehicles/${vehicle.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/vehicles/${vehicle.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

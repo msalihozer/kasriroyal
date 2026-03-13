@@ -10,7 +10,7 @@ async function getTours(searchParams: any) {
     // Note: Month filtering might need client-side or specific API support if not implemented
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours?${params.toString()}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tours?${params.toString()}`, {
             cache: 'no-store'
         });
         if (res.ok) {
@@ -25,7 +25,7 @@ async function getTours(searchParams: any) {
 
 async function getTourTypes() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tour-types`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tour-types`, { cache: 'no-store' });
         if (res.ok) return await res.json();
     } catch (err) {
         console.error(err);
@@ -35,7 +35,7 @@ async function getTourTypes() {
 
 async function getLocations() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`, { cache: 'no-store' });
         if (res.ok) return await res.json();
     } catch (err) {
         console.error(err);

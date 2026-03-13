@@ -2,7 +2,7 @@ import { Building, CreditCard, User, MapPin, Target, Eye } from 'lucide-react';
 
 async function getSettings() {
     try {
-        const res = await fetch(`${process.env.API_BASE_URL || `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api`}/site-settings`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.API_BASE_URL || `${process.env.NEXT_PUBLIC_API_URL || ''}/api`}/site-settings`, { cache: 'no-store' });
         if (!res.ok) return null;
         return await res.json();
     } catch (e) {

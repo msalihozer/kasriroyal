@@ -15,7 +15,7 @@ export default function HotelDetailPage({ params }: { params: { slug: string } }
 
     const fetchHotel = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels/${params.slug}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/hotels/${params.slug}`);
             if (res.ok) {
                 const data = await res.json();
                 setHotel(data);
@@ -34,7 +34,7 @@ export default function HotelDetailPage({ params }: { params: { slug: string } }
 
     const images = [hotel.imageUrl, ...(hotel.gallery || [])].filter(Boolean);
     if (images.length === 0) images.push('/placeholder-hotel.jpg');
-    const getFullUrl = (url: string) => url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${url}`;
+    const getFullUrl = (url: string) => url.startsWith('http') ? url : `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
 
     const nextImage = () => setActiveImage(prev => prev === images.length - 1 ? 0 : prev + 1);
     const prevImage = () => setActiveImage(prev => prev === 0 ? images.length - 1 : prev - 1);

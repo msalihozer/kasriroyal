@@ -29,7 +29,7 @@ export default function PostFormPage({ params }: { params: { id: string } }) {
     const fetchPost = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/posts/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts/${params.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -48,8 +48,8 @@ export default function PostFormPage({ params }: { params: { id: string } }) {
         try {
             const token = localStorage.getItem('token');
             const url = isNew
-                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/posts`
-                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/posts/${params.id}`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts`
+                : `${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts/${params.id}`;
 
             // Sanitize data before sending
             const { id, createdAt, updatedAt, category, ...payload } = formData as any;

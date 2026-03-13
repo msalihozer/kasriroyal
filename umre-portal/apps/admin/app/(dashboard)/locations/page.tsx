@@ -13,13 +13,19 @@ export default function LocationsPage() {
     const [editingLocation, setEditingLocation] = useState<any>(null);
     const [formData, setFormData] = useState({ name: '', slug: '', imageUrl: '' });
 
+    const getFullImgUrl = (url: string) => {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
+    };
+
     useEffect(() => {
         fetchLocations();
     }, []);
 
     const fetchLocations = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`);
             if (res.ok) {
                 const data = await res.json();
                 setLocations(data || []);
@@ -36,8 +42,8 @@ export default function LocationsPage() {
         try {
             const token = localStorage.getItem('token');
             const url = editingLocation
-                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations/${editingLocation.id}`
-                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations/${editingLocation.id}`
+                : `${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`;
 
             const method = editingLocation ? 'PATCH' : 'POST';
 
@@ -66,7 +72,7 @@ export default function LocationsPage() {
         if (!confirm('Bu lokasyonu silmek istediğinizden emin misiniz?')) return;
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations/${location.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations/${location.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -99,7 +105,7 @@ export default function LocationsPage() {
         {
             key: 'imageUrl',
             label: 'Görsel',
-            render: (val: string) => val ? <img src={val} alt="Loc" className="w-10 h-10 object-cover rounded" /> : <div className="w-10 h-10 bg-gray-200 rounded"></div>
+            render: (val: string) => val ? <img src={getFullImgUrl(val)} alt="Loc" className="w-10 h-10 object-cover rounded" /> : <div className="w-10 h-10 bg-gray-200 rounded"></div>
         },
         { key: 'name', label: 'Lokasyon Adı', sortable: true },
         { key: 'slug', label: 'Slug', sortable: true },

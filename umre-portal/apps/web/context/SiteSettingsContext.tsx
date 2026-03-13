@@ -26,7 +26,7 @@ export const SiteSettingsProvider = ({ children }: { children: React.ReactNode }
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/site-settings`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/site-settings`);
                 if (res.ok) {
                     const data = await res.json();
                     setSettings(data);

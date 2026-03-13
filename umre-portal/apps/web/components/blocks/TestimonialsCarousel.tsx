@@ -64,7 +64,7 @@ export default function TestimonialsCarousel({ data }: { data: { title?: string,
                                 <div className="w-12 h-12 rounded-full bg-gray-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden shrink-0">
                                     {item.avatarUrl ? (
                                         <Image
-                                            src={item.avatarUrl.startsWith('http') ? item.avatarUrl : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${item.avatarUrl}`}
+                                            src={item.avatarUrl.startsWith('http') ? item.avatarUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${item.avatarUrl}`}
                                             alt={item.fullName}
                                             width={48}
                                             height={48}
