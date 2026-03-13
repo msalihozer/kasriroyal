@@ -45,7 +45,7 @@ export default function ImageUpload({ value, onChange, label = "Resim Yükle" }:
             formData.append('file', file);
 
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:4000/api/media/upload', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/media/upload`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

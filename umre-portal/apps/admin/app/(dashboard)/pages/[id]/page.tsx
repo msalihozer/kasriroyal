@@ -35,7 +35,7 @@ export default function PageFormPage({ params, searchParams }: { params: { id: s
     const fetchPage = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/pages/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/pages/${params.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -101,8 +101,8 @@ export default function PageFormPage({ params, searchParams }: { params: { id: s
 
             // If we have a pageId, use it for updates. Otherwise, create new.
             const url = pageId
-                ? `http://localhost:4000/api/pages/${pageId}`
-                : 'http://localhost:4000/api/pages';
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/pages/${pageId}`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/pages`;
 
             const method = pageId ? 'PATCH' : 'POST';
 

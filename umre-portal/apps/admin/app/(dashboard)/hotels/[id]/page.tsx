@@ -41,19 +41,19 @@ export default function HotelFormPage({ params }: { params: { id: string } }) {
     }, []);
 
     const fetchLocations = async () => {
-        const res = await fetch('http://localhost:4000/api/locations');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`);
         if (res.ok) setLocations(await res.json());
     };
 
     const fetchFeatures = async () => {
-        const res = await fetch('http://localhost:4000/api/features');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/features`);
         if (res.ok) setAvailableFeatures(await res.json());
     };
 
     const fetchHotel = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/hotels/by-id/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels/by-id/${params.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -96,8 +96,8 @@ export default function HotelFormPage({ params }: { params: { id: string } }) {
         try {
             const token = localStorage.getItem('token');
             const url = isNew
-                ? 'http://localhost:4000/api/hotels'
-                : `http://localhost:4000/api/hotels/${params.id}`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels/${params.id}`;
 
             const res = await fetch(url, {
                 method: isNew ? 'POST' : 'PATCH',

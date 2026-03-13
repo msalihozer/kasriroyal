@@ -7,7 +7,7 @@ import TourBookingWidget from '@/components/tours/TourBookingWidget';
 
 async function getTour(slug: string) {
     try {
-        const res = await fetch(`http://localhost:4000/api/tours/${slug}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours/${slug}`, {
             cache: 'no-store'
         });
         if (res.ok) {
@@ -21,7 +21,7 @@ async function getTour(slug: string) {
 
 async function getLocations() {
     try {
-        const res = await fetch('http://localhost:4000/api/locations', { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`, { cache: 'no-store' });
         if (res.ok) return await res.json();
     } catch (err) {
         console.error(err);
@@ -31,7 +31,7 @@ async function getLocations() {
 
 async function getSiteSettings() {
     try {
-        const res = await fetch('http://localhost:4000/api/site-settings', { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/site-settings`, { cache: 'no-store' });
         if (res.ok) return await res.json();
     } catch (err) {
         console.error(err);

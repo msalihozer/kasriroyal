@@ -14,7 +14,7 @@ export default function MediaPage() {
 
     const fetchMedia = async () => {
         try {
-            const res = await fetch('http://localhost:4000/api/media');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/media`);
             if (res.ok) {
                 const data = await res.json();
                 setMedia(data.data || []);
@@ -31,7 +31,7 @@ export default function MediaPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/media/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/media/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

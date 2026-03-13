@@ -16,7 +16,7 @@ export default function TestimonialsPage() {
     const fetchTestimonials = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:4000/api/testimonials', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/testimonials`, {
                 headers: { 'Authorization': `Bearer ${token}` } // Not strictly guarded in GET but consistent practice
             });
             if (res.ok) {
@@ -39,7 +39,7 @@ export default function TestimonialsPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/testimonials/${item.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/testimonials/${item.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

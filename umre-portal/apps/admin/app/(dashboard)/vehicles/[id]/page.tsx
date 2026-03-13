@@ -30,7 +30,7 @@ export default function VehicleFormPage({ params }: { params: { id: string } }) 
     const fetchVehicle = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/vehicles/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/vehicles/${params.id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -54,8 +54,8 @@ export default function VehicleFormPage({ params }: { params: { id: string } }) 
         try {
             const token = localStorage.getItem('token');
             const url = isNew
-                ? 'http://localhost:4000/api/vehicles'
-                : `http://localhost:4000/api/vehicles/${params.id}`;
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/vehicles`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/vehicles/${params.id}`;
 
             const res = await fetch(url, {
                 method: isNew ? 'POST' : 'PATCH',

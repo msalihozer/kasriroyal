@@ -18,7 +18,7 @@ export default function ToursPage() {
     const fetchTours = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:4000/api/tours?status=all', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours?status=all`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -54,7 +54,7 @@ export default function ToursPage() {
                 returnDate: data.returnDate ? new Date(data.returnDate).toISOString() : null,
             };
 
-            const res = await fetch(`http://localhost:4000/api/tours/${tourId}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours/${tourId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function ToursPage() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/tours/${tour.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tours/${tour.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

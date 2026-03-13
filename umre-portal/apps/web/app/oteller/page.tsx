@@ -20,7 +20,7 @@ export default function HotelsPage() {
 
     const fetchLocations = async () => {
         try {
-            const res = await fetch('http://localhost:4000/api/locations');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`);
             if (res.ok) {
                 const data = await res.json();
                 setLocations(data || []);
@@ -36,7 +36,7 @@ export default function HotelsPage() {
     const fetchHotels = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:4000/api/hotels?locationId=${activeLocation}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels?locationId=${activeLocation}`);
             if (res.ok) {
                 const data = await res.json();
                 setHotels(data || []);

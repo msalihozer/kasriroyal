@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 async function getVehicles() {
     try {
-        const res = await fetch('http://localhost:4000/api/vehicles?status=published', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/vehicles?status=published`, {
             cache: 'no-store'
         });
         if (res.ok) {

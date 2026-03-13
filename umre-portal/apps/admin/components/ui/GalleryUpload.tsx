@@ -35,7 +35,7 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
                 const formData = new FormData();
                 formData.append('file', file);
 
-                const res = await fetch('http://localhost:4000/api/media/upload', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/media/upload`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`

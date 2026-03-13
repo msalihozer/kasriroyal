@@ -15,7 +15,7 @@ export default function HotelDetailPage({ params }: { params: { slug: string } }
 
     const fetchHotel = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/api/hotels/${params.slug}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/hotels/${params.slug}`);
             if (res.ok) {
                 const data = await res.json();
                 setHotel(data);

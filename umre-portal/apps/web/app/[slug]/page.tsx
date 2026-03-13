@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 async function getPage(slug: string) {
     try {
-        const res = await fetch(`http://localhost:4000/api/pages/${slug}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/pages/${slug}`, {
             cache: 'no-store'
         });
 

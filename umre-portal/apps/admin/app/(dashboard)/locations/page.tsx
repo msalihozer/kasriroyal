@@ -19,7 +19,7 @@ export default function LocationsPage() {
 
     const fetchLocations = async () => {
         try {
-            const res = await fetch('http://localhost:4000/api/locations');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`);
             if (res.ok) {
                 const data = await res.json();
                 setLocations(data || []);
@@ -36,8 +36,8 @@ export default function LocationsPage() {
         try {
             const token = localStorage.getItem('token');
             const url = editingLocation
-                ? `http://localhost:4000/api/locations/${editingLocation.id}`
-                : 'http://localhost:4000/api/locations';
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations/${editingLocation.id}`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations`;
 
             const method = editingLocation ? 'PATCH' : 'POST';
 
@@ -66,7 +66,7 @@ export default function LocationsPage() {
         if (!confirm('Bu lokasyonu silmek istediğinizden emin misiniz?')) return;
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/locations/${location.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/locations/${location.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

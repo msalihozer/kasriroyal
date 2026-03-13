@@ -18,7 +18,7 @@ export default function TourTypesPage() {
 
     const fetchTourTypes = async () => {
         try {
-            const res = await fetch('http://localhost:4000/api/tour-types');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tour-types`);
             if (res.ok) {
                 const data = await res.json();
                 setTourTypes(data || []);
@@ -35,8 +35,8 @@ export default function TourTypesPage() {
         try {
             const token = localStorage.getItem('token');
             const url = editingType
-                ? `http://localhost:4000/api/tour-types/${editingType.id}`
-                : 'http://localhost:4000/api/tour-types';
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tour-types/${editingType.id}`
+                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tour-types`;
 
             const method = editingType ? 'PATCH' : 'POST';
 
@@ -64,7 +64,7 @@ export default function TourTypesPage() {
         if (!confirm('Bu tur tipini silmek istediğinizden emin misiniz?')) return;
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:4000/api/tour-types/${type.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/tour-types/${type.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
