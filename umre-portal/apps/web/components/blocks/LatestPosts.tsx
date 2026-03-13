@@ -16,11 +16,11 @@ export default function LatestPosts({ data }: { data: { title?: string, items: a
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {data.items.slice(0, 3).map((post: any, idx: number) => (
                         <div key={idx} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:-translate-y-1">
-                            <div className="aspect-video bg-gray-200 overflow-hidden relative">
+                            <div className="aspect-[4/3] sm:aspect-square bg-gray-50 overflow-hidden relative flex items-center justify-center">
                                 <img
-                                    src={post.coverImageUrl ? getImageUrl(post.coverImageUrl) : 'https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2000&auto=format&fit=crop'}
+                                    src={post.coverImageUrl ? encodeURI(getImageUrl(post.coverImageUrl)) : 'https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2000&auto=format&fit=crop'}
                                     alt={post.title}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700"
                                 />
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                             </div>

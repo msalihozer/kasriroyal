@@ -45,6 +45,7 @@ export default async function VipUmrePage() {
                 title={landingPage?.title || "VIP UMRE NEDİR?"}
                 summary={landingPage?.summary}
                 content={landingPage?.content}
+                backgroundImageUrl={landingPage?.imageUrl}
             />
 
             {/* Editorial List Layout */}
