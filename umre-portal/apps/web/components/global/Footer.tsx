@@ -50,7 +50,7 @@ export default function Footer() {
                                 footerLogos.map((logo: any, idx: number) => (
                                     <div key={idx} className="bg-white p-3 rounded-lg w-24 h-24 flex items-center justify-center">
                                         <img
-                                            src={logo.imageUrl ? (logo.imageUrl.startsWith('http') ? logo.imageUrl : `http://localhost:4000${logo.imageUrl}`) : '/logo.png'}
+                                            src={logo.imageUrl ? (logo.imageUrl.startsWith('http') ? logo.imageUrl : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${logo.imageUrl}`) : '/logo.png'}
                                             alt={logo.alt || 'Üyelik'}
                                             className="max-w-full max-h-full object-contain"
                                         />

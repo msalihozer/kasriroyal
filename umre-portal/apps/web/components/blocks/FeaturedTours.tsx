@@ -126,7 +126,7 @@ export default function FeaturedTours({ data }: { data: { title?: string, items:
                                 >
                                     <div className="h-40 md:h-48 bg-gray-200 relative overflow-hidden">
                                         <img
-                                            src={coverImage ? (coverImage.startsWith('http') ? coverImage : `http://localhost:4000${coverImage}`) : 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22400%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23cccccc%22%2F%3E%3C%2Fsvg%3E'}
+                                            src={coverImage ? (coverImage.startsWith('http') ? coverImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${coverImage}`) : 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22400%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23cccccc%22%2F%3E%3C%2Fsvg%3E'}
                                             className="w-full h-full object-cover"
                                             alt={tour.title}
                                             draggable={false}

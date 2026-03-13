@@ -36,7 +36,7 @@ export default function PartnersSlider({ data }: PartnersSliderProps) {
                         >
                             <div className="relative w-20 h-20 md:w-28 md:h-28">
                                 <Image
-                                    src={logo.imageUrl ? (logo.imageUrl.startsWith('http') ? logo.imageUrl : `http://localhost:4000${logo.imageUrl}`) : '/logo.png'}
+                                    src={logo.imageUrl ? (logo.imageUrl.startsWith('http') ? logo.imageUrl : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${logo.imageUrl}`) : '/logo.png'}
                                     alt={logo.alt || 'Partner Logo'}
                                     fill
                                     sizes="(max-width: 768px) 100px, 150px"

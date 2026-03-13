@@ -16,7 +16,7 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
     const getFullUrl = (url: string) => {
         if (!url) return '';
         if (url.startsWith('http')) return url;
-        return `http://localhost:4000${url}`;
+        return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${url}`;
     };
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

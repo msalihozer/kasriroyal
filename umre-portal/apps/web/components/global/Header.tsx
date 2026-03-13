@@ -107,8 +107,8 @@ export default function Header() {
                 <img
                     src={
                         (isHome && !scrolled && !isOpen)
-                            ? (logoUrl ? (logoUrl.startsWith('http') ? logoUrl : `http://localhost:4000${logoUrl}`) : '/logo.png')
-                            : (faviconUrl ? (faviconUrl.startsWith('http') ? faviconUrl : `http://localhost:4000${faviconUrl}`) : '/favicon.ico')
+                            ? (logoUrl ? (logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${logoUrl}`) : '/logo.png')
+                            : (faviconUrl ? (faviconUrl.startsWith('http') ? faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${faviconUrl}`) : '/favicon.ico')
                     }
                     alt="Site Logo"
                     className={`object-contain transition-all duration-300 ${isOpen ? 'h-12 w-auto' : logoClasses}`}

@@ -66,7 +66,7 @@ export default function VideoUpload({ value, onChange, label = "Video Yükle" }:
             {preview ? (
                 <div className="relative inline-block w-full max-w-md">
                     <video
-                        src={preview.startsWith('http') ? preview : `http://localhost:4000${preview}`}
+                        src={preview.startsWith('http') ? preview : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${preview}`}
                         controls
                         className="w-full rounded-lg border bg-black"
                     />
