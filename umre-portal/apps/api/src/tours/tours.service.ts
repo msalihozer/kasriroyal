@@ -95,28 +95,33 @@ export class ToursService {
         const { itinerary, vehicleId, categoryId, tourTypeId, ...rest } = data;
 
         // If itinerary is provided, we might want to delete existing and recreate, or update incrementally.
-        // For simplicity in this demo: Delete all existing itineraries for this tour and recreate.
         if (itinerary) {
             await this.prisma.tourItinerary.deleteMany({ where: { tourId: id } });
         }
 
+        const updateData: any = { ...rest };
+
+        // Only explicitly set to null if empty string is passed (clearing standard dropdown).
+        // If undefined, it means the frontend didn't include it in a partial PATCH payload, so don't touch it.
+        if (vehicleId !== undefined) updateData.vehicleId = vehicleId || null;
+        if (categoryId !== undefined) updateData.categoryId = categoryId || null;
+        if (tourTypeId !== undefined) updateData.tourTypeId = tourTypeId || null;
+
+        if (itinerary) {
+            updateData.itinerary = {
+                create: itinerary.map((item: any) => ({
+                    day: item.day,
+                    title: item.title,
+                    description: item.description,
+                    locationId: item.locationId || null,
+                    hotelId: item.hotelId || null
+                }))
+            };
+        }
+
         return this.prisma.tour.update({
             where: { id },
-            data: {
-                ...rest,
-                vehicleId: vehicleId || null,
-                categoryId: categoryId || null,
-                tourTypeId: tourTypeId || null,
-                itinerary: itinerary ? {
-                    create: itinerary.map((item: any) => ({
-                        day: item.day,
-                        title: item.title,
-                        description: item.description,
-                        locationId: item.locationId || null,
-                        hotelId: item.hotelId || null
-                    }))
-                } : undefined
-            },
+            data: updateData,
             include: {
                 itinerary: true
             }
