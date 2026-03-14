@@ -9,7 +9,10 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
     // HTTP güvenlik başlıkları (XSS, Clickjacking, sniffing önleme)
-    app.use(helmet());
+    // crossOriginResourcePolicy kapalı — api.kasriroyal.com/uploads resimleri cross-origin yüklenebilsin
+    app.use(helmet({
+        crossOriginResourcePolicy: false,
+    }));
 
     app.enableCors({
         origin: [
