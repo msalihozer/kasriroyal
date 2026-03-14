@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { getImageUrl } from '@/utils/image-url';
 
 async function getPage(slug: string) {
     try {
@@ -33,7 +34,7 @@ export default async function VipPageDetail({ params }: { params: { slug: string
             <div className="relative h-[50vh] min-h-[400px] w-full bg-gray-900">
                 {page.imageUrl && (
                     <Image
-                        src={page.imageUrl}
+                        src={getImageUrl(page.imageUrl)}
                         alt={page.title}
                         fill
                         sizes="100vw"
