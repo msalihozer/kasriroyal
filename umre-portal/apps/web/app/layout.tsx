@@ -6,6 +6,7 @@ import Footer from '../components/global/Footer';
 import { SiteSettingsProvider } from '../context/SiteSettingsContext';
 import PageContent from '../components/layout/PageContent';
 import GoogleTranslate from '../components/global/GoogleTranslate';
+import AnalyticsTracker from '../components/AnalyticsTracker';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <html lang="tr">
             <body className={inter.className}>
                 <SiteSettingsProvider>
+                    <AnalyticsTracker />
                     <GoogleTranslate />
                     <Header />
                     <PageContent>

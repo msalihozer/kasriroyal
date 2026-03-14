@@ -1,6 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
@@ -18,10 +20,17 @@ import { CommentsModule } from './comments/comments.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { ContactModule } from './contact/contact.module';
 import { CustomTourRequestsModule } from './custom-tour-requests/custom-tour-requests.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { IpBlockMiddleware } from './common/ip-block.middleware';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
+        ThrottlerModule.forRoot([
+            { name: 'short',  ttl: 1000,  limit: 15  },
+            { name: 'medium', ttl: 10000, limit: 60  },
+            { name: 'long',   ttl: 60000, limit: 250 },
+        ]),
         ServeStaticModule.forRoot({
             rootPath: join(process.cwd(), 'uploads'),
             serveRoot: '/uploads',
@@ -42,6 +51,14 @@ import { CustomTourRequestsModule } from './custom-tour-requests/custom-tour-req
         ReservationsModule,
         ContactModule,
         CustomTourRequestsModule,
+        AnalyticsModule,
+    ],
+    providers: [
+        { provide: APP_GUARD, useClass: ThrottlerGuard },
     ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(IpBlockMiddleware).forRoutes('*');
+    }
+}

@@ -314,3 +314,21 @@ model CustomTourRequest {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }
+
+model PageView {
+  id        String   @id @default(uuid())
+  path      String
+  referrer  String?
+  device    String?
+  duration  Int?
+  sessionId String?
+  ip        String?
+  createdAt DateTime @default(now())
+}
+
+model BlockedIp {
+  id        String   @id @default(uuid())
+  ip        String   @unique
+  reason    String?
+  createdAt DateTime @default(now())
+}
