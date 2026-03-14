@@ -67,11 +67,14 @@ export class ToursService {
     async create(data: any) {
         // Handle relations manually if needed, or rely on frontend sending correct structure
         // assuming payload has: { title, ..., itinerary: [{ day, title, locationId, hotelId }] }
-        const { itinerary, ...rest } = data;
+        const { itinerary, vehicleId, categoryId, tourTypeId, ...rest } = data;
 
         return this.prisma.tour.create({
             data: {
                 ...rest,
+                vehicleId: vehicleId || null,
+                categoryId: categoryId || null,
+                tourTypeId: tourTypeId || null,
                 itinerary: itinerary ? {
                     create: itinerary.map((item: any) => ({
                         day: item.day,
@@ -89,7 +92,7 @@ export class ToursService {
     }
 
     async update(id: string, data: any) {
-        const { itinerary, ...rest } = data;
+        const { itinerary, vehicleId, categoryId, tourTypeId, ...rest } = data;
 
         // If itinerary is provided, we might want to delete existing and recreate, or update incrementally.
         // For simplicity in this demo: Delete all existing itineraries for this tour and recreate.
@@ -101,6 +104,9 @@ export class ToursService {
             where: { id },
             data: {
                 ...rest,
+                vehicleId: vehicleId || null,
+                categoryId: categoryId || null,
+                tourTypeId: tourTypeId || null,
                 itinerary: itinerary ? {
                     create: itinerary.map((item: any) => ({
                         day: item.day,
