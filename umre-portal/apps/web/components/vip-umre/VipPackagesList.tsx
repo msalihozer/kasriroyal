@@ -26,24 +26,25 @@ export default function VipPackagesList({ vipPages }: { vipPages: any[] }) {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true, margin: "-100px" }}
                                 transition={{ duration: 0.8, ease: "easeOut" }}
-                                className="w-full md:w-5/12 relative"
+                                className="w-full md:w-5/12 relative flex justify-center"
                             >
-                                <div className="aspect-[16/9] md:aspect-[4/3] max-w-sm mx-auto relative rounded-xl overflow-hidden shadow-lg">
+                                <div className="aspect-[16/9] md:aspect-[4/3] w-full max-w-sm relative rounded-xl overflow-hidden shadow-lg bg-gray-50 border border-gray-100">
                                     {page.imageUrl ? (
-                                        <div 
-                                            className="w-full h-full bg-cover bg-center bg-no-repeat bg-fixed hover:scale-105 transition-transform duration-[1.5s]"
-                                            style={{ backgroundImage: `url('${getImageUrl(page.imageUrl)}')` }}
-                                            title={page.title}
+                                        <Image
+                                            src={getImageUrl(page.imageUrl)}
+                                            alt={page.title}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                            className="object-contain p-4 hover:scale-105 transition-transform duration-[1.5s]"
                                         />
                                     ) : (
-                                        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                        <div className="w-full h-full flex items-center justify-center">
                                             <span className="text-gray-300 text-3xl font-serif">Royal</span>
                                         </div>
                                     )}
-                                    <div className="absolute inset-0 bg-black/5 hover:bg-transparent transition-colors duration-500"></div>
                                 </div>
                                 {/* Decorative Element */}
-                                <div className={`absolute -bottom-4 -z-10 w-full h-full border border-[#bda569]/30 rounded-xl ${isEven ? '-left-4' : '-right-4'}`}></div>
+                                <div className={`absolute -bottom-4 -z-10 w-full max-w-sm h-full border border-[#bda569]/30 rounded-xl ${isEven ? '-left-4' : '-right-4'}`}></div>
                             </motion.div>
 
                             {/* Content Side */}
