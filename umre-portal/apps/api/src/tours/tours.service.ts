@@ -12,8 +12,11 @@ export class ToursService {
 
         const where: any = { status: 'published' };
         if (featured) where.isFeatured = true;
-        if (category) where.category = { slug: category };
-        if (type) where.tourType = { slug: type };
+        
+        // Fix relation filtering: use is: { slug: ... } instead of direct assignment
+        if (category) where.category = { is: { slug: category } };
+        if (type) where.tourType = { is: { slug: type } };
+        
         if (days) where.durationDays = Number(days);
         // Date and Price filtering logic...
         if (q) where.title = { contains: q, mode: 'insensitive' };
@@ -67,7 +70,7 @@ export class ToursService {
     async create(data: any) {
         // Handle relations manually if needed, or rely on frontend sending correct structure
         // assuming payload has: { title, ..., itinerary: [{ day, title, locationId, hotelId }] }
-        const { itinerary, vehicleId, categoryId, tourTypeId, ...rest } = data;
+        const { itinerary, vehicleId, categoryId, tourTypeId, vehicle, category, tourType, ...rest } = data;
 
         return this.prisma.tour.create({
             data: {
@@ -92,7 +95,7 @@ export class ToursService {
     }
 
     async update(id: string, data: any) {
-        const { itinerary, vehicleId, categoryId, tourTypeId, ...rest } = data;
+        const { itinerary, vehicleId, categoryId, tourTypeId, vehicle, category, tourType, ...rest } = data;
 
         // If itinerary is provided, we might want to delete existing and recreate, or update incrementally.
         if (itinerary) {
