@@ -38,21 +38,20 @@ export default function VipCardGrid({ vipPages }: { vipPages: any[] }) {
                             className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100"
                         >
                             {/* Smaller Card Image */}
-                            <div className="h-48 relative overflow-hidden bg-gray-200">
+                            <div className="h-48 relative overflow-hidden bg-gray-50">
                                 {page.imageUrl ? (
                                     <Image
                                         src={getImageUrl(page.imageUrl)}
                                         alt={page.title}
                                         fill
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                        className="object-contain p-4 group-hover:scale-105 transition-transform duration-700"
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         <span className="text-3xl opacity-20 font-serif">Royal</span>
                                     </div>
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                             </div>
 
                             {/* Content - Minimalist */}
