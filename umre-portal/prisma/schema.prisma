@@ -8,57 +8,49 @@ datasource db {
 }
 
 model SiteSettings {
-  id                   String   @id @default(uuid())
-  logoUrl              String?
-  faviconUrl           String?
-  heroVideoUrl         String?
-  heroTitle            String?
-  heroSubtitle         String?
-  heroTitleColor       String?  @default("#ffffff")
-  socialLinks          Json?    // { instagram, facebook, youtube, x, tiktok, whatsapp }
+  id                    String   @id @default(uuid())
+  logoUrl               String?
+  faviconUrl            String?
+  socialLinks           Json?
   footerDiyanetImageUrl String?
-  footerDiyanetLink    String?
-
-  footerAgencyImageUrl String?
-  footerAgencyLink     String?
-  
-  // Dynamic Settings
-  phones               Json?    // Array of { label, number }
-  footerLogos          Json?    // Array of { imageUrl, alt, link }
-
-  // Contact Info
-  firmName             String?
-  address              String?
-  email                String?
-  phone                String? // Deprecated in favor of phones
-  mapEmbedUrl          String?  // Google Maps Embed URL
-  
-  // About Page
-  mission              String?  @db.Text
-  vision               String?  @db.Text
-  bankAccounts         Json?    // Array of { bankName, iban, branch, accountHolder }
-
-  tourImportantNotes   String?  // Global warning text for tours
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  footerDiyanetLink     String?
+  footerAgencyImageUrl  String?
+  footerAgencyLink      String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  address               String?
+  bankAccounts          Json?
+  email                 String?
+  firmName              String?
+  footerLogos           Json?
+  heroSubtitle          String?
+  heroTitle             String?
+  heroTitleColor        String?  @default("#ffffff")
+  heroVideoUrl          String?
+  mapEmbedUrl           String?
+  mission               String?
+  phone                 String?
+  phones                Json?
+  tourImportantNotes    String?
+  vision                String?
 }
 
 model MenuItem {
-  id         String  @id @default(uuid())
+  id         String     @id @default(uuid())
   label      String
   url        String
   parentId   String?
-  parent     MenuItem? @relation("MenuHierarchy", fields: [parentId], references: [id])
-  children   MenuItem[] @relation("MenuHierarchy")
   orderIndex Int
-  isActive   Boolean @default(true)
+  isActive   Boolean    @default(true)
+  parent     MenuItem?  @relation("MenuHierarchy", fields: [parentId], references: [id])
+  children   MenuItem[] @relation("MenuHierarchy")
 }
 
 model Media {
   id        String   @id @default(uuid())
   url       String
   altText   String?
-  type      String   // "image" | "video"
+  type      String
   createdAt DateTime @default(now())
 }
 
@@ -66,18 +58,18 @@ model Page {
   id             String    @id @default(uuid())
   title          String
   slug           String    @unique
-  status         String    @default("draft") // "draft" | "published"
-  category       String    @default("general") // "general" | "vip-umre"
-  summary        String?   // Added for VIP Umre cards
-  content        String?   // Added for rich text HTML
-  imageUrl       String?   // Added for card cover image
+  status         String    @default("draft")
   seoTitle       String?
   seoDescription String?
   ogImageUrl     String?
-  blocks         Json?     // array of blocks
+  blocks         Json?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   publishedAt    DateTime?
+  category       String    @default("general")
+  content        String?
+  imageUrl       String?
+  summary        String?
 }
 
 model TourCategory {
@@ -89,137 +81,108 @@ model TourCategory {
 
 model TourType {
   id    String @id @default(uuid())
-  name  String // "Butik", "Deluxe", "Royal"
+  name  String
   slug  String @unique
   tours Tour[]
 }
 
 model TourItinerary {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   tourId      String
-  tour        Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
-  day         Int      // Gün sırası (1, 2, 3...)
-  title       String   // "Mekke'ye Varış"
-  description String?  // Detaylı açıklama
+  day         Int
+  title       String
+  description String?
   locationId  String?
-  location    Location? @relation(fields: [locationId], references: [id])
   hotelId     String?
   hotel       Hotel?    @relation(fields: [hotelId], references: [id])
+  location    Location? @relation(fields: [locationId], references: [id])
+  tour        Tour      @relation(fields: [tourId], references: [id], onDelete: Cascade)
 }
 
 model Tour {
-  id             String        @id @default(uuid())
-  title          String
-  slug           String        @unique
-  summary        String?
-  content        String?       // rich text html
-  
-  // Relations
-  categoryId     String?
-  category       TourCategory? @relation(fields: [categoryId], references: [id])
-  
-  tourTypeId     String?
-  tourType       TourType?     @relation(fields: [tourTypeId], references: [id])
-  
-  itinerary      TourItinerary[]
-
-  // Vehicle Info
-  vehicleId      String?
-  vehicle        Vehicle?      @relation(fields: [vehicleId], references: [id])
-
-  // Dates & Locations
-  startDates     Json?         // Keep for legacy/multiple
-  startDate      DateTime?     // Specific start
-  endDate        DateTime?     // Specific end
-  returnDate     DateTime?     // Specific return (if different from endDate logic)
-  
-  durationDays   Int
-  durationNights Int?
-  
-  locationStays  Json?         // [{ locationId: "...", nights: 3 }]
-
-  departureLocation String?   // "İstanbul"
-  returnLocation    String?   // "Cidde" or "İstanbul"
-  airline           String?   // "THY", "Pegasus"
-
-  // Pricing (Flexible JSON structure)
-  // { single: 1500, double: 1200, triple: 1000, child_0_2: 0, child_3_6: 500, child_7_11: 800, currency: "USD" }
-  pricing        Json?
-  priceFrom      Decimal?      // Base price for filtering
-  currency       String        @default("USD")
-
-  included       Json?         // array string
-  excluded       Json?         // array string
-  gallery        Json?         // array of media urls
-
-  // Labels
-  label          String?       // "Sömestr Özel", "Ramazan Kampanyası"
-
-  isFeatured     Boolean       @default(false)
-  status         String        @default("draft") // "draft" | "published"
-  
-  seoTitle       String?
-  seoDescription String?
-  ogImageUrl     String?
-  
-  excludedText   String?       // Rich text for excluded services
-
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  publishedAt    DateTime?
+  id                String          @id @default(uuid())
+  title             String
+  slug              String          @unique
+  summary           String?
+  content           String?
+  durationDays      Int
+  priceFrom         Decimal?
+  currency          String          @default("USD")
+  isFeatured        Boolean         @default(false)
+  categoryId        String?
+  startDates        Json?
+  included          Json?
+  excluded          Json?
+  gallery           Json?
+  status            String          @default("draft")
+  seoTitle          String?
+  seoDescription    String?
+  ogImageUrl        String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  publishedAt       DateTime?
+  airline           String?
+  departureLocation String?
+  durationNights    Int?
+  endDate           DateTime?
+  excludedText      String?
+  label             String?
+  locationStays     Json?
+  pricing           Json?
+  returnDate        DateTime?
+  returnLocation    String?
+  startDate         DateTime?
+  tourTypeId        String?
+  vehicleId         String?
+  category          TourCategory?   @relation(fields: [categoryId], references: [id])
+  tourType          TourType?       @relation(fields: [tourTypeId], references: [id])
+  vehicle           Vehicle?        @relation(fields: [vehicleId], references: [id])
+  itinerary         TourItinerary[]
 }
 
 model Location {
-  id        String   @id @default(uuid())
-  name      String   // "Mekke", "Medine", "Cidde"
-  slug      String   @unique
-  imageUrl  String?
-  hotels    Hotel[]
+  id          String          @id @default(uuid())
+  name        String
+  slug        String          @unique
+  imageUrl    String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  hotels      Hotel[]
   itineraries TourItinerary[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model HotelFeature {
   id        String   @id @default(uuid())
-  name      String   // "Wifi", "Kahvaltı"
-  icon      String?  // Lucide icon name or image url
-  category  String?  // "Konaklama yerinin özellikleri", "Oda özellikleri", vs.
-  hotels    Hotel[]
+  name      String
+  icon      String?
+  category  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  hotels    Hotel[]  @relation("HotelToHotelFeature")
 }
 
 model Hotel {
-  id          String    @id @default(uuid())
-  title       String
-  slug        String    @unique
-  imageUrl    String?
-  stars       Int?
+  id               String          @id @default(uuid())
+  title            String
+  slug             String          @unique
+  stars            Int?
+  description      String?
+  gallery          Json?
+  lat              Decimal?
+  lng              Decimal?
+  isFeatured       Boolean         @default(false)
+  status           String          @default("draft")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  publishedAt      DateTime?
+  imageUrl         String?
+  locationId       String?
+  locationText     String?
   shortDescription String?
-  description String?   // rich text html
-  gallery     Json?
-  
-  locationId  String?
-  location    Location? @relation(fields: [locationId], references: [id])
-  
-  features    HotelFeature[]
-  itineraries TourItinerary[]
-
-  locationText String?   // "Mekke, Haram'a 500m"
-  websiteUrl   String?
-  
-  // Deprecated fields (keep for migration if needed, or remove if fresh)
-  // city        String 
-  // featuresJson Json? 
-
-  lat         Decimal?
-  lng         Decimal?
-  isFeatured  Boolean   @default(false)
-  status      String    @default("draft") // "draft" | "published"
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  publishedAt DateTime?
+  websiteUrl       String?
+  location         Location?       @relation(fields: [locationId], references: [id])
+  itineraries      TourItinerary[]
+  features         HotelFeature[]  @relation("HotelToHotelFeature")
 }
 
 model Vehicle {
@@ -229,12 +192,12 @@ model Vehicle {
   description String?
   imageUrl    String?
   features    Json?
-  tours       Tour[]
   isFeatured  Boolean   @default(false)
-  status      String    @default("draft") // "draft" | "published"
+  status      String    @default("draft")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   publishedAt DateTime?
+  tours       Tour[]
 }
 
 model PostCategory {
@@ -249,24 +212,24 @@ model Post {
   title          String
   slug           String        @unique
   excerpt        String?
-  content        String?       // rich text html
+  content        String?
   coverImageUrl  String?
   categoryId     String?
-  category       PostCategory? @relation(fields: [categoryId], references: [id])
   tags           Json?
-  status         String        @default("draft") // "draft" | "published"
+  status         String        @default("draft")
   publishedAt    DateTime?
   seoTitle       String?
   seoDescription String?
   ogImageUrl     String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+  category       PostCategory? @relation(fields: [categoryId], references: [id])
 }
 
 model Testimonial {
   id         String   @id @default(uuid())
   fullName   String
-  rating     Int      // 1-5
+  rating     Int
   comment    String
   avatarUrl  String?
   isFeatured Boolean  @default(false)
@@ -286,7 +249,7 @@ model AdminUser {
   id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String
-  role         String   // "ADMIN" | "EDITOR"
+  role         String
   createdAt    DateTime @default(now())
 }
 
@@ -297,7 +260,7 @@ model EmailSettings {
   user              String
   pass              String
   fromEmail         String
-  notificationEmail String   // Where admin notifications go
+  notificationEmail String
   updatedAt         DateTime @updatedAt
 }
 
@@ -305,13 +268,10 @@ model Comment {
   id          String   @id @default(uuid())
   name        String
   content     String
-  rating      Int      // 1-5
-  
-  // Relations (Polymorphic-like via optional fields)
-  type        String   // "Page" | "Tour" | "Hotel"
-  entityId    String   // ID of the related entity (Page, Tour, or Hotel)
-  entityName  String?  // Name of the entity for display in admin
-  
+  rating      Int
+  type        String
+  entityId    String
+  entityName  String?
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
@@ -323,50 +283,34 @@ model Reservation {
   email       String?
   city        String?
   personCount Int
-  
-  // Context
   tourId      String?
   tourName    String?
-  
   note        String?
-  status      String   @default("pending") // "pending" | "contacted" | "completed" | "cancelled"
+  status      String   @default("pending")
   createdAt   DateTime @default(now())
 }
 
 model CustomTourRequest {
-  id          String   @id @default(uuid())
-  
-  // Personal Info
-  fullName    String
-  phone       String
-  email       String
-  personCount Int
-  
-  // Dates & Locations
-  mekkeDays   Int?
-  medineDays  Int?
-  startDate   DateTime? // Optional: Desired start date
-  
-  // Flight
-  airline       String? // "THY", "Pegasus", "Saudia", etc.
-  flightClass   String? // "Economy", "Business"
-  departureCity String? // New addition based on "Kalkış Yeri" context usually needed
-  
-  // Accommodation
-  hotelChoiceType String? // "specific" | "preference"
-  hotelSelection  Json?   // If specific: [{ location: "Mekke", hotelId: "..." }]
-  hotelPreference Json?   // If preference: { class: "Deluxe", distance: "Walking", view: "Kaaba" }
-  
-  // Transfer
-  transferChoiceType String? // "specific" | "service"
-  vehicleSelection   String? // If specific: Vehicle ID
-  transferService    String? // "VIP" | "Economic"
-  
-  // Extras
-  guideRequested Boolean @default(false)
-  message        String?
-  
-  status      String   @default("pending") // "pending" | "processed" | "archived"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 String    @id @default(uuid())
+  fullName           String
+  phone              String
+  email              String
+  personCount        Int
+  mekkeDays          Int?
+  medineDays         Int?
+  startDate          DateTime?
+  airline            String?
+  flightClass        String?
+  departureCity      String?
+  hotelChoiceType    String?
+  hotelSelection     Json?
+  hotelPreference    Json?
+  transferChoiceType String?
+  vehicleSelection   String?
+  transferService    String?
+  guideRequested     Boolean   @default(false)
+  message            String?
+  status             String    @default("pending")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 }
