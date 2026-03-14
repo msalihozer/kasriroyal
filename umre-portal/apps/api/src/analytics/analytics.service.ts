@@ -64,13 +64,22 @@ export class AnalyticsService {
             dailySeries,
             avgDuration,
         ] = await Promise.all([
-            // Bugün
-            this.prisma.pageView.count({ where: { createdAt: { gte: todayStart } } }),
-            // Bu hafta
-            this.prisma.pageView.count({ where: { createdAt: { gte: weekStart } } }),
-            // Bu ay
-            this.prisma.pageView.count({ where: { createdAt: { gte: monthStart } } }),
-            // Top 5 sayfa
+            // Bugün - tekil oturum sayısı
+            this.prisma.$queryRaw<{ count: bigint }[]>`
+                SELECT COUNT(DISTINCT "sessionId") as count FROM "PageView"
+                WHERE "createdAt" >= ${todayStart}
+            `,
+            // Bu hafta - tekil oturum
+            this.prisma.$queryRaw<{ count: bigint }[]>`
+                SELECT COUNT(DISTINCT "sessionId") as count FROM "PageView"
+                WHERE "createdAt" >= ${weekStart}
+            `,
+            // Bu ay - tekil oturum
+            this.prisma.$queryRaw<{ count: bigint }[]>`
+                SELECT COUNT(DISTINCT "sessionId") as count FROM "PageView"
+                WHERE "createdAt" >= ${monthStart}
+            `,
+            // Top 5 sayfa (sayfa başı toplam görüntülenme)
             this.prisma.pageView.groupBy({
                 by: ['path'],
                 _count: { path: true },
@@ -84,9 +93,9 @@ export class AnalyticsService {
                 _count: { device: true },
                 where: { createdAt: { gte: monthStart } },
             }),
-            // Son 30 gün günlük seri (raw query)
+            // Son 30 gün günlük TEKİL ziyaretçi serisi
             this.prisma.$queryRaw<{ date: string; count: bigint }[]>`
-                SELECT DATE("createdAt") as date, COUNT(*) as count
+                SELECT DATE("createdAt") as date, COUNT(DISTINCT "sessionId") as count
                 FROM "PageView"
                 WHERE "createdAt" >= ${monthStart}
                 GROUP BY DATE("createdAt")
@@ -100,9 +109,9 @@ export class AnalyticsService {
         ]);
 
         return {
-            today: todayViews,
-            week: weekViews,
-            month: monthViews,
+            today:  Number((todayViews as { count: bigint }[])[0]?.count ?? 0),
+            week:   Number((weekViews  as { count: bigint }[])[0]?.count ?? 0),
+            month:  Number((monthViews as { count: bigint }[])[0]?.count ?? 0),
             topPages: topPages.map((p) => ({ path: p.path, count: p._count.path })),
             devices: deviceStats.map((d) => ({ device: d.device || 'unknown', count: d._count.device })),
             dailySeries: dailySeries.map((d) => ({
@@ -111,6 +120,7 @@ export class AnalyticsService {
             })),
             avgDuration: Math.round(avgDuration._avg.duration || 0),
         };
+
     }
 
     async getBlockedIps() {
