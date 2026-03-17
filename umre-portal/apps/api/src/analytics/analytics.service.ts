@@ -31,6 +31,19 @@ export class AnalyticsService {
         const device = data.userAgent ? this.detectDevice(data.userAgent) : undefined;
         const hashedIp = data.ip ? this.hashIp(data.ip) : undefined;
 
+        // Prevent duplicate hits for same session + path within 15 minutes
+        if (data.sessionId && !data.duration) { // Duration check means it's an update, don't deduplicate updates
+            const fifteenMinsAgo = new Date(Date.now() - 15 * 60 * 1000);
+            const recentView = await this.prisma.pageView.findFirst({
+                where: {
+                    sessionId: data.sessionId,
+                    path: data.path,
+                    createdAt: { gte: fifteenMinsAgo }
+                }
+            });
+            if (recentView) return { ok: true, duplicated: true };
+        }
+
         await this.prisma.pageView.create({
             data: {
                 path: data.path,
@@ -41,6 +54,22 @@ export class AnalyticsService {
                 ip: hashedIp,
             },
         });
+
+        // Increment Blog Post View Count if applicable
+        if (data.path.startsWith('/blog/') && !data.duration) {
+            const slug = data.path.replace('/blog/', '').split('?')[0];
+            if (slug && slug !== '') {
+                try {
+                    await this.prisma.post.update({
+                        where: { slug },
+                        data: { viewCount: { increment: 1 } }
+                    });
+                } catch (e) {
+                    // Slug might not exist or be invalid, ignore
+                }
+            }
+        }
+
         return { ok: true };
     }
 
@@ -64,7 +93,7 @@ export class AnalyticsService {
             dailySeries,
             avgDuration,
         ] = await Promise.all([
-            // Bugün - tekil oturum sayısı
+            // Bugün - tekil oturum sayısı (Ziyaretçi)
             this.prisma.$queryRaw<{ count: bigint }[]>`
                 SELECT COUNT(DISTINCT "sessionId") as count FROM "PageView"
                 WHERE "createdAt" >= ${todayStart}
@@ -79,20 +108,22 @@ export class AnalyticsService {
                 SELECT COUNT(DISTINCT "sessionId") as count FROM "PageView"
                 WHERE "createdAt" >= ${monthStart}
             `,
-            // Top 5 sayfa (sayfa başı toplam görüntülenme)
-            this.prisma.pageView.groupBy({
-                by: ['path'],
-                _count: { path: true },
-                orderBy: { _count: { path: 'desc' } },
-                take: 5,
-                where: { createdAt: { gte: monthStart } },
-            }),
-            // Cihaz dağılımı
-            this.prisma.pageView.groupBy({
-                by: ['device'],
-                _count: { device: true },
-                where: { createdAt: { gte: monthStart } },
-            }),
+            // Top 5 sayfa (Tekil oturum bazlı popülerlik)
+            this.prisma.$queryRaw<{ path: string; count: bigint }[]>`
+                SELECT "path", COUNT(DISTINCT "sessionId") as count 
+                FROM "PageView"
+                WHERE "createdAt" >= ${monthStart}
+                GROUP BY "path"
+                ORDER BY count DESC
+                LIMIT 5
+            `,
+            // Cihaz dağılımı (Tekil oturum bazlı)
+            this.prisma.$queryRaw<{ device: string; count: bigint }[]>`
+                SELECT "device", COUNT(DISTINCT "sessionId") as count
+                FROM "PageView"
+                WHERE "createdAt" >= ${monthStart} AND "device" IS NOT NULL
+                GROUP BY "device"
+            `,
             // Son 30 gün günlük TEKİL ziyaretçi serisi
             this.prisma.$queryRaw<{ date: string; count: bigint }[]>`
                 SELECT DATE("createdAt") as date, COUNT(DISTINCT "sessionId") as count
@@ -112,15 +143,14 @@ export class AnalyticsService {
             today:  Number((todayViews as { count: bigint }[])[0]?.count ?? 0),
             week:   Number((weekViews  as { count: bigint }[])[0]?.count ?? 0),
             month:  Number((monthViews as { count: bigint }[])[0]?.count ?? 0),
-            topPages: topPages.map((p) => ({ path: p.path, count: p._count.path })),
-            devices: deviceStats.map((d) => ({ device: d.device || 'unknown', count: d._count.device })),
+            topPages: topPages.map((p) => ({ path: p.path, count: Number(p.count) })),
+            devices: deviceStats.map((d) => ({ device: d.device || 'unknown', count: Number(d.count) })),
             dailySeries: dailySeries.map((d) => ({
                 date: d.date,
                 count: Number(d.count),
             })),
             avgDuration: Math.round(avgDuration._avg.duration || 0),
         };
-
     }
 
     async getBlockedIps() {

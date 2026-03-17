@@ -16,7 +16,7 @@ export default function PostsPage() {
     const fetchPosts = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts?status=all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

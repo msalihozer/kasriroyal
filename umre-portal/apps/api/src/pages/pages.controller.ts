@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { PagesService } from './pages.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,8 +14,8 @@ export class PagesController {
     }
 
     @Get()
-    findAll() {
-        return this.pagesService.findAll();
+    findAll(@Query() query: any) {
+        return this.pagesService.findAll(query);
     }
 
     @UseGuards(JwtAuthGuard)

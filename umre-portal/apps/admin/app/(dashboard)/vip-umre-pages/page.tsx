@@ -16,7 +16,7 @@ export default function VipUmrePagesPage() {
     const fetchPages = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/pages`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/pages?status=all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

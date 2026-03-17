@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getImageUrl } from '@/utils/image-url';
 import { ArrowLeft, Calendar, User, Clock, Share2 } from 'lucide-react';
+import BlogShareButtons from '@/components/blog/BlogShareButtons';
 
 async function getPost(slug: string) {
     try {
@@ -33,10 +34,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     // Calculate read time (rough estimate)
     const readTime = Math.ceil((post.content?.length || 0) / 1000) || 1;
 
+    // Sharing URL
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kasriroyal.com';
+    const postUrl = `${baseUrl}/blog/${params.slug}`;
+
     return (
         <article className="min-h-screen bg-[#f8f9fa] font-sans pb-20">
             {/* Navigation Bar (Sticky) */}
-            <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 py-4">
+            <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 py-4 shadow-sm">
                 <div className="container mx-auto px-4 max-w-4xl flex items-center justify-between">
                     <Link
                         href="/blog"
@@ -46,9 +51,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                         Blog'a Dön
                     </Link>
                     <div className="flex items-center gap-4">
-                        <button className="text-gray-400 hover:text-primary-600 transition-colors">
-                            <Share2 size={20} />
-                        </button>
+                        <BlogShareButtons url={postUrl} title={post.title} />
                     </div>
                 </div>
             </div>
@@ -79,10 +82,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                             <Clock size={18} className="text-primary-500" />
                             <span>{readTime} dk okuma</span>
                         </div>
-                        {/* Author placeholder if needed */}
                         <div className="flex items-center gap-2">
                             <User size={18} className="text-primary-500" />
-                            <span>Editör</span>
+                            <span>{post.viewCount || 0} okuma</span>
                         </div>
                     </div>
                 </div>
@@ -114,6 +116,15 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     "
                     dangerouslySetInnerHTML={{ __html: post.content }}
                 />
+
+                {/* Sharing Section */}
+                <div className="mt-12 p-8 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <h4 className="text-xl font-bold text-gray-900 mb-1">Bu Yazıyı Paylaşın</h4>
+                        <p className="text-gray-500 text-sm">Faydalı bulduysanız sevdiklerinizle paylaşabilirsiniz.</p>
+                    </div>
+                    <BlogShareButtons url={postUrl} title={post.title} />
+                </div>
 
                 {/* Tags or Footer Info */}
                 <div className="mt-16 pt-8 border-t border-gray-200">

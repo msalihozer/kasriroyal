@@ -16,15 +16,29 @@ export const metadata: Metadata = {
     description: 'En iyi umre ve kültür turları',
 };
 
-export default function RootLayout({
+async function getSiteSettings() {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/site-settings`, {
+            next: { revalidate: 3600 } // Cache for 1 hour
+        });
+        if (res.ok) return await res.json();
+    } catch (err) {
+        console.error(err);
+    }
+    return {};
+}
+
+export default async function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const siteSettings = await getSiteSettings();
+
     return (
         <html lang="tr">
             <body className={inter.className}>
-                <SiteSettingsProvider>
+                <SiteSettingsProvider initialSettings={siteSettings}>
                     <AnalyticsTracker />
                     <GoogleTranslate />
                     <Header />

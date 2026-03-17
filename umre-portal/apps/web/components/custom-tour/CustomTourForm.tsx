@@ -342,120 +342,143 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                             </div>
 
                             {/* Mekke Otelleri */}
-                            <div className="mb-8">
-                                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><MapPin size={20} className="text-gray-400" /> Mekke Oteli Seçimi</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {effectiveMekkeHotels.length === 0 && (
-                                        <div className="md:col-span-2 lg:col-span-3 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100 text-sm flex items-center gap-2">
-                                            <Info size={16} className="shrink-0" />
-                                            Sistemde gösterilecek Mekke oteli bulunamadı. Lütfen &quot;Farklı Bir Otel İstiyorum&quot; seçeneğiyle devam edin.
-                                        </div>
-                                    )}
-                                    {effectiveMekkeHotels.map(hotel => (
-                                        <div key={hotel.id}
-                                            onClick={() => handleSelection('selectedMekkeHotelId', String(hotel.id))}
-                                            className={`relative border rounded-xl overflow-hidden cursor-pointer group transition-all ${String(formData.selectedMekkeHotelId) === String(hotel.id) ? 'ring-2 ring-[#bda569] border-[#bda569]' : 'border-gray-200 hover:border-blue-300'}`}
+                            <div className="mb-12">
+                                <h3 className="font-bold text-xl mb-6 flex items-center gap-2"><MapPin size={24} className="text-[#bda569]" /> Mekke Oteli Seçimi</h3>
+                                <div className="relative group/carousel">
+                                    <div className="flex overflow-x-auto gap-6 pb-6 snap-x no-scrollbar scroll-smooth">
+                                        {effectiveMekkeHotels.length === 0 && (
+                                            <div className="min-w-full p-8 bg-blue-50 text-blue-800 rounded-2xl border border-blue-100 flex items-center justify-center gap-3">
+                                                <Info size={20} />
+                                                Sistemde gösterilecek Mekke oteli bulunamadı. Lütfen sağdaki &quot;Farklı Bir Otel&quot; seçeneğiyle devam edin.
+                                            </div>
+                                        )}
+                                        {effectiveMekkeHotels.map(hotel => (
+                                            <div key={hotel.id}
+                                                onClick={() => handleSelection('selectedMekkeHotelId', String(hotel.id))}
+                                                className={`min-w-[280px] md:min-w-[320px] snap-start relative border-2 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ${String(formData.selectedMekkeHotelId) === String(hotel.id) ? 'ring-4 ring-[#bda569]/20 border-[#bda569]' : 'border-gray-100 hover:border-[#bda569]/50 shadow-sm hover:shadow-md'}`}
+                                            >
+                                                <div className="aspect-[4/3] relative bg-gray-100 overflow-hidden">
+                                                    <img
+                                                        src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : 'https://images.unsplash.com/photo-1565552629477-09be08370df4?q=80&w=2000'}
+                                                        alt={hotel.title || 'Otel'}
+                                                        className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                                                    {(hotel.locationText || hotel.distance) && (
+                                                        <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                                                            <MapPin size={12} className="text-[#bda569]" /> {hotel.locationText || hotel.distance}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="p-5">
+                                                    <h4 className="font-bold text-gray-900 mb-1 line-clamp-1">{hotel.title}</h4>
+                                                    <div className="flex text-yellow-400 text-sm mb-3">
+                                                        {Array(hotel.stars || 5).fill(0).map((_, i) => <span key={i}>★</span>)}
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <Link
+                                                            href={`/oteller/${hotel.slug}`}
+                                                            target="_blank"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="text-xs font-bold text-[#bda569] hover:underline flex items-center gap-1"
+                                                        >
+                                                            Detaylar <ExternalLink size={12} />
+                                                        </Link>
+                                                        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${String(formData.selectedMekkeHotelId) === String(hotel.id) ? 'bg-[#bda569] border-[#bda569] scale-110 shadow-lg shadow-[#bda569]/30' : 'border-gray-200 bg-white'}`}>
+                                                            {String(formData.selectedMekkeHotelId) === String(hotel.id) ? <CheckCircle size={16} className="text-white" /> : <div className="w-2 h-2 rounded-full bg-gray-200" />}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        {/* Others / Custom Choice Card */}
+                                        <div
+                                            onClick={() => handleSelection('selectedMekkeHotelId', 'others')}
+                                            className={`min-w-[200px] snap-start border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-center p-6 cursor-pointer transition-all duration-300 ${formData.selectedMekkeHotelId === 'others' ? 'bg-[#bda569]/5 border-[#bda569] ring-4 ring-[#bda569]/10' : 'border-gray-200 hover:border-[#bda569]/50 hover:bg-gray-50'}`}
                                         >
-                                            <div className="aspect-video relative bg-gray-100">
-                                                <img
-                                                    src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : 'https://images.unsplash.com/photo-1565552629477-09be08370df4?q=80&w=2000'}
-                                                    alt={hotel.title || 'Otel'}
-                                                    className="object-cover w-full h-full"
-                                                />
-                                                {/* Distance / Location Badge */}
-                                                {(hotel.locationText || hotel.distance) && (
-                                                    <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                                                        <MapPin size={12} /> {hotel.locationText || hotel.distance || 'Merkeze yakın'}
-                                                    </div>
-                                                )}
+                                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-[#bda569]">
+                                                <Hotel size={24} />
                                             </div>
-                                            <div className="p-4">
-                                                <h4 className="font-bold text-lg mb-1">{hotel.title}</h4>
-                                                {/* Stars */}
-                                                <div className="flex text-yellow-400 text-xs mb-2">
-                                                    {Array(hotel.stars || 5).fill(0).map((_, i) => <span key={i}>★</span>)}
-                                                </div>
-                                                <div className="flex justify-between items-center mt-3">
-                                                    <Link
-                                                        href={`/oteller/${hotel.slug}`}
-                                                        target="_blank"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                        className="text-xs text-blue-600 hover:underline flex items-center gap-1"
-                                                    >
-                                                        İncele <ExternalLink size={12} />
-                                                    </Link>
-                                                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${String(formData.selectedMekkeHotelId) === String(hotel.id) ? 'bg-[#bda569] border-[#bda569]' : 'border-gray-300'}`}>
-                                                        {String(formData.selectedMekkeHotelId) === String(hotel.id) && <CheckCircle size={12} className="text-white" />}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <span className="font-bold text-gray-900 mb-2">Farklı Bir Otel</span>
+                                            <span className="text-xs text-gray-500">Size özel bir<br/>teklif hazırlayalım</span>
                                         </div>
-                                    ))}
-                                    <div
-                                        onClick={() => handleSelection('selectedMekkeHotelId', 'others')}
-                                        className={`border rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${formData.selectedMekkeHotelId === 'others' ? 'ring-2 ring-[#bda569] border-[#bda569] bg-orange-50' : 'border-gray-200 hover:bg-gray-50'}`}
-                                    >
-                                        <span className="font-bold text-gray-700 text-sm">Farklı Bir Otel İstiyorum</span>
-                                        <span className="text-xs text-gray-400 mt-1">Danışmanımız size özel önerecek</span>
+                                    </div>
+                                    
+                                    {/* Carousel Indicators for scroll hints on mobile */}
+                                    <div className="md:hidden flex justify-center gap-1.5 mt-2">
+                                        <div className="w-8 h-1 bg-[#bda569] rounded-full"></div>
+                                        <div className="w-2 h-1 bg-gray-200 rounded-full"></div>
+                                        <div className="w-2 h-1 bg-gray-200 rounded-full"></div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Medine Otelleri */}
-                            <div className="mb-8">
-                                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><MapPin size={20} className="text-gray-400" /> Medine Oteli Seçimi</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {effectiveMedineHotels.length === 0 && (
-                                        <div className="md:col-span-2 lg:col-span-3 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100 text-sm flex items-center gap-2">
-                                            <Info size={16} className="shrink-0" />
-                                            Sistemde gösterilecek Medine oteli bulunamadı. Lütfen &quot;Farklı Bir Otel İstiyorum&quot; seçeneğiyle devam edin.
-                                        </div>
-                                    )}
-                                    {effectiveMedineHotels.map(hotel => (
-                                        <div key={hotel.id}
-                                            onClick={() => handleSelection('selectedMedineHotelId', String(hotel.id))}
-                                            className={`relative border rounded-xl overflow-hidden cursor-pointer group transition-all ${String(formData.selectedMedineHotelId) === String(hotel.id) ? 'ring-2 ring-[#bda569] border-[#bda569]' : 'border-gray-200 hover:border-blue-300'}`}
+                            <div className="mb-12">
+                                <h3 className="font-bold text-xl mb-6 flex items-center gap-2"><MapPin size={24} className="text-[#bda569]" /> Medine Oteli Seçimi</h3>
+                                <div className="relative group/carousel">
+                                    <div className="flex overflow-x-auto gap-6 pb-6 snap-x no-scrollbar scroll-smooth">
+                                        {effectiveMedineHotels.length === 0 && (
+                                            <div className="min-w-full p-8 bg-blue-50 text-blue-800 rounded-2xl border border-blue-100 flex items-center justify-center gap-3">
+                                                <Info size={20} />
+                                                Sistemde gösterilecek Medine oteli bulunamadı. Lütfen sağdaki &quot;Farklı Bir Otel&quot; seçeneğiyle devam edin.
+                                            </div>
+                                        )}
+                                        {effectiveMedineHotels.map(hotel => (
+                                            <div key={hotel.id}
+                                                onClick={() => handleSelection('selectedMedineHotelId', String(hotel.id))}
+                                                className={`min-w-[280px] md:min-w-[320px] snap-start relative border-2 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ${String(formData.selectedMedineHotelId) === String(hotel.id) ? 'ring-4 ring-[#bda569]/20 border-[#bda569]' : 'border-gray-100 hover:border-[#bda569]/50 shadow-sm hover:shadow-md'}`}
+                                            >
+                                                <div className="aspect-[4/3] relative bg-gray-100 overflow-hidden">
+                                                    <img
+                                                        src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?q=80&w=2000'}
+                                                        alt={hotel.title || 'Otel'}
+                                                        className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                                                    {(hotel.locationText || hotel.distance) && (
+                                                        <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                                                            <MapPin size={12} className="text-[#bda569]" /> {hotel.locationText || hotel.distance}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="p-5">
+                                                    <h4 className="font-bold text-gray-900 mb-1 line-clamp-1">{hotel.title}</h4>
+                                                    <div className="flex text-yellow-400 text-sm mb-3">
+                                                        {Array(hotel.stars || 5).fill(0).map((_, i) => <span key={i}>★</span>)}
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <Link
+                                                            href={`/oteller/${hotel.slug}`}
+                                                            target="_blank"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="text-xs font-bold text-[#bda569] hover:underline flex items-center gap-1"
+                                                        >
+                                                            Detaylar <ExternalLink size={12} />
+                                                        </Link>
+                                                        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${String(formData.selectedMedineHotelId) === String(hotel.id) ? 'bg-[#bda569] border-[#bda569] scale-110 shadow-lg shadow-[#bda569]/30' : 'border-gray-200 bg-white'}`}>
+                                                            {String(formData.selectedMedineHotelId) === String(hotel.id) ? <CheckCircle size={16} className="text-white" /> : <div className="w-2 h-2 rounded-full bg-gray-200" />}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <div
+                                            onClick={() => handleSelection('selectedMedineHotelId', 'others')}
+                                            className={`min-w-[200px] snap-start border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-center p-6 cursor-pointer transition-all duration-300 ${formData.selectedMedineHotelId === 'others' ? 'bg-[#bda569]/5 border-[#bda569] ring-4 ring-[#bda569]/10' : 'border-gray-200 hover:border-[#bda569]/50 hover:bg-gray-50'}`}
                                         >
-                                            <div className="aspect-video relative bg-gray-100">
-                                                <img
-                                                    src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?q=80&w=2000'}
-                                                    alt={hotel.title || 'Otel'}
-                                                    className="object-cover w-full h-full"
-                                                />
-                                                {/* Distance / Location Badge */}
-                                                {(hotel.locationText || hotel.distance) && (
-                                                    <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                                                        <MapPin size={12} /> {hotel.locationText || hotel.distance || 'Merkeze yakın'}
-                                                    </div>
-                                                )}
+                                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-[#bda569]">
+                                                <Hotel size={24} />
                                             </div>
-                                            <div className="p-4">
-                                                <h4 className="font-bold text-lg mb-1">{hotel.title}</h4>
-                                                <div className="flex text-yellow-400 text-xs mb-2">
-                                                    {Array(hotel.stars || 5).fill(0).map((_, i) => <span key={i}>★</span>)}
-                                                </div>
-                                                <div className="flex justify-between items-center mt-3">
-                                                    <Link
-                                                        href={`/oteller/${hotel.slug}`}
-                                                        target="_blank"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                        className="text-xs text-blue-600 hover:underline flex items-center gap-1"
-                                                    >
-                                                        İncele <ExternalLink size={12} />
-                                                    </Link>
-                                                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${String(formData.selectedMedineHotelId) === String(hotel.id) ? 'bg-[#bda569] border-[#bda569]' : 'border-gray-300'}`}>
-                                                        {String(formData.selectedMedineHotelId) === String(hotel.id) && <CheckCircle size={12} className="text-white" />}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <span className="font-bold text-gray-900 mb-2">Farklı Bir Otel</span>
+                                            <span className="text-xs text-gray-500">Size özel bir<br/>teklif hazırlayalım</span>
                                         </div>
-                                    ))}
-                                    <div
-                                        onClick={() => handleSelection('selectedMedineHotelId', 'others')}
-                                        className={`border rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${formData.selectedMedineHotelId === 'others' ? 'ring-2 ring-[#bda569] border-[#bda569] bg-orange-50' : 'border-gray-200 hover:bg-gray-50'}`}
-                                    >
-                                        <span className="font-bold text-gray-700 text-sm">Farklı Bir Otel İstiyorum</span>
-                                        <span className="text-xs text-gray-400 mt-1">Danışmanımız size özel önerecek</span>
+                                    </div>
+                                    <div className="md:hidden flex justify-center gap-1.5 mt-2">
+                                        <div className="w-8 h-1 bg-[#bda569] rounded-full"></div>
+                                        <div className="w-2 h-1 bg-gray-200 rounded-full"></div>
+                                        <div className="w-2 h-1 bg-gray-200 rounded-full"></div>
                                     </div>
                                 </div>
                             </div>

@@ -3,7 +3,7 @@ import { getImageUrl } from '@/utils/image-url';
 
 async function getPosts() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts?status=published`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts`, {
             cache: 'no-store'
         });
         if (res.ok) {

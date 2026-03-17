@@ -15,6 +15,7 @@ export class PostsController {
 
     @Get(':slug')
     findOne(@Param('slug') slug: string) {
+        // Public request uses default isAdmin = false
         return this.postsService.findOne(slug);
     }
 

@@ -6,11 +6,21 @@ export class PostsService {
     constructor(private prisma: PrismaService) { }
 
     async findAll(query: any) {
-        const { category, q, page = 1 } = query;
+        const { category, q, page = 1, status } = query;
         const take = 10;
         const skip = (page - 1) * take;
 
-        const where: any = { status: 'published' };
+        const where: any = {};
+        
+        // Admin can request status=all to see everything
+        if (status === 'all') {
+            // No strict filter for Admin
+        } else {
+            // Public filter
+            where.status = 'published';
+            where.publishedAt = { lte: new Date() };
+        }
+
         if (category) where.category = { slug: category };
         if (q) where.title = { contains: q, mode: 'insensitive' };
 
@@ -28,20 +38,24 @@ export class PostsService {
         return { data: posts, total, page: Number(page), lastPage: Math.ceil(total / take) };
     }
 
-    async findOne(idOrSlug: string) {
+    async findOne(idOrSlug: string, isAdmin = false) {
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+        const where: any = isUuid ? { id: idOrSlug } : { slug: idOrSlug };
 
-        if (isUuid) {
-            return this.prisma.post.findUnique({
-                where: { id: idOrSlug },
-                include: { category: true },
-            });
-        }
-
-        return this.prisma.post.findUnique({
-            where: { slug: idOrSlug },
+        const post = await this.prisma.post.findUnique({
+            where,
             include: { category: true },
         });
+
+        if (!post) return null;
+
+        // If not admin, check if published and not scheduled for future
+        if (!isAdmin) {
+            if (post.status !== 'published') return null;
+            if (post.publishedAt && post.publishedAt > new Date()) return null;
+        }
+
+        return post;
     }
 
     async create(data: any) {

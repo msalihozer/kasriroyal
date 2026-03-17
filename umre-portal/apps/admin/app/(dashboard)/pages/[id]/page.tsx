@@ -18,6 +18,7 @@ export default function PageFormPage({ params, searchParams }: { params: { id: s
         imageUrl: '',
         blocks: [] as any[], // Changed to array to match schema
         status: 'published',
+        publishedAt: null as string | null,
     });
 
     const [pageId, setPageId] = useState<string | null>(null);
@@ -71,7 +72,8 @@ export default function PageFormPage({ params, searchParams }: { params: { id: s
                     content: data.content || '',
                     imageUrl: data.imageUrl || '',
                     status: data.status || 'draft',
-                    blocks
+                    blocks,
+                    publishedAt: data.publishedAt || null
                 });
             } else if (res.status === 404 && params.id !== 'new') {
                 // Determine category based on known slugs or searchParams
@@ -294,28 +296,43 @@ export default function PageFormPage({ params, searchParams }: { params: { id: s
                     </div>
                 )}
 
-                <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2">
-                        <input
-                            type="radio"
-                            name="status"
-                            value="draft"
-                            checked={formData.status === 'draft'}
-                            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                        />
-                        <span className="text-sm font-medium text-gray-700">Taslak</span>
-                    </label>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Durum</label>
+                        <div className="flex items-center gap-4">
+                            <label className="flex items-center gap-2">
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="draft"
+                                    checked={formData.status === 'draft'}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                />
+                                <span className="text-sm font-medium text-gray-700">Taslak</span>
+                            </label>
 
-                    <label className="flex items-center gap-2">
+                            <label className="flex items-center gap-2">
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="published"
+                                    checked={formData.status === 'published'}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                />
+                                <span className="text-sm font-medium text-gray-700">Yayında</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Yayınlanma Tarihi</label>
                         <input
-                            type="radio"
-                            name="status"
-                            value="published"
-                            checked={formData.status === 'published'}
-                            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                            type="datetime-local"
+                            className="w-full border rounded-lg p-2"
+                            value={formData.publishedAt ? new Date(formData.publishedAt).toISOString().slice(0, 16) : ''}
+                            onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
                         />
-                        <span className="text-sm font-medium text-gray-700">Yayında</span>
-                    </label>
+                        <p className="text-xs text-gray-500 mt-1">İleri bir tarih seçerseniz sayfa o zaman yayına girer.</p>
+                    </div>
                 </div>
 
                 <div className="flex gap-4 pt-4 border-t">
