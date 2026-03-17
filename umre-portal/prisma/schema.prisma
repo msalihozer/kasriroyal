@@ -261,6 +261,10 @@ model EmailSettings {
   pass              String
   fromEmail         String
   notificationEmail String
+  whatsappEnabled    Boolean  @default(false)
+  whatsappInstanceId String?
+  whatsappToken      String?
+  whatsappPhone      String?
   updatedAt         DateTime @updatedAt
 }
 

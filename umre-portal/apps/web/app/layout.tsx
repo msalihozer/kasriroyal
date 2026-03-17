@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Header from '../components/global/Header';
 import Footer from '../components/global/Footer';
+import WhatsAppButton from '../components/global/WhatsAppButton';
 import { SiteSettingsProvider } from '../context/SiteSettingsContext';
 import PageContent from '../components/layout/PageContent';
 import GoogleTranslate from '../components/global/GoogleTranslate';
@@ -31,6 +32,7 @@ export default function RootLayout({
                         {children}
                     </PageContent>
                     <Footer />
+                    <WhatsAppButton />
                 </SiteSettingsProvider>
             </body>
         </html>

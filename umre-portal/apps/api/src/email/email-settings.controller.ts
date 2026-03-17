@@ -17,16 +17,41 @@ export class EmailSettingsController {
     @Put()
     @UseGuards(AuthGuard('jwt'))
     async updateSettings(@Body() body: any) {
-        const { host, port, user, pass, fromEmail, notificationEmail } = body;
+        const { 
+            host, 
+            port, 
+            user, 
+            pass, 
+            fromEmail, 
+            notificationEmail, 
+            whatsappEnabled, 
+            whatsappInstanceId, 
+            whatsappToken, 
+            whatsappPhone 
+        } = body;
+
+        const data: any = {
+            host,
+            port: parseInt(port.toString()) || 587,
+            user,
+            pass,
+            fromEmail,
+            notificationEmail,
+            whatsappEnabled: Boolean(whatsappEnabled),
+            whatsappInstanceId: whatsappInstanceId || null,
+            whatsappToken: whatsappToken || null,
+            whatsappPhone: whatsappPhone || null,
+        };
+
         const existing = await this.prisma.emailSettings.findFirst();
         if (existing) {
             return this.prisma.emailSettings.update({
                 where: { id: existing.id },
-                data: { host, port: parseInt(port), user, pass, fromEmail, notificationEmail },
+                data,
             });
         } else {
             return this.prisma.emailSettings.create({
-                data: { host, port: parseInt(port), user, pass, fromEmail, notificationEmail },
+                data,
             });
         }
     }

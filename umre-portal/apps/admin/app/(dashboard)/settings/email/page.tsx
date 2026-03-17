@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Save, Mail, Loader2 } from 'lucide-react';
+import { Save, Mail, Loader2, MessageSquare } from 'lucide-react';
 
 export default function EmailSettingsPage() {
     const [settings, setSettings] = useState({
@@ -11,7 +11,11 @@ export default function EmailSettingsPage() {
         user: '',
         pass: '',
         fromEmail: '',
-        notificationEmail: ''
+        notificationEmail: '',
+        whatsappEnabled: false,
+        whatsappInstanceId: '',
+        whatsappToken: '',
+        whatsappPhone: ''
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -64,8 +68,11 @@ export default function EmailSettingsPage() {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setSettings(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setSettings(prev => ({ 
+            ...prev, 
+            [name]: type === 'checkbox' ? checked : value 
+        }));
     };
 
     if (loading) return <div className="p-8"><Loader2 className="animate-spin" /></div>;
@@ -131,32 +138,62 @@ export default function EmailSettingsPage() {
                     </div>
                 </div>
 
-                <div className="border-t pt-4 mt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border-t pt-4 mt-6">
+                    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-green-600">
+                        <MessageSquare size={20} /> WhatsApp Bildirim Ayarları (UltraMsg)
+                    </h2>
+                    
+                    <div className="flex items-center gap-2 mb-4">
+                        <input
+                            type="checkbox"
+                            id="whatsappEnabled"
+                            name="whatsappEnabled"
+                            checked={settings.whatsappEnabled}
+                            onChange={handleChange}
+                            className="w-4 h-4 text-green-600 rounded"
+                        />
+                        <label htmlFor="whatsappEnabled" className="text-sm font-medium text-gray-700">
+                            WhatsApp Bildirimlerini Aktif Et
+                        </label>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 opacity-100 transition-opacity duration-200" style={{ opacity: settings.whatsappEnabled ? 1 : 0.5 }}>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Gönderen Adresi (From)</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Instance ID</label>
                             <input
-                                type="email"
-                                name="fromEmail"
-                                value={settings.fromEmail}
+                                type="text"
+                                name="whatsappInstanceId"
+                                value={settings.whatsappInstanceId}
                                 onChange={handleChange}
                                 className="w-full p-2 border rounded"
-                                placeholder="noreply@example.com"
-                                required
+                                placeholder="instance123456"
+                                disabled={!settings.whatsappEnabled}
                             />
-                            <p className="text-xs text-gray-500 mt-1">Giden e-postalarda görünecek adres.</p>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Bildirim E-postası</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Token</label>
                             <input
-                                type="email"
-                                name="notificationEmail"
-                                value={settings.notificationEmail}
+                                type="password"
+                                name="whatsappToken"
+                                value={settings.whatsappToken}
                                 onChange={handleChange}
                                 className="w-full p-2 border rounded"
-                                placeholder="admin@example.com"
+                                placeholder="ultramsg-token"
+                                disabled={!settings.whatsappEnabled}
                             />
-                            <p className="text-xs text-gray-500 mt-1">İletişim ve başvuru bildirimleri buraya gelecek.</p>
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Bildirim Gidecek Telefon (Uluslararası format)</label>
+                            <input
+                                type="text"
+                                name="whatsappPhone"
+                                value={settings.whatsappPhone}
+                                onChange={handleChange}
+                                className="w-full p-2 border rounded"
+                                placeholder="905XXXXXXXXX"
+                                disabled={!settings.whatsappEnabled}
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Başvuruların bildirim olarak düşeceği telefon numarası.</p>
                         </div>
                     </div>
                 </div>

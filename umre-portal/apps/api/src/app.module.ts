@@ -21,6 +21,7 @@ import { ReservationsModule } from './reservations/reservations.module';
 import { ContactModule } from './contact/contact.module';
 import { CustomTourRequestsModule } from './custom-tour-requests/custom-tour-requests.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { WhatsappModule } from './whatsapp/whatsapp.module';
 import { IpBlockMiddleware } from './common/ip-block.middleware';
 
 @Module({
@@ -52,6 +53,7 @@ import { IpBlockMiddleware } from './common/ip-block.middleware';
         ContactModule,
         CustomTourRequestsModule,
         AnalyticsModule,
+        WhatsappModule,
     ],
     providers: [
         { provide: APP_GUARD, useClass: ThrottlerGuard },

@@ -139,6 +139,9 @@ importers:
       '@prisma/client':
         specifier: ^5.10.2
         version: 5.22.0(prisma@5.22.0)
+      axios:
+        specifier: ^1.13.4
+        version: 1.13.4
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1

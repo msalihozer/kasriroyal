@@ -2,12 +2,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
+import { WhatsappService } from '../whatsapp/whatsapp.service';
 
 @Injectable()
 export class ReservationsService {
     constructor(
         private prisma: PrismaService,
         private emailService: EmailService,
+        private whatsappService: WhatsappService,
     ) { }
 
     async create(data: any) {
@@ -36,6 +38,10 @@ export class ReservationsService {
       <p><strong>Not:</strong> ${data.note || '-'}</p>
     `;
         this.emailService.sendNotificationToAdmin('Yeni Tur Başvurusu', emailHtml).catch(console.error);
+
+        // Send WhatsApp
+        const whatsappMsg = `🔔 *Yeni Tur Başvurusu*\n\n*Tur:* ${data.tourName || 'Genel'}\n*İsim:* ${data.name}\n*Telefon:* ${data.phone}\n*Kişi Sayısı:* ${data.personCount}\n*Not:* ${data.note || '-'}`;
+        this.whatsappService.sendMessage(whatsappMsg).catch(console.error);
 
         return reservation;
     }
