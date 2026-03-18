@@ -13,33 +13,59 @@ export default function Header() {
     const [currentLang, setCurrentLang] = useState('tr');
 
     const handleLanguageChange = (lang: string) => {
-        // Set cookie for Google Translate
-        // Format: /source/target or /auto/target
-        // We use /tr/target since site is Turkish
-        const cookieValue = `/tr/${lang}`;
-        document.cookie = `googtrans=${cookieValue}; path=/; domain=${window.location.hostname}`;
-        document.cookie = `googtrans=${cookieValue}; path=/; domain=.${window.location.hostname}`; // for subdomains if any
+        // If language is Turkish, we want to clear the translation
+        if (lang === 'tr') {
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname;
+            
+            // Also try to clear from localStorage/sessionStorage if Google uses it
+            try {
+                localStorage.removeItem('googtrans');
+                sessionStorage.removeItem('googtrans');
+            } catch (e) {}
+        } else {
+            // Set cookie for Google Translate
+            const cookieValue = `/tr/${lang}`;
+            const domains = [
+                window.location.hostname,
+                '.' + window.location.hostname,
+                window.location.host,
+                '.' + window.location.host
+            ];
+
+            domains.forEach(domain => {
+                document.cookie = `googtrans=${cookieValue}; path=/; domain=${domain}`;
+            });
+            // Fallback for no domain
+            document.cookie = `googtrans=${cookieValue}; path=/`;
+        }
 
         setCurrentLang(lang);
-        window.location.reload();
+        
+        // Use a more forceful reload to ensure Google Translate picks up the change
+        window.location.href = window.location.pathname + window.location.search;
     };
+
+    const pathname = usePathname();
+    const isHome = pathname === '/';
 
     useEffect(() => {
         // Read current language from cookie
         const cookies = document.cookie.split(';');
-        const gtCookie = cookies.find(c => c.trim().startsWith('googtrans='));
+        const gtCookie = cookies.find(c => c.trim().startsWith('googtrans=') || c.trim().startsWith(' googtrans='));
         if (gtCookie) {
             const val = gtCookie.split('=')[1];
             // val is like /tr/en, we want 'en'
             const parts = val.split('/');
-            if (parts.length > 0) {
-                setCurrentLang(parts[parts.length - 1]);
+            if (parts.length > 1) {
+                const lang = parts[parts.length - 1];
+                if (lang) setCurrentLang(lang);
             }
+        } else {
+            setCurrentLang('tr');
         }
-    }, []);
-
-    const pathname = usePathname();
-    const isHome = pathname === '/';
+    }, [pathname]); // Also re-check on path change
 
     useEffect(() => {
         // Fetch menu from API in real implementation
