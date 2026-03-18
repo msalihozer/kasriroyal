@@ -51,7 +51,7 @@ export default function Header() {
             { label: 'Transfer', url: '/araclar' },
             { label: 'Blog', url: '/blog' },
             { label: 'Hakkımızda', url: '/hakkimizda' },
-            { label: 'İletişim', url: '/pages/contact' },
+            { label: 'İletişim', url: '/iletisim' },
             { label: 'S.S.S.', url: '/sss' },
             { label: 'Kendi Turunu Planla', url: '/kendi-turunu-planla', isCta: true },
         ]);
@@ -105,17 +105,17 @@ export default function Header() {
             {/* Logo */}
             <Link 
                 href="/" 
-                className={`flex-shrink-0 transition-all duration-500 z-[60] ${isOpen ? 'fixed top-5 left-6 shadow-sm' : ''}`}
+                className={`flex-shrink-0 transition-all duration-500 z-[60] ${isOpen ? 'opacity-0 scale-90 pointer-events-none' : 'opacity-100'}`}
             >
                 <img
                     src={
-                        (isHome && !scrolled && !isOpen)
+                        (isHome && !scrolled)
                             ? (logoUrl ? (logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`) : '/logo.png')
                             : (faviconUrl ? (faviconUrl.startsWith('http') ? faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${faviconUrl}`) : '/favicon.ico')
                     }
                     alt="Site Logo"
-                    className={`object-contain transition-all duration-500 ${isOpen ? 'h-10 md:h-12 w-auto' : logoClasses}`}
-                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = (isHome && !scrolled && !isOpen) ? '/logo.png' : '/favicon.ico'; }}
+                    className={`object-contain transition-all duration-500 ${logoClasses}`}
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = (isHome && !scrolled) ? '/logo.png' : '/favicon.ico'; }}
                 />
             </Link>
 
@@ -156,14 +156,14 @@ export default function Header() {
             </button>
 
             {/* Mobile Menu Overlay */}
-            <div className={`fixed inset-0 z-50 bg-[#bda569] flex flex-col transition-all duration-500 md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
+            <div className={`fixed inset-0 z-50 bg-[#1a1a1a]/95 backdrop-blur-xl flex flex-col transition-all duration-500 md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
                 {/* Fixed Top Bar in Menu */}
-                <div className="flex justify-between items-center px-6 py-6 border-b border-white/10 shrink-0">
-                    <div className="max-w-[180px] overflow-hidden">
+                <div className="flex justify-between items-center px-6 py-6 border-b border-white/5 shrink-0">
+                    <div className="max-w-[180px]">
                         {logoUrl ? (
                             <img 
                                 src={logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`} 
-                                className="h-10 object-contain brightness-0 invert" 
+                                className="h-12 object-contain brightness-0 invert" 
                                 alt="Kasrı Royal" 
                             />
                         ) : (
@@ -172,7 +172,7 @@ export default function Header() {
                     </div>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="bg-white/10 p-2 rounded-full text-white backdrop-blur-md"
+                        className="bg-white/5 p-3 rounded-2xl text-white hover:bg-white/10 transition-colors"
                     >
                         <X size={28} />
                     </button>
@@ -193,10 +193,12 @@ export default function Header() {
                                                 : 'text-white/90 hover:bg-white/5'
                                     }`}
                                 >
-                                    <span className="text-xl font-bold uppercase tracking-wide">
+                                    <span className="text-xl font-bold uppercase tracking-wider">
                                         {item.label}
                                     </span>
-                                    <Menu size={20} className="opacity-40" />
+                                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                                        <X size={14} className="opacity-40 rotate-45" />
+                                    </div>
                                 </Link>
                             </li>
                         ))}

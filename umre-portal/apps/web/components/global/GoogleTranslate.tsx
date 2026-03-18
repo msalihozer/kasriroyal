@@ -98,7 +98,8 @@ export default function GoogleTranslate() {
                 #goog-gt-tt,
                 .goog-tooltip,
                 .goog-tooltip:hover,
-                .goog-te-balloon-panel {
+                .goog-te-balloon-panel,
+                .goog-te-spinner-pos {
                     display: none !important;
                     visibility: hidden !important;
                     height: 0 !important;
@@ -110,10 +111,11 @@ export default function GoogleTranslate() {
                     top: -9999px !important;
                 }
                 
-                /* Reset body top that Google adds */
-                body {
+                /* Reset body top and margin that Google adds */
+                html, body {
                     top: 0px !important;
                     position: static !important;
+                    margin-top: 0px !important;
                 }
 
                 /* Hide the google branding */
