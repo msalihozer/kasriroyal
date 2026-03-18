@@ -79,7 +79,7 @@ export default async function VipPageDetail({ params }: { params: { slug: string
 
                     {/* Main Content */}
                     <div
-                        className="prose prose-lg md:prose-xl max-w-none prose-headings:font-serif prose-headings:font-bold prose-p:text-gray-600 prose-p:leading-loose prose-a:text-blue-600 prose-img:rounded-xl prose-img:shadow-lg"
+                        className="prose prose-lg md:prose-xl max-w-none prose-headings:font-serif prose-headings:font-bold prose-p:text-gray-600 prose-p:leading-loose prose-a:text-blue-600 prose-img:rounded-xl prose-img:shadow-lg prose-img:w-full prose-img:object-cover"
                         dangerouslySetInnerHTML={{ __html: page.content || '' }}
                     />
                 </div>

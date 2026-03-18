@@ -110,7 +110,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900 
                     prose-p:text-gray-600 prose-p:leading-relaxed 
                     prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline
-                    prose-img:rounded-xl prose-img:shadow-lg
+                    prose-img:rounded-xl prose-img:shadow-lg prose-img:w-full prose-img:object-cover
                     prose-blockquote:border-l-4 prose-blockquote:border-primary-500 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:not-italic prose-blockquote:text-gray-700
                     first-letter:text-5xl first-letter:font-bold first-letter:text-primary-600 first-letter:mr-3 first-letter:float-left
                     "

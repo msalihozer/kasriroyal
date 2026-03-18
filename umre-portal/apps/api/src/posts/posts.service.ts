@@ -6,9 +6,10 @@ export class PostsService {
     constructor(private prisma: PrismaService) { }
 
     async findAll(query: any) {
-        const { category, q, page = 1, status } = query;
+        const { category, q, page = 1, status, sort = 'desc' } = query;
         const take = 10;
         const skip = (page - 1) * take;
+        const orderDir = sort === 'asc' ? 'asc' : 'desc';
 
         const where: any = {};
         
@@ -30,7 +31,7 @@ export class PostsService {
                 take,
                 skip,
                 include: { category: true },
-                orderBy: { publishedAt: 'desc' },
+                orderBy: { publishedAt: orderDir },
             }),
             this.prisma.post.count({ where }),
         ]);

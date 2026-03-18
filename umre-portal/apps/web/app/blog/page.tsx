@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { getImageUrl } from '@/utils/image-url';
 
-async function getPosts() {
+async function getPosts(sort: string = 'desc') {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts?sort=${sort}`, {
             cache: 'no-store'
         });
         if (res.ok) {
@@ -16,8 +16,9 @@ async function getPosts() {
     return [];
 }
 
-export default async function BlogPage() {
-    const posts = await getPosts();
+export default async function BlogPage({ searchParams }: { searchParams: { sort?: string } }) {
+    const currentSort = searchParams.sort || 'desc';
+    const posts = await getPosts(currentSort);
 
     return (
         <main className="min-h-screen bg-gray-50 pb-20">
@@ -34,6 +35,30 @@ export default async function BlogPage() {
             </div>
 
             <div className="container mx-auto px-4">
+                {/* Filters / Sort */}
+                <div className="flex justify-between items-center mb-10 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div className="text-gray-500 text-sm font-medium">
+                        Toplam <span className="text-gray-900 font-bold">{posts.length}</span> yazı bulundu
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">Sıralama:</span>
+                        <div className="flex bg-gray-50 p-1 rounded-lg border border-gray-200">
+                            <Link
+                                href={`/blog?sort=desc`}
+                                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${currentSort === 'desc' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                            >
+                                YENİDEN ESKİYE
+                            </Link>
+                            <Link
+                                href={`/blog?sort=asc`}
+                                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${currentSort === 'asc' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                            >
+                                ESKİDEN YENİYE
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {posts.map((post: any) => (
                         <Link key={post.id} href={`/blog/${post.slug}`} className="group">
