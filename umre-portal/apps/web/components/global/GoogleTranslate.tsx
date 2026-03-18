@@ -90,7 +90,7 @@ export default function GoogleTranslate() {
         <>
             <div id="google_translate_element" style={{ display: 'none' }}></div>
             <style jsx global>{`
-                /* Hide the Google top bar with extreme prejudice */
+                /* Hide the Google top bar and all its containers with extreme prejudice */
                 .goog-te-banner-frame.skiptranslate, 
                 .goog-te-banner-frame, 
                 iframe.goog-te-banner-frame,
@@ -99,7 +99,9 @@ export default function GoogleTranslate() {
                 .goog-tooltip,
                 .goog-tooltip:hover,
                 .goog-te-balloon-panel,
-                .goog-te-spinner-pos {
+                .goog-te-spinner-pos,
+                .VIpgJd-ZVi9od-ORHb-OEVmcd,
+                iframe[id*=".container"] {
                     display: none !important;
                     visibility: hidden !important;
                     height: 0 !important;
