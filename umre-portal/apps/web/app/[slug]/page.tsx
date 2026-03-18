@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 async function getPage(slug: string) {
     try {
@@ -21,6 +22,27 @@ async function getPage(slug: string) {
         console.error(err);
     }
     return null;
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+    const page = await getPage(params.slug);
+    if (!page) return {};
+
+    const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://kasriroyal.com').replace(/\/$/, '');
+    const description = page.seoDescription || page.excerpt || page.title;
+
+    return {
+        title: page.title,
+        description,
+        openGraph: {
+            title: page.title,
+            description,
+            url: `${baseUrl}/${params.slug}`,
+        },
+        alternates: {
+            canonical: `${baseUrl}/${params.slug}`,
+        },
+    };
 }
 
 export default async function DynamicPage({ params }: { params: { slug: string } }) {

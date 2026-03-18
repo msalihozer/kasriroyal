@@ -1,6 +1,17 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import TourRow from '../../components/cards/TourRow';
 import TourFilters from '../../components/tours/TourFilters';
+
+export const metadata: Metadata = {
+    title: 'Umre Turları',
+    description: 'Kasri Royal\'ın özel umre tur paketlerini keşfedin. VIP umre, butik umre ve ekonomik paketler ile Mekke ve Medine\'ye güvenli seyahat.',
+    alternates: {
+        canonical: 'https://kasriroyal.com/turlar',
+    },
+};
+
+
 
 async function getTours(searchParams: any) {
     const params = new URLSearchParams();

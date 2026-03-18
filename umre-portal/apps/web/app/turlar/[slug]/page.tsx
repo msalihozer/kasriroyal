@@ -1,5 +1,6 @@
 
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { Calendar, MapPin, Plane, Clock, Info, CheckCircle, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import CommentSection from '@/components/global/CommentSection';
@@ -37,6 +38,38 @@ async function getSiteSettings() {
         console.error(err);
     }
     return {};
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+    const tour = await getTour(params.slug);
+    if (!tour) return {};
+
+    const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://kasriroyal.com').replace(/\/$/, '');
+    const description = `${tour.title} - ${tour.durationDays} günlük umre turu. ${tour.departureLocation ? `${tour.departureLocation} hareket.` : ''} Fiyat için detayları inceleyin.`;
+
+    const imageUrl = tour.gallery?.[0]
+        ? (tour.gallery[0].startsWith('http') ? tour.gallery[0] : `${process.env.NEXT_PUBLIC_API_URL || ''}${tour.gallery[0]}`)
+        : `${baseUrl}/logo.png`;
+
+    return {
+        title: tour.title,
+        description,
+        openGraph: {
+            title: tour.title,
+            description,
+            url: `${baseUrl}/turlar/${params.slug}`,
+            images: [{ url: imageUrl, alt: tour.title }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: tour.title,
+            description,
+            images: [imageUrl],
+        },
+        alternates: {
+            canonical: `${baseUrl}/turlar/${params.slug}`,
+        },
+    };
 }
 
 export default async function TourDetailPage({ params }: { params: { slug: string } }) {

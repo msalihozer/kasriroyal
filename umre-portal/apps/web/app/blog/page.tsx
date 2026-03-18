@@ -1,5 +1,16 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getImageUrl } from '@/utils/image-url';
+
+export const metadata: Metadata = {
+    title: 'Blog ve Haberler',
+    description: 'Umre, Mekke, Medine ve kutsal topraklar hakkında güncel blog yazıları, rehber bilgileri ve haberler. Kasri Royal blog köşesi.',
+    alternates: {
+        canonical: 'https://kasriroyal.com/blog',
+    },
+};
+
+
 
 async function getPosts(sort: string = 'desc') {
     try {

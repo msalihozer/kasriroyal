@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { getImageUrl } from '@/utils/image-url';
 import { ArrowLeft, Calendar, User, Clock, Share2 } from 'lucide-react';
 import BlogShareButtons from '@/components/blog/BlogShareButtons';
@@ -16,6 +17,40 @@ async function getPost(slug: string) {
         console.error(err);
     }
     return null;
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+    const post = await getPost(params.slug);
+    if (!post) return {};
+
+    const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://kasriroyal.com').replace(/\/$/, '');
+    const description = post.excerpt || `${(post.content || '').replace(/<[^>]+>/g, '').slice(0, 155)}...`;
+    const imageUrl = post.coverImageUrl
+        ? (post.coverImageUrl.startsWith('http') ? post.coverImageUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${post.coverImageUrl}`)
+        : `${baseUrl}/logo.png`;
+
+    return {
+        title: post.title,
+        description,
+        openGraph: {
+            type: 'article',
+            title: post.title,
+            description,
+            url: `${baseUrl}/blog/${params.slug}`,
+            publishedTime: post.createdAt,
+            modifiedTime: post.updatedAt,
+            images: [{ url: imageUrl, alt: post.title }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: post.title,
+            description,
+            images: [imageUrl],
+        },
+        alternates: {
+            canonical: `${baseUrl}/blog/${params.slug}`,
+        },
+    };
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
