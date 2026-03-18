@@ -78,7 +78,7 @@ export default function GoogleTranslate() {
         if (!document.querySelector('#google-translate-script')) {
             const script = document.createElement('script');
             script.id = 'google-translate-script';
-            script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
             script.async = true;
             document.body.appendChild(script);
         }
@@ -90,7 +90,7 @@ export default function GoogleTranslate() {
         <>
             <div id="google_translate_element" style={{ display: 'none' }}></div>
             <style jsx global>{`
-                /* Hide the Google top bar and all its containers with extreme prejudice */
+                /* Hide the Google top bar and all its containers with extreme prejudice but don't use display:none on essential engine iframes */
                 .goog-te-banner-frame.skiptranslate, 
                 .goog-te-banner-frame, 
                 iframe.goog-te-banner-frame,
@@ -102,15 +102,14 @@ export default function GoogleTranslate() {
                 .goog-te-spinner-pos,
                 .VIpgJd-ZVi9od-ORHb-OEVmcd,
                 iframe[id*=".container"] {
-                    display: none !important;
                     visibility: hidden !important;
-                    height: 0 !important;
-                    width: 0 !important;
                     opacity: 0 !important;
                     pointer-events: none !important;
                     z-index: -9999 !important;
                     position: absolute !important;
                     top: -9999px !important;
+                    height: 0 !important;
+                    width: 0 !important;
                 }
                 
                 /* Reset body top and margin that Google adds */
