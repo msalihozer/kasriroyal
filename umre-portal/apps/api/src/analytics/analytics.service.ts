@@ -60,10 +60,7 @@ export class AnalyticsService {
             const slug = data.path.replace('/blog/', '').split('?')[0];
             if (slug && slug !== '') {
                 try {
-                    await this.prisma.post.update({
-                        where: { slug },
-                        data: { viewCount: { increment: 1 } }
-                    });
+                    await this.prisma.$executeRaw`UPDATE "Post" SET "viewCount" = "viewCount" + 1 WHERE "slug" = ${slug}`;
                 } catch (e) {
                     // Slug might not exist or be invalid, ignore
                 }
@@ -73,16 +70,37 @@ export class AnalyticsService {
         return { ok: true };
     }
 
-    async getStats() {
+    async getStats(range: string = '1m') {
         const now = new Date();
         const todayStart = new Date(now);
         todayStart.setHours(0, 0, 0, 0);
 
-        const weekStart = new Date(now);
-        weekStart.setDate(now.getDate() - 7);
+        const startDate = new Date(now);
+        let groupByHour = false;
 
-        const monthStart = new Date(now);
-        monthStart.setDate(now.getDate() - 30);
+        switch (range) {
+            case '24h':
+                startDate.setHours(now.getHours() - 24);
+                groupByHour = true;
+                break;
+            case '1w':
+                startDate.setDate(now.getDate() - 7);
+                break;
+            case '1m':
+                startDate.setDate(now.getDate() - 30);
+                break;
+            case '3m':
+                startDate.setMonth(now.getMonth() - 3);
+                break;
+            case '6m':
+                startDate.setMonth(now.getMonth() - 6);
+                break;
+            case '1y':
+                startDate.setFullYear(now.getFullYear() - 1);
+                break;
+            default:
+                startDate.setDate(now.getDate() - 30);
+        }
 
         const [
             todayViews,
@@ -101,41 +119,49 @@ export class AnalyticsService {
             // Bu hafta - tekil oturum
             this.prisma.$queryRaw<{ count: bigint }[]>`
                 SELECT COUNT(DISTINCT "sessionId") as count FROM "PageView"
-                WHERE "createdAt" >= ${weekStart}
+                WHERE "createdAt" >= ${new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)}
             `,
             // Bu ay - tekil oturum
             this.prisma.$queryRaw<{ count: bigint }[]>`
                 SELECT COUNT(DISTINCT "sessionId") as count FROM "PageView"
-                WHERE "createdAt" >= ${monthStart}
+                WHERE "createdAt" >= ${new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)}
             `,
-            // Top 5 sayfa (Tekil oturum bazlı popülerlik)
+            // Top 5 sayfa (Seçili aralığa göre)
             this.prisma.$queryRaw<{ path: string; count: bigint }[]>`
                 SELECT "path", COUNT(DISTINCT "sessionId") as count 
                 FROM "PageView"
-                WHERE "createdAt" >= ${monthStart}
+                WHERE "createdAt" >= ${startDate}
                 GROUP BY "path"
                 ORDER BY count DESC
                 LIMIT 5
             `,
-            // Cihaz dağılımı (Tekil oturum bazlı)
+            // Cihaz dağılımı (Seçili aralığa göre)
             this.prisma.$queryRaw<{ device: string; count: bigint }[]>`
                 SELECT "device", COUNT(DISTINCT "sessionId") as count
                 FROM "PageView"
-                WHERE "createdAt" >= ${monthStart} AND "device" IS NOT NULL
+                WHERE "createdAt" >= ${startDate} AND "device" IS NOT NULL
                 GROUP BY "device"
             `,
-            // Son 30 gün günlük TEKİL ziyaretçi serisi
-            this.prisma.$queryRaw<{ date: string; count: bigint }[]>`
-                SELECT DATE("createdAt") as date, COUNT(DISTINCT "sessionId") as count
-                FROM "PageView"
-                WHERE "createdAt" >= ${monthStart}
-                GROUP BY DATE("createdAt")
-                ORDER BY date ASC
-            `,
-            // Ortalama kalma süresi
+            // Günlük/Saatlik TEKİL ziyaretçi serisi
+            groupByHour 
+                ? this.prisma.$queryRaw<{ date: string; count: bigint }[]>`
+                    SELECT TO_CHAR("createdAt", 'YYYY-MM-DD HH24:00') as date, COUNT(DISTINCT "sessionId") as count
+                    FROM "PageView"
+                    WHERE "createdAt" >= ${startDate}
+                    GROUP BY date
+                    ORDER BY date ASC
+                `
+                : this.prisma.$queryRaw<{ date: string; count: bigint }[]>`
+                    SELECT DATE("createdAt") as date, COUNT(DISTINCT "sessionId") as count
+                    FROM "PageView"
+                    WHERE "createdAt" >= ${startDate}
+                    GROUP BY DATE("createdAt")
+                    ORDER BY date ASC
+                `,
+            // Ortalama kalma süresi (Seçili aralığa göre)
             this.prisma.pageView.aggregate({
                 _avg: { duration: true },
-                where: { createdAt: { gte: monthStart }, duration: { not: null } },
+                where: { createdAt: { gte: startDate }, duration: { not: null } },
             }),
         ]);
 
@@ -149,7 +175,7 @@ export class AnalyticsService {
                 date: d.date,
                 count: Number(d.count),
             })),
-            avgDuration: Math.round(avgDuration._avg.duration || 0),
+            avgDuration: Math.round((avgDuration._avg.duration || 0) / 1000), // Convert ms to s
         };
     }
 

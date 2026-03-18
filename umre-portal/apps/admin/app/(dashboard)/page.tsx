@@ -43,48 +43,51 @@ export default function DashboardPage() {
     const [counts, setCounts] = useState({ tours: 0, reservations: 0, hotels: 0, posts: 0 });
     const [analytics, setAnalytics] = useState<Stats | null>(null);
     const [loading, setLoading] = useState(true);
+    const [range, setRange] = useState('1m');
+
+    const fetchAll = async (selectedRange: string) => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const headers = { 'Authorization': `Bearer ${token}` };
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+
+            const [toursRes, reservationsRes, hotelsRes, postsRes, statsRes] = await Promise.all([
+                fetch(`${apiUrl}/api/tours`),
+                fetch(`${apiUrl}/api/reservations`, { headers }),
+                fetch(`${apiUrl}/api/hotels?status=all`),
+                fetch(`${apiUrl}/api/posts?status=all`),
+                fetch(`${apiUrl}/api/analytics/stats?range=${selectedRange}`, { headers }),
+            ]);
+
+            const [tours, reservations, hotels, posts] = await Promise.all([
+                toursRes.ok ? toursRes.json() : [],
+                reservationsRes.ok ? reservationsRes.json() : [],
+                hotelsRes.ok ? hotelsRes.json() : [],
+                postsRes.ok ? postsRes.json() : [],
+            ]);
+
+            setCounts({
+                tours: tours.length || 0,
+                reservations: reservations.length || 0,
+                hotels: hotels.length || 0,
+                posts: posts.length || 0,
+            });
+
+            if (statsRes.ok) {
+                const statsData = await statsRes.json();
+                setAnalytics(statsData);
+            }
+        } catch (err) {
+            console.error('Dashboard fetch error:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchAll = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const headers = { 'Authorization': `Bearer ${token}` };
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-
-                const [toursRes, reservationsRes, hotelsRes, postsRes, statsRes] = await Promise.all([
-                    fetch(`${apiUrl}/api/tours`),
-                    fetch(`${apiUrl}/api/reservations`, { headers }),
-                    fetch(`${apiUrl}/api/hotels?status=all`),
-                    fetch(`${apiUrl}/api/posts?status=all`),
-                    fetch(`${apiUrl}/api/analytics/stats`, { headers }),
-                ]);
-
-                const [tours, reservations, hotels, posts] = await Promise.all([
-                    toursRes.ok ? toursRes.json() : [],
-                    reservationsRes.ok ? reservationsRes.json() : [],
-                    hotelsRes.ok ? hotelsRes.json() : [],
-                    postsRes.ok ? postsRes.json() : [],
-                ]);
-
-                setCounts({
-                    tours: tours.length || 0,
-                    reservations: reservations.length || 0,
-                    hotels: hotels.length || 0,
-                    posts: posts.length || 0,
-                });
-
-                if (statsRes.ok) {
-                    const statsData = await statsRes.json();
-                    setAnalytics(statsData);
-                }
-            } catch (err) {
-                console.error('Dashboard fetch error:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchAll();
-    }, []);
+        fetchAll(range);
+    }, [range]);
 
     if (loading) return (
         <div className="p-8 flex items-center justify-center h-64">
@@ -129,14 +132,59 @@ export default function DashboardPage() {
 
                     {/* Günlük Grafik */}
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h2 className="text-base font-semibold text-gray-700 mb-4">Son 30 Gün Ziyaret</h2>
-                        <ResponsiveContainer width="100%" height={220}>
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                            <h2 className="text-base font-semibold text-gray-700">Ziyaretçi Grafiği</h2>
+                            
+                            <div className="flex bg-gray-100 p-1 rounded-lg self-end md:self-auto">
+                                {[
+                                    { id: '24h', label: '24S' },
+                                    { id: '1w', label: '1H' },
+                                    { id: '1m', label: '1A' },
+                                    { id: '3m', label: '3A' },
+                                    { id: '6m', label: '6A' },
+                                    { id: '1y', label: '1Y' },
+                                ].map((r) => (
+                                    <button
+                                        key={r.id}
+                                        onClick={() => setRange(r.id)}
+                                        className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                                            range === r.id 
+                                                ? 'bg-white text-indigo-600 shadow-sm' 
+                                                : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                    >
+                                        {r.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <ResponsiveContainer width="100%" height={260}>
                             <LineChart data={analytics.dailySeries}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                                <XAxis dataKey="date" tick={{ fontSize: 11 }} tickFormatter={v => v.slice(5)} />
-                                <YAxis tick={{ fontSize: 11 }} />
-                                <Tooltip />
-                                <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} dot={false} name="Ziyaret" />
+                                <XAxis 
+                                    dataKey="date" 
+                                    tick={{ fontSize: 10, fontWeight: 600 }} 
+                                    tickFormatter={v => {
+                                        if (range === '24h') return v.split(' ')[1]; // show hour
+                                        const d = new Date(v);
+                                        return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+                                    }} 
+                                />
+                                <YAxis tick={{ fontSize: 10, fontWeight: 600 }} />
+                                <Tooltip 
+                                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                                    labelStyle={{ fontWeight: 'bold', marginBottom: '4px' }}
+                                />
+                                <Line 
+                                    type="monotone" 
+                                    dataKey="count" 
+                                    stroke="#6366f1" 
+                                    strokeWidth={3} 
+                                    dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: '#fff' }} 
+                                    activeDot={{ r: 6, strokeWidth: 0 }}
+                                    name="Ziyaret" 
+                                />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>

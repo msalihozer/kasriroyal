@@ -1,6 +1,6 @@
 import {
     Controller, Post, Get, Delete, Body, Param, Req,
-    UseGuards, HttpCode,
+    UseGuards, HttpCode, Query,
 } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -33,8 +33,8 @@ export class AnalyticsController {
     // JWT korumalı - istatistikler
     @Get('stats')
     @UseGuards(AuthGuard('jwt'))
-    async getStats() {
-        return this.analyticsService.getStats();
+    async getStats(@Query('range') range?: string) {
+        return this.analyticsService.getStats(range);
     }
 
     // IP Engelleme yönetimi (admin)

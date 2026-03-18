@@ -200,47 +200,46 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                             {tour.title} &gt; {tour.durationNights} GECE - {tour.durationDays} GÜN
                         </div>
 
-                        <div className="p-6 overflow-y-auto custom-scrollbar">
+                        <div className="p-3 md:p-6 overflow-y-auto custom-scrollbar">
                             {/* 2. Flight / Travel Info */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
-                                <div className="border border-gray-200 rounded-xl p-4 text-center">
-                                    <div className="text-gray-400 text-sm mb-2 flex items-center justify-center gap-2"><PlaneTakeoff size={16} /> Gidiş</div>
-                                    <div className="font-bold text-gray-800 text-lg">{longDate(startObj)}</div>
-                                    <div className="text-sm text-gray-500 mt-1">{tour.departureLocation || 'İstanbul'} - {getLocationInfo(stays[0]?.locationId)?.name || 'Medine'}</div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-8">
+                                <div className="border border-gray-200 rounded-xl p-3 md:p-4 text-center">
+                                    <div className="text-gray-400 text-xs mb-1 flex items-center justify-center gap-2"><PlaneTakeoff size={14} /> Gidiş</div>
+                                    <div className="font-bold text-gray-800 text-base md:text-lg">{longDate(startObj)}</div>
+                                    <div className="text-[10px] md:text-sm text-gray-500 mt-1">{tour.departureLocation || 'İstanbul'} - {getLocationInfo(stays[0]?.locationId)?.name || 'Medine'}</div>
                                 </div>
-                                <div className="border border-gray-200 rounded-xl p-4 text-center">
-                                    <div className="text-gray-400 text-sm mb-2 flex items-center justify-center gap-2"><PlaneLanding size={16} /> Dönüş</div>
-                                    <div className="font-bold text-gray-800 text-lg">{longDate(endObj)}</div>
-                                    <div className="text-sm text-gray-500 mt-1">{tour.returnLocation || 'Cidde'} - {tour.departureLocation || 'İstanbul'}</div>
+                                <div className="border border-gray-200 rounded-xl p-3 md:p-4 text-center">
+                                    <div className="text-gray-400 text-xs mb-1 flex items-center justify-center gap-2"><PlaneLanding size={14} /> Dönüş</div>
+                                    <div className="font-bold text-gray-800 text-base md:text-lg">{longDate(endObj)}</div>
+                                    <div className="text-[10px] md:text-sm text-gray-500 mt-1">{tour.returnLocation || 'Cidde'} - {tour.departureLocation || 'İstanbul'}</div>
                                 </div>
-                                {/* Optional: Add 'Ara Geçiş' if data exists logic */}
                             </div>
 
                             {/* 3. Konaklama */}
-                            <div className="mb-8">
-                                <h4 className="flex items-center gap-2 font-bold text-gray-700 mb-4 text-lg">
-                                    <BedDouble className="text-gray-400" /> Konaklama
+                            <div className="mb-6 md:mb-8">
+                                <h4 className="flex items-center gap-2 font-bold text-gray-700 mb-3 md:mb-4 text-base md:text-lg">
+                                    <BedDouble className="text-gray-400" size={18} /> Konaklama
                                 </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     {stays.map((stay: any, idx: number) => {
                                         const loc = getLocationInfo(stay.locationId);
                                         const hotel = getHotelForLocation(stay.locationId);
                                         return (
-                                            <div key={idx} className="flex gap-4 items-start">
-                                                <div className="w-24 h-24 rounded-lg bg-gray-100 overflow-hidden shrink-0 border border-gray-100 shadow-sm">
+                                            <div key={idx} className="flex gap-3 md:gap-4 items-start bg-gray-50/50 p-2 rounded-lg md:bg-transparent md:p-0">
+                                                <div className="w-16 h-16 md:w-24 md:h-24 rounded-lg bg-gray-100 overflow-hidden shrink-0 border border-gray-200 shadow-sm">
                                                     {hotel?.imageUrl ? (
                                                         <img src={getFullUrl(hotel.imageUrl)} alt={hotel.title} className="w-full h-full object-cover" />
                                                     ) : (
                                                         hotel?.gallery && Array.isArray(hotel.gallery) && hotel.gallery[0] ? (
                                                             <img src={getFullUrl(hotel.gallery[0])} alt={hotel.title} className="w-full h-full object-cover" />
                                                         ) : (
-                                                            loc.imageUrl ? <img src={getFullUrl(loc.imageUrl)} alt={loc.name} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center"><Hotel className="text-gray-400" /></div>
+                                                            loc.imageUrl ? <img src={getFullUrl(loc.imageUrl)} alt={loc.name} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center"><Hotel className="text-gray-400" size={20} /></div>
                                                         )
                                                     )}
                                                 </div>
-                                                <div>
-                                                    <div className="font-bold text-gray-800 text-lg">{loc.name} <span className="text-gray-500 text-sm font-normal">({stay.nights} Gece)</span></div>
-                                                    <div className="text-gray-600 font-medium">{hotel?.title || 'Otel Belirtilmedi'}</div>
+                                                <div className="min-w-0">
+                                                    <div className="font-bold text-gray-800 text-sm md:text-lg truncate">{loc.name} <span className="text-gray-500 text-[10px] md:text-sm font-normal">({stay.nights} Gece)</span></div>
+                                                    <div className="text-gray-600 text-xs md:text-base font-medium truncate">{hotel?.title || 'Otel Belirtilmedi'}</div>
                                                     {hotel?.stars && renderStars(hotel.stars)}
                                                 </div>
                                             </div>
@@ -250,11 +249,11 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                             </div>
 
                             {/* 4. Ücretler (Pricing) */}
-                            <div className="mb-6">
-                                <h4 className="flex items-center gap-2 font-bold text-gray-700 mb-4 text-lg">
-                                    <CheckCircle className="text-gray-400" /> Ücretler
+                            <div className="mb-4">
+                                <h4 className="flex items-center gap-2 font-bold text-gray-700 mb-3 md:mb-4 text-base md:text-lg">
+                                    <CheckCircle className="text-gray-400" size={18} /> Ücretler
                                 </h4>
-                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
                                     {[
                                         { label: 'Single Oda', key: 'single', desc: '*Kişi başı' },
                                         { label: 'İkili Oda', key: 'double', desc: '*Kişi başı' },
@@ -265,10 +264,10 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                     ].map((item) => {
                                         if (!pricing[item.key]) return null;
                                         return (
-                                            <div key={item.key} className="border border-gray-200 rounded-xl p-4 text-center hover:border-[#bda569] transition-colors">
-                                                <div className="text-sm font-bold text-gray-600 mb-1">{item.label}</div>
-                                                <div className="text-xl font-bold text-green-600">{Number(pricing[item.key]).toLocaleString()} {tour.currency}</div>
-                                                <div className="text-xs text-gray-400 mt-1">{item.desc}</div>
+                                            <div key={item.key} className="border border-gray-200 rounded-xl p-2.5 md:p-4 text-center hover:border-[#bda569] transition-colors bg-white">
+                                                <div className="text-[10px] md:text-sm font-bold text-gray-600 mb-0.5 md:mb-1">{item.label}</div>
+                                                <div className="text-base md:text-xl font-bold text-green-600">{Number(pricing[item.key]).toLocaleString()} {tour.currency}</div>
+                                                <div className="text-[8px] md:text-xs text-gray-400 mt-0.5">{item.desc}</div>
                                             </div>
                                         );
                                     })}
@@ -277,28 +276,28 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                         </div>
 
                         {/* 5. Footer */}
-                        <div className="p-4 border-t bg-gray-50 flex justify-between gap-3 rounded-b-xl">
+                        <div className="p-3 md:p-4 border-t bg-gray-50 flex flex-col md:flex-row justify-between gap-2 md:gap-3 rounded-b-xl">
                             {settings.tourImportantNotes && (
                                 <button
                                     onClick={() => setShowWarning(!showWarning)}
-                                    className="px-4 py-2 bg-red-100 text-red-600 rounded-lg font-bold hover:bg-red-200 transition-colors flex items-center gap-2"
+                                    className="w-full md:w-auto px-4 py-2 bg-red-100 text-red-600 rounded-lg text-xs md:text-sm font-bold hover:bg-red-200 transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <Info size={18} /> Önemli Bilgiler
+                                    <Info size={16} /> Önemli Bilgiler
                                 </button>
                             )}
-                            <div className="flex gap-3 ml-auto">
+                            <div className="flex flex-row gap-2 md:ml-auto w-full md:w-auto">
                                 <a
                                     href={`https://wa.me/905555555555?text=Merhaba, ${tour.title} turu hakkında teklif almak istiyorum.`}
                                     target="_blank"
-                                    className="px-6 py-2 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 transition-colors flex items-center gap-2"
+                                    className="flex-1 md:flex-none px-4 md:px-6 py-2 bg-green-500 text-white rounded-lg text-xs md:text-sm font-bold hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <MessageCircle size={18} /> İletişime Geç
+                                    <MessageCircle size={16} /> <span className="whitespace-nowrap">İletişim</span>
                                 </a>
                                 <button
                                     onClick={toggleQuickView}
-                                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg font-bold hover:bg-white hover:border-gray-400 transition-colors flex items-center gap-2"
+                                    className="flex-1 md:flex-none px-4 md:px-6 py-2 border border-gray-300 text-gray-700 rounded-lg text-xs md:text-sm font-bold hover:bg-white transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <X size={18} /> Kapat
+                                    <X size={16} /> <span className="whitespace-nowrap">Kapat</span>
                                 </button>
                             </div>
                         </div>

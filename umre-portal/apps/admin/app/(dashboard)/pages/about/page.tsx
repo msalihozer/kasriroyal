@@ -18,6 +18,7 @@ export default function AboutPageAdmin() {
     // Form State
     const [mission, setMission] = useState('');
     const [vision, setVision] = useState('');
+    const [aboutText, setAboutText] = useState('');
     const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
 
     useEffect(() => {
@@ -34,6 +35,7 @@ export default function AboutPageAdmin() {
                 const data = await res.json();
                 setMission(data.mission || '');
                 setVision(data.vision || '');
+                setAboutText(data.aboutText || '');
                 setBankAccounts(Array.isArray(data.bankAccounts) ? data.bankAccounts : []);
             }
         } catch (error) {
@@ -58,6 +60,7 @@ export default function AboutPageAdmin() {
                 body: JSON.stringify({
                     mission,
                     vision,
+                    aboutText,
                     bankAccounts
                 })
             });
@@ -110,6 +113,13 @@ export default function AboutPageAdmin() {
                     </h2>
 
                     <div className="space-y-8">
+                        <div>
+                            <RichTextEditor
+                                label="Hakkımızda Metni"
+                                value={aboutText}
+                                onChange={setAboutText}
+                            />
+                        </div>
                         <div>
                             <RichTextEditor
                                 label="Misyonumuz"

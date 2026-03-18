@@ -4,9 +4,12 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle, X, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 
 export default function WhatsAppButton() {
+    const pathname = usePathname();
+    const isHome = pathname === '/';
     const settings = useSiteSettings();
     const [isOpen, setIsOpen] = useState(false);
     const [showGreeting, setShowGreeting] = useState(false);
@@ -15,12 +18,14 @@ export default function WhatsAppButton() {
     const whatsappNumber = settings?.socialLinks?.whatsapp || settings?.phone || '';
 
     useEffect(() => {
-        // Show greeting bubble after 3 seconds
+        // Show greeting bubble after 3 seconds, but only on homepage
+        if (!isHome) return;
+
         const timer = setTimeout(() => {
             if (!isOpen) setShowGreeting(true);
         }, 3000);
         return () => clearTimeout(timer);
-    }, [isOpen]);
+    }, [isOpen, isHome]);
 
     const handleOpen = () => {
         setIsOpen(true);

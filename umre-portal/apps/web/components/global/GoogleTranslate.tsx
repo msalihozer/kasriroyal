@@ -93,7 +93,12 @@ export default function GoogleTranslate() {
                 /* Hide the Google top bar with extreme prejudice */
                 .goog-te-banner-frame.skiptranslate, 
                 .goog-te-banner-frame, 
-                iframe.goog-te-banner-frame {
+                iframe.goog-te-banner-frame,
+                .goog-te-menu-frame,
+                #goog-gt-tt,
+                .goog-tooltip,
+                .goog-tooltip:hover,
+                .goog-te-balloon-panel {
                     display: none !important;
                     visibility: hidden !important;
                     height: 0 !important;
@@ -121,18 +126,13 @@ export default function GoogleTranslate() {
                     overflow: hidden;
                 }
                 
-                /* Hide tooltip */
-                .goog-te-balloon-frame {
-                    display: none !important;
-                }
-                #goog-gt-tt {
-                    display: none !important;
-                    visibility: hidden !important;
-                }
-                
                 /* Ensure no extra space */
                 #google_translate_element {
                     display: none !important;
+                }
+                .goog-text-highlight {
+                    background-color: transparent !important;
+                    box-shadow: none !important;
                 }
             `}</style>
         </>

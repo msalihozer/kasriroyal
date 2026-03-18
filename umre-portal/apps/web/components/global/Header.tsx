@@ -156,51 +156,71 @@ export default function Header() {
             </button>
 
             {/* Mobile Menu Overlay */}
-            <div className={`fixed inset-0 z-50 bg-white/98 backdrop-blur-xl flex flex-col transition-all duration-500 md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
-                <div className="flex flex-col items-center justify-center flex-1 w-full max-w-sm mx-auto px-8 pt-24 pb-12 overflow-y-auto">
-                    <div className="w-full space-y-2 mb-8">
-                        {menu.map((item, idx) => (
-                            <Link
-                                key={idx}
-                                href={item.url}
-                                className={`block w-full text-center py-3 text-xl font-serif font-medium tracking-tight transition-all duration-300 ${item.isCta
-                                    ? 'bg-[#bda569] text-white px-8 py-4 rounded-2xl hover:bg-[#a38b55] shadow-lg shadow-[#bda569]/20 !mt-8 font-bold uppercase text-sm tracking-widest'
-                                    : (pathname === item.url ? 'text-[#bda569] bg-[#bda569]/5 rounded-xl border border-[#bda569]/10' : 'text-gray-700 hover:text-[#bda569]')
-                                }`}
-                                style={{ 
-                                    transitionDelay: `${isOpen ? idx * 40 : 0}ms`,
-                                    transform: isOpen ? 'translateY(0)' : 'translateY(20px)',
-                                    opacity: isOpen ? 1 : 0
-                                }}
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
+            <div className={`fixed inset-0 z-50 bg-[#bda569] flex flex-col transition-all duration-500 md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
+                {/* Fixed Top Bar in Menu */}
+                <div className="flex justify-between items-center px-6 py-6 border-b border-white/10 shrink-0">
+                    <div className="max-w-[180px] overflow-hidden">
+                        {logoUrl ? (
+                            <img 
+                                src={logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`} 
+                                className="h-10 object-contain brightness-0 invert" 
+                                alt="Kasrı Royal" 
+                            />
+                        ) : (
+                            <span className="font-bold text-xl text-white uppercase tracking-tighter">Kasrı Royal</span>
+                        )}
                     </div>
+                    <button
+                        onClick={() => setIsOpen(false)}
+                        className="bg-white/10 p-2 rounded-full text-white backdrop-blur-md"
+                    >
+                        <X size={28} />
+                    </button>
+                </div>
 
-                    <div className="mt-auto w-full pt-8 border-t border-gray-100">
-                        <p className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Dil Seçimi</p>
-                        <div className="flex items-center justify-center gap-6">
-                            <button onClick={() => handleLanguageChange('tr')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'tr' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
-                                <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'tr' ? 'border-[#bda569]' : 'border-transparent'}`}>
-                                    <img src="https://flagcdn.com/w80/tr.png" alt="Türkçe" className="w-full h-full object-cover rounded-xl" />
-                                </div>
-                                <span className="text-[10px] font-bold text-gray-500 uppercase">TR</span>
-                            </button>
-                            <button onClick={() => handleLanguageChange('en')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'en' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
-                                <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'en' ? 'border-[#bda569]' : 'border-transparent'}`}>
-                                    <img src="https://flagcdn.com/w80/gb.png" alt="English" className="w-full h-full object-cover rounded-xl" />
-                                </div>
-                                <span className="text-[10px] font-bold text-gray-500 uppercase">EN</span>
-                            </button>
-                            <button onClick={() => handleLanguageChange('ar')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'ar' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
-                                <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'ar' ? 'border-[#bda569]' : 'border-transparent'}`}>
-                                    <img src="https://flagcdn.com/w80/sa.png" alt="Arabic" className="w-full h-full object-cover rounded-xl" />
-                                </div>
-                                <span className="text-[10px] font-bold text-gray-500 uppercase">AR</span>
-                            </button>
-                        </div>
+                <nav className="flex-1 overflow-y-auto py-10 px-6">
+                    <ul className="space-y-4">
+                        {menu.map((item: any, idx: number) => (
+                            <li key={idx}>
+                                <Link
+                                    href={item.url}
+                                    onClick={() => setIsOpen(false)}
+                                    className={`flex items-center justify-between p-4 rounded-2xl transition-all ${
+                                        pathname === item.url 
+                                            ? 'bg-white/10 text-white' 
+                                            : item.isCta 
+                                                ? 'bg-white text-[#bda569] font-black' 
+                                                : 'text-white/90 hover:bg-white/5'
+                                    }`}
+                                >
+                                    <span className="text-xl font-bold uppercase tracking-wide">
+                                        {item.label}
+                                    </span>
+                                    <Menu size={20} className="opacity-40" />
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+
+                <div className="mt-auto w-full p-8 border-t border-white/10 bg-black/5">
+                    <p className="text-center text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] mb-4">Dil Seçimi / Language</p>
+                    <div className="flex items-center justify-center gap-8">
+                        <button onClick={() => handleLanguageChange('tr')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'tr' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
+                            <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'tr' ? 'border-white' : 'border-transparent'}`}>
+                                <img src="https://flagcdn.com/w80/tr.png" alt="Türkçe" className="w-full h-full object-cover rounded-xl" />
+                            </div>
+                        </button>
+                        <button onClick={() => handleLanguageChange('en')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'en' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
+                            <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'en' ? 'border-white' : 'border-transparent'}`}>
+                                <img src="https://flagcdn.com/w80/gb.png" alt="English" className="w-full h-full object-cover rounded-xl" />
+                            </div>
+                        </button>
+                        <button onClick={() => handleLanguageChange('ar')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'ar' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
+                            <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'ar' ? 'border-white' : 'border-transparent'}`}>
+                                <img src="https://flagcdn.com/w80/sa.png" alt="Arabic" className="w-full h-full object-cover rounded-xl" />
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
