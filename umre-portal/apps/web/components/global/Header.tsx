@@ -13,59 +13,68 @@ export default function Header() {
     const [currentLang, setCurrentLang] = useState('tr');
 
     const handleLanguageChange = (lang: string) => {
-        // If language is Turkish, we want to clear the translation
-        if (lang === 'tr') {
-            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
-            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname;
-            
-            // Also try to clear from localStorage/sessionStorage if Google uses it
-            try {
-                localStorage.removeItem('googtrans');
-                sessionStorage.removeItem('googtrans');
-            } catch (e) {}
-        } else {
-            // Set cookie for Google Translate
-            const cookieValue = `/tr/${lang}`;
-            const domains = [
-                window.location.hostname,
-                '.' + window.location.hostname,
-                window.location.host,
-                '.' + window.location.host
-            ];
-
-            domains.forEach(domain => {
-                document.cookie = `googtrans=${cookieValue}; path=/; domain=${domain}`;
-            });
-            // Fallback for no domain
-            document.cookie = `googtrans=${cookieValue}; path=/`;
-        }
-
         setCurrentLang(lang);
-        
-        // Use a more forceful reload to ensure Google Translate picks up the change
-        window.location.href = window.location.pathname + window.location.search;
+
+        // Try to use Google Translate's select element directly (no reload needed)
+        const tryTranslate = (attempts = 0) => {
+            const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+            if (select) {
+                select.value = lang === 'tr' ? '' : lang;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+                return;
+            }
+            // If not ready yet, retry up to 10 times
+            if (attempts < 10) {
+                setTimeout(() => tryTranslate(attempts + 1), 300);
+            } else {
+                // Fallback: cookie + reload
+                if (lang === 'tr') {
+                    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+                    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname;
+                } else {
+                    const cookieValue = `/tr/${lang}`;
+                    document.cookie = `googtrans=${cookieValue}; path=/`;
+                    document.cookie = `googtrans=${cookieValue}; path=/; domain=${window.location.hostname}`;
+                    document.cookie = `googtrans=${cookieValue}; path=/; domain=.${window.location.hostname}`;
+                }
+                window.location.reload();
+            }
+        };
+
+        tryTranslate();
     };
 
     const pathname = usePathname();
     const isHome = pathname === '/';
 
     useEffect(() => {
-        // Read current language from cookie
-        const cookies = document.cookie.split(';');
-        const gtCookie = cookies.find(c => c.trim().startsWith('googtrans=') || c.trim().startsWith(' googtrans='));
-        if (gtCookie) {
-            const val = gtCookie.split('=')[1];
-            // val is like /tr/en, we want 'en'
-            const parts = val.split('/');
-            if (parts.length > 1) {
-                const lang = parts[parts.length - 1];
-                if (lang) setCurrentLang(lang);
+        // Read current language from Google Translate select OR cookie
+        const detectLang = () => {
+            const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+            if (select && select.value) {
+                setCurrentLang(select.value || 'tr');
+                return;
             }
-        } else {
+            // Fallback: read from cookie
+            const cookies = document.cookie.split(';');
+            const gtCookie = cookies.find(c => c.trim().startsWith('googtrans='));
+            if (gtCookie) {
+                const val = decodeURIComponent(gtCookie.split('=').slice(1).join('='));
+                const parts = val.split('/');
+                const lang = parts[parts.length - 1];
+                if (lang && lang !== 'tr') {
+                    setCurrentLang(lang);
+                    return;
+                }
+            }
             setCurrentLang('tr');
-        }
-    }, [pathname]); // Also re-check on path change
+        };
+
+        // Slight delay to wait for Google Translate widget to initialize
+        const timer = setTimeout(detectLang, 500);
+        return () => clearTimeout(timer);
+    }, [pathname]);
 
     useEffect(() => {
         // Fetch menu from API in real implementation
