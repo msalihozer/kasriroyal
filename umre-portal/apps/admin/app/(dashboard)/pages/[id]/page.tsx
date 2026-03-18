@@ -37,7 +37,7 @@ export default function PageFormPage({ params, searchParams }: { params: { id: s
     const fetchPage = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/pages/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/pages/${params.id}?status=all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

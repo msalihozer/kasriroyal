@@ -31,7 +31,7 @@ export default function PostFormPage({ params }: { params: { id: string } }) {
     const fetchPost = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts/${params.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/posts/${params.id}?status=all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {

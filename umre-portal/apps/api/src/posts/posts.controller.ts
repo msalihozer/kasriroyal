@@ -14,9 +14,10 @@ export class PostsController {
     }
 
     @Get(':slug')
-    findOne(@Param('slug') slug: string) {
-        // Public request uses default isAdmin = false
-        return this.postsService.findOne(slug);
+    findOne(@Param('slug') slug: string, @Query('status') status?: string) {
+        // If status=all is passed, we treat it as an admin request to see drafts/scheduled posts
+        const isAdmin = status === 'all';
+        return this.postsService.findOne(slug, isAdmin);
     }
 
     @UseGuards(JwtAuthGuard)

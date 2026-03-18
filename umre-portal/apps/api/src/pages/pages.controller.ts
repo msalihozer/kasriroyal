@@ -9,8 +9,10 @@ export class PagesController {
     constructor(private readonly pagesService: PagesService) { }
 
     @Get(':slug')
-    findOne(@Param('slug') slug: string) {
-        return this.pagesService.findOne(slug);
+    findOne(@Param('slug') slug: string, @Query('status') status?: string) {
+        // If status=all is passed, we treat it as an admin request
+        const isAdmin = status === 'all';
+        return this.pagesService.findOne(slug, isAdmin);
     }
 
     @Get()
