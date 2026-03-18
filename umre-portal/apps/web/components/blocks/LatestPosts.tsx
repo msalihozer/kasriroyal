@@ -20,7 +20,7 @@ export default function LatestPosts({ data }: { data: { title?: string, items: a
                                 <img
                                     src={post.coverImageUrl ? encodeURI(getImageUrl(post.coverImageUrl)) : 'https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2000&auto=format&fit=crop'}
                                     alt={post.title}
-                                    className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-700"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                             </div>

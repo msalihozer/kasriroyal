@@ -33,6 +33,7 @@ model SiteSettings {
   phones                Json?
   tourImportantNotes    String?
   vision                String?
+  aboutText             String?
 }
 
 model MenuItem {

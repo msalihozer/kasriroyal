@@ -35,7 +35,7 @@ export default function VipPackagesList({ vipPages }: { vipPages: any[] }) {
                                             alt={page.title}
                                             fill
                                             sizes="(max-width: 768px) 100vw, 50vw"
-                                            className="object-contain p-4 hover:scale-105 transition-transform duration-[1.5s]"
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center">

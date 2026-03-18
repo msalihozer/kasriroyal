@@ -24,6 +24,7 @@ export default function SettingsPage() {
         heroSubtitle: '',
         heroTitleColor: '#ffffff',
         tourImportantNotes: '', // Added
+        aboutText: '', // Added
 
         // Dynamic Lists
         footerLogos: [] as FooterLogo[],
@@ -89,6 +90,7 @@ export default function SettingsPage() {
                         heroSubtitle: data.heroSubtitle || '',
                         heroTitleColor: data.heroTitleColor || '#ffffff',
                         tourImportantNotes: data.tourImportantNotes || '',
+                        aboutText: data.aboutText || '',
 
                         phones: initialPhones,
                         footerLogos: initialFooterLogos,
@@ -242,6 +244,18 @@ export default function SettingsPage() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                {/* About Us Section */}
+                <section>
+                    <h2 className="text-xl font-semibold mb-4 pb-2 border-b">Hakkımızda Sayfası İçeriği</h2>
+                    <div className="space-y-4">
+                        <RichTextEditor
+                            label="Hakkımızda Metni"
+                            value={settings.aboutText || ''}
+                            onChange={(val) => setSettings({ ...settings, aboutText: val })}
+                        />
                     </div>
                 </section>
 
