@@ -15,29 +15,39 @@ export default function Header() {
     const handleLanguageChange = (lang: string) => {
         setCurrentLang(lang);
 
-        // Try to use Google Translate's select element directly (no reload needed)
+        if (lang === 'tr') {
+            // Hard reset for Turkish: Clear cookies and reload
+            const domains = [
+                window.location.hostname,
+                '.' + window.location.hostname,
+                window.location.host,
+                '.' + window.location.host
+            ];
+
+            domains.forEach(domain => {
+                document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain}`;
+            });
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            
+            // Force reload to original source
+            window.location.reload();
+            return;
+        }
+
+        // Fast programmatic translate for other languages
         const tryTranslate = (attempts = 0) => {
             const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
             if (select) {
-                select.value = lang === 'tr' ? '' : lang;
+                select.value = lang;
                 select.dispatchEvent(new Event('change', { bubbles: true }));
                 return;
             }
-            // If not ready yet, retry up to 10 times
             if (attempts < 10) {
                 setTimeout(() => tryTranslate(attempts + 1), 300);
             } else {
-                // Fallback: cookie + reload
-                if (lang === 'tr') {
-                    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-                    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
-                    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname;
-                } else {
-                    const cookieValue = `/tr/${lang}`;
-                    document.cookie = `googtrans=${cookieValue}; path=/`;
-                    document.cookie = `googtrans=${cookieValue}; path=/; domain=${window.location.hostname}`;
-                    document.cookie = `googtrans=${cookieValue}; path=/; domain=.${window.location.hostname}`;
-                }
+                // Fallback
+                const cookieValue = `/tr/${lang}`;
+                document.cookie = `googtrans=${cookieValue}; path=/`;
                 window.location.reload();
             }
         };

@@ -62,14 +62,20 @@ export default function GoogleTranslate() {
                 .skiptranslate,
                 #goog-gt-tt,
                 .goog-tooltip,
-                .goog-te-balloon-panel {
+                .goog-te-balloon-panel,
+                .goog-te-spinner-pos,
+                .VIpgJd-ZVi9od-ORHb-OEVmcd {
                     display: none !important;
                     visibility: hidden !important;
                     height: 0 !important;
+                    width: 0 !important;
+                    opacity: 0 !important;
+                    pointer-events: none !important;
                 }
                 body {
                     top: 0px !important;
                     position: static !important;
+                    margin-top: 0px !important;
                 }
                 .goog-text-highlight {
                     background-color: transparent !important;
