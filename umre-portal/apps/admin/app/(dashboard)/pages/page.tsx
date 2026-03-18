@@ -16,7 +16,7 @@ export default function PagesPage() {
     const fetchPages = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/pages`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/pages?status=all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -57,11 +57,28 @@ export default function PagesPage() {
         {
             key: 'status',
             label: 'Durum',
-            render: (value: string) => (
-                <span className={`px-2 py-1 rounded text-xs ${value === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                    {value === 'published' ? 'Yayında' : 'Taslak'}
-                </span>
-            )
+            render: (value: string, item: any) => {
+                const isPublished = value === 'published';
+                const isScheduled = isPublished && item.publishedAt && new Date(item.publishedAt) > new Date();
+                
+                if (isScheduled) {
+                    return (
+                        <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200 uppercase">
+                            Zamanlandı
+                        </span>
+                    );
+                }
+                
+                return (
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase border ${
+                        isPublished 
+                        ? 'bg-green-50 text-green-700 border-green-200' 
+                        : 'bg-orange-50 text-orange-700 border-orange-200'
+                    }`}>
+                        {isPublished ? 'Yayında' : 'Taslak'}
+                    </span>
+                );
+            }
         },
     ];
 
