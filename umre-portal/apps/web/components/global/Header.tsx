@@ -50,7 +50,7 @@ export default function Header() {
             { label: 'Oteller', url: '/oteller' },
             { label: 'Transfer', url: '/araclar' },
             { label: 'Blog', url: '/blog' },
-            { label: 'Hakkımızda', url: '/pages/about' },
+            { label: 'Hakkımızda', url: '/hakkimizda' },
             { label: 'İletişim', url: '/pages/contact' },
             { label: 'S.S.S.', url: '/sss' },
             { label: 'Kendi Turunu Planla', url: '/kendi-turunu-planla', isCta: true },

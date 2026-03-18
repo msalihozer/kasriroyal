@@ -29,6 +29,16 @@ export default async function AboutPage() {
             </div>
 
             <div className="container mx-auto px-4 py-16">
+                {/* Dynamic About Content */}
+                {settings?.aboutText && (
+                    <div className="max-w-4xl mx-auto mb-20">
+                        <div 
+                            className="prose prose-lg prose-amber max-w-none text-gray-700 leading-relaxed font-light"
+                            dangerouslySetInnerHTML={{ __html: settings.aboutText }}
+                        />
+                        <div className="w-24 h-1 bg-[#bda569] mt-10 rounded-full opacity-30"></div>
+                    </div>
+                )}
 
                 {/* Mission & Vision */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
