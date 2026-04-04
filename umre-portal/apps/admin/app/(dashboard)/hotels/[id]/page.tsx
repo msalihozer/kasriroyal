@@ -264,6 +264,7 @@ export default function HotelFormPage({ params }: { params: { id: string } }) {
                         value={formData.gallery}
                         onChange={(urls) => setFormData({ ...formData, gallery: urls })}
                         label="Otel Görselleri (Galeri)"
+                        disabledCrop={true}
                     />
                 </div>
 

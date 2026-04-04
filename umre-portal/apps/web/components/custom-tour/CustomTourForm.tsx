@@ -287,14 +287,55 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                     <label className="block text-sm font-bold text-gray-700 mb-2">E-posta</label>
                                     <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-[13px] rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" placeholder="ornek@email.com" />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">Yetişkin</label>
-                                        <input type="number" min="1" max="50" name="adultCount" value={formData.adultCount} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
+                                    <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                                                <Users size={20} />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold text-gray-900">Yetişkin</label>
+                                                <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">13+ Yaş</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, adultCount: Math.max(1, prev.adultCount - 1) }))}
+                                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-[#bda569] hover:text-[#bda569] transition-all"
+                                            >-</button>
+                                            <span className="w-6 text-center font-bold text-gray-900 text-lg">{formData.adultCount}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, adultCount: Math.min(50, prev.adultCount + 1) }))}
+                                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-[#bda569] hover:text-[#bda569] transition-all"
+                                            >+</button>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">Çocuk (0-12)</label>
-                                        <input type="number" min="0" max="50" name="childCount" value={formData.childCount} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" />
+
+                                    <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-pink-50 text-pink-500 rounded-lg flex items-center justify-center">
+                                                <Users size={18} />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold text-gray-900">Çocuk</label>
+                                                <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">0-12 Yaş</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, childCount: Math.max(0, prev.childCount - 1) }))}
+                                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-[#bda569] hover:text-[#bda569] transition-all"
+                                            >-</button>
+                                            <span className="w-6 text-center font-bold text-gray-900 text-lg">{formData.childCount}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, childCount: Math.min(50, prev.childCount + 1) }))}
+                                                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-[#bda569] hover:text-[#bda569] transition-all"
+                                            >+</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -316,7 +357,14 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="md:col-span-1">
                                         <label className="block text-sm font-bold text-gray-700 mb-2">Planlanan Gidiş Tarihi</label>
-                                        <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none" />
+                                        <input
+                                            type="date"
+                                            name="startDate"
+                                            min={new Date().toISOString().split('T')[0]}
+                                            value={formData.startDate}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">Mekke Süresi</label>
@@ -558,9 +606,10 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                             </div>
                                             <div className="flex-1">
                                                 <h4 className="font-bold text-gray-900">{vehicle.modelName}</h4>
-                                                <div className="text-xs text-gray-500 leading-relaxed max-h-16 overflow-y-auto pr-2 custom-scrollbar">
-                                                    {vehicle.description}
-                                                </div>
+                                                <div 
+                                                    className="text-xs text-gray-500 leading-relaxed max-h-16 overflow-y-auto pr-2 custom-scrollbar transition-all"
+                                                    dangerouslySetInnerHTML={{ __html: vehicle.description || '' }}
+                                                />
                                                 <div className="flex items-center gap-3 mt-2">
                                                     {vehicle.showCapacity !== false && (
                                                         <span className="text-xs bg-gray-100 px-2 py-1 rounded flex items-center gap-1">

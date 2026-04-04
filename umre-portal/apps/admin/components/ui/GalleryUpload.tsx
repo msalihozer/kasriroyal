@@ -8,9 +8,10 @@ interface GalleryUploadProps {
     value?: string[];
     onChange: (urls: string[]) => void;
     label?: string;
+    disabledCrop?: boolean;
 }
 
-export default function GalleryUpload({ value = [], onChange, label = "Galeri Resimleri" }: GalleryUploadProps) {
+export default function GalleryUpload({ value = [], onChange, label = "Galeri Resimleri", disabledCrop = false }: GalleryUploadProps) {
     const [uploading, setUploading] = useState(false);
     const [imageToCrop, setImageToCrop] = useState<string | null>(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -35,6 +36,38 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
+
+        if (disabledCrop) {
+            setUploading(true);
+            const newUrls: string[] = [];
+            const token = localStorage.getItem('token');
+
+            try {
+                for (const file of files) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/media/upload`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: formData
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        newUrls.push(data.url);
+                    }
+                }
+                if (newUrls.length > 0) {
+                    onChange([...value, ...newUrls]);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Yükleme sırasında hata oluştu');
+            } finally {
+                setUploading(false);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            }
+            return;
+        }
 
         setPendingFiles(files);
         startCropping(files[0]);

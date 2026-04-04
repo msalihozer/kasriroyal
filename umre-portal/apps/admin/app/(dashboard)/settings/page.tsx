@@ -291,6 +291,7 @@ export default function SettingsPage() {
                                         value={logo.imageUrl}
                                         onChange={(url) => updateFooterLogo(index, 'imageUrl', url)}
                                         label="Görsel"
+                                        compact={true}
                                     />
                                 </div>
                                 <div className="flex-1 space-y-3 w-full">

@@ -8,9 +8,10 @@ interface ImageUploadProps {
     value?: string;
     onChange: (url: string) => void;
     label?: string;
+    compact?: boolean;
 }
 
-export default function ImageUpload({ value, onChange, label = "Resim Yükle" }: ImageUploadProps) {
+export default function ImageUpload({ value, onChange, label = "Resim Yükle", compact = false }: ImageUploadProps) {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(value || '');
     const [imageToCrop, setImageToCrop] = useState<string | null>(null);
@@ -109,11 +110,11 @@ export default function ImageUpload({ value, onChange, label = "Resim Yükle" }:
             {preview ? (
                 <div className="relative inline-block group">
                     {preview.match(/\.(mp4|webm|ogg)$/i) ? (
-                        <div className="w-64 h-40 bg-gray-100 rounded-lg border flex flex-col items-center justify-center text-gray-500">
-                            <span className="text-xs p-2 text-center break-all text-gray-400 font-mono">Video Yüklendi</span>
+                        <div className={`${compact ? 'w-full h-24' : 'w-64 h-40'} bg-gray-100 rounded-lg border flex flex-col items-center justify-center text-gray-500`}>
+                            <span className="text-[10px] p-1 text-center break-all text-gray-400 font-mono">Video</span>
                         </div>
                     ) : (
-                        <div className="relative w-64 h-40 rounded-xl overflow-hidden border shadow-sm group-hover:shadow-md transition-all">
+                        <div className={`relative ${compact ? 'w-full h-24' : 'w-64 h-40'} rounded-xl overflow-hidden border shadow-sm group-hover:shadow-md transition-all`}>
                             <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                                 <button
@@ -139,20 +140,20 @@ export default function ImageUpload({ value, onChange, label = "Resim Yükle" }:
             ) : (
                 <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full h-40 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/30 transition-all text-gray-400 hover:text-blue-500 group"
+                    className={`w-full ${compact ? 'h-24' : 'h-40'} border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/30 transition-all text-gray-400 hover:text-blue-500 group`}
                 >
                     {uploading ? (
                         <div className="flex flex-col items-center gap-2">
                             <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                            <span className="text-sm font-medium">Yükleniyor...</span>
+                            <span className="text-[10px] font-medium">Yükleniyor...</span>
                         </div>
                     ) : (
                         <>
-                            <div className="p-3 bg-gray-100 rounded-full group-hover:bg-blue-100 group-hover:text-blue-500 transition-colors mb-2">
-                                <ImageIcon size={32} />
+                            <div className={`${compact ? 'p-1.5' : 'p-3'} bg-gray-100 rounded-full group-hover:bg-blue-100 group-hover:text-blue-500 transition-colors mb-2`}>
+                                <ImageIcon size={compact ? 20 : 32} />
                             </div>
-                            <span className="text-sm font-bold">Resim Seçin</span>
-                            <span className="text-xs opacity-60">veya sürükleyip bırakın</span>
+                            <span className={`${compact ? 'text-[10px]' : 'text-sm'} font-bold`}>Resim Seçin</span>
+                            {!compact && <span className="text-xs opacity-60">veya sürükleyip bırakın</span>}
                         </>
                     )}
                 </div>
