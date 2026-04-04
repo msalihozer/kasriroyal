@@ -4,6 +4,31 @@ import { Calendar, Users, Plane, Hotel, Car, MessageSquare, CheckCircle, Chevron
 import Link from 'next/link';
 import Image from 'next/image';
 import { getImageUrl } from '@/utils/image-url';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import Select from 'react-select';
+
+const TURKISH_AIRPORTS = [
+    { value: 'IST', label: 'İstanbul Havalimanı (IST)' },
+    { value: 'SAW', label: 'Sabiha Gökçen Havalimanı (SAW)' },
+    { value: 'ESB', label: 'Ankara Esenboğa Havalimanı (ESB)' },
+    { value: 'ADB', label: 'İzmir Adnan Menderes Havalimanı (ADB)' },
+    { value: 'AYT', label: 'Antalya Havalimanı (AYT)' },
+    { value: 'ADA', label: 'Adana Şakirpaşa Havalimanı (ADA)' },
+    { value: 'TZX', label: 'Trabzon Havalimanı (TZX)' },
+    { value: 'DLM', label: 'Dalaman Havalimanı (DLM)' },
+    { value: 'BJV', label: 'Milas-Bodrum Havalimanı (BJV)' },
+    { value: 'GZT', label: 'Gaziantep Havalimanı (GZT)' },
+    { value: 'KYK', label: 'Kayseri Havalimanı (KYK)' },
+    { value: 'SZF', label: 'Samsun Çarşamba Havalimanı (SZF)' },
+    { value: 'Bursa', label: 'Bursa Yenişehir Havalimanı (YEI)' },
+    { value: 'Konya', label: 'Konya Havalimanı (KYA)' },
+    { value: 'Diyarbakir', label: 'Diyarbakır Havalimanı (DIY)' },
+    { value: 'Erzurum', label: 'Erzurum Havalimanı (ERZ)' },
+    { value: 'Van', label: 'Van Ferit Melen Havalimanı (VAN)' },
+    { value: 'Hatay', label: 'Hatay Havalimanı (HTY)' },
+    { value: 'Malatya', label: 'Malatya Erhaç Havalimanı (MLX)' },
+].sort((a, b) => a.label.localeCompare(b.label));
 
 interface CustomTourFormProps {
     hotels: any[];
@@ -15,6 +40,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
+    const [showSummary, setShowSummary] = useState(false);
 
     // Client-side data fetching state
     const [hotels, setHotels] = useState<any[]>(initialHotels);
@@ -69,7 +95,8 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
         fullName: '',
         phone: '',
         email: '',
-        personCount: 1,
+        adultCount: 1,
+        childCount: 0,
 
         // Step 2: Dates & Flights
         startDate: '',
@@ -143,23 +170,26 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
             alert("Lütfen gidiş tarihi ve kalkış yerini belirtiniz.");
             return;
         }
+        if (step === 4) {
+            setShowSummary(true);
+            return;
+        }
         setStep(prev => prev + 1);
     };
 
     const prevStep = () => setStep(prev => prev - 1);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (step < 4) return;
+    const handleSubmit = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
         setLoading(true);
 
         const payload = {
             ...formData,
-            personCount: Number(formData.personCount) || 1,
+            personCount: Number(formData.adultCount || 0) + Number(formData.childCount || 0),
 
             // Getting full object details for submission
-            mekkeHotel: hotels.find(h => h.id === formData.selectedMekkeHotelId)?.title,
-            medineHotel: hotels.find(h => h.id === formData.selectedMedineHotelId)?.title,
+            mekkeHotel: hotels.find(h => h.id === formData.selectedMekkeHotelId)?.title || (formData.selectedMekkeHotelId === 'others' ? 'Farklı Bir Otel' : ''),
+            medineHotel: hotels.find(h => h.id === formData.selectedMedineHotelId)?.title || (formData.selectedMedineHotelId === 'others' ? 'Farklı Bir Otel' : ''),
             vehicle: vehicles.find(v => v.id === formData.selectedVehicleId)?.modelName,
         };
 
@@ -172,7 +202,6 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
 
             if (res.ok) {
                 setSubmitted(true);
-                window.scrollTo(0, 0);
             } else {
                 alert('Bir hata oluştu. Lütfen tekrar deneyiniz.');
             }
@@ -244,15 +273,29 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Telefon</label>
-                                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" placeholder="0555 555 55 55" />
+                                    <PhoneInput
+                                        country={'tr'}
+                                        value={formData.phone}
+                                        onChange={phone => setFormData(prev => ({ ...prev, phone }))}
+                                        inputClass="!w-full !h-[50px] !rounded-xl !border-gray-300 !focus:ring-2 !focus:ring-[#bda569]"
+                                        containerClass="!w-full"
+                                        buttonClass="!rounded-l-xl !border-gray-300"
+                                        placeholder="+90 555 555 55 55"
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">E-posta</label>
-                                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" placeholder="ornek@email.com" />
+                                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-[13px] rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" placeholder="ornek@email.com" />
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Kişi Sayısı</label>
-                                    <input type="number" min="1" max="50" name="personCount" value={formData.personCount} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Yetişkin</label>
+                                        <input type="number" min="1" max="50" name="adultCount" value={formData.adultCount} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Çocuk (0-12)</label>
+                                        <input type="number" min="0" max="50" name="childCount" value={formData.childCount} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -291,8 +334,22 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">Kalkış Yeri (Şehir / Havalimanı)</label>
-                                        <input type="text" name="departureCity" value={formData.departureCity} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none" placeholder="Örn: İstanbul Havalimanı, Sabiha Gökçen..." />
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Kalkış Yeri (Havalimanı)</label>
+                                        <Select
+                                            options={TURKISH_AIRPORTS}
+                                            value={TURKISH_AIRPORTS.find(a => a.value === formData.departureCity)}
+                                            onChange={(val: any) => handleSelection('departureCity', val?.value)}
+                                            placeholder="Havalimanı seçiniz..."
+                                            noOptionsMessage={() => "Havalimanı bulunamadı"}
+                                            styles={{
+                                                control: (base) => ({
+                                                    ...base,
+                                                    borderRadius: '12px',
+                                                    padding: '4px',
+                                                    borderColor: '#d1d5db'
+                                                })
+                                            }}
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-bold text-gray-700 mb-2">Havayolu Şirketi</label>
@@ -501,11 +558,15 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                             </div>
                                             <div className="flex-1">
                                                 <h4 className="font-bold text-gray-900">{vehicle.modelName}</h4>
-                                                <p className="text-xs text-gray-500 line-clamp-2">{vehicle.description}</p>
+                                                <div className="text-xs text-gray-500 leading-relaxed max-h-16 overflow-y-auto pr-2 custom-scrollbar">
+                                                    {vehicle.description}
+                                                </div>
                                                 <div className="flex items-center gap-3 mt-2">
-                                                    <span className="text-xs bg-gray-100 px-2 py-1 rounded flex items-center gap-1">
-                                                        <Users size={12} /> Kapasite: {vehicle.capacity || '4+'}
-                                                    </span>
+                                                    {vehicle.showCapacity !== false && (
+                                                        <span className="text-xs bg-gray-100 px-2 py-1 rounded flex items-center gap-1">
+                                                            <Users size={12} /> Kapasite: {vehicle.capacity || '4+'}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div className={`w-6 h-6 rounded-full border flex items-center justify-center flex-shrink-0 ${String(formData.selectedVehicleId) === String(vehicle.id) ? 'bg-[#bda569] border-[#bda569]' : 'border-gray-300'}`}>
@@ -570,19 +631,81 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                         </button>
                     )}
                     <div className="ml-auto">
-                        {step < 4 ? (
-                            <button type="button" onClick={nextStep} className="bg-[#bda569] hover:bg-[#a38b55] text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl">
-                                Devam Et <ChevronRight size={20} />
-                            </button>
-                        ) : (
-                            <button type="submit" disabled={!isConfirmed || loading} className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
-                                {loading ? 'Gönderiliyor...' : 'Talebi Oluştur'}
-                                {!loading && <CheckCircle size={20} />}
-                            </button>
-                        )}
+                        <button type="button" onClick={nextStep} className="bg-[#bda569] hover:bg-[#a38b55] text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl">
+                            {step < 4 ? 'Devam Et' : 'Özeti Gör'} <ChevronRight size={20} />
+                        </button>
                     </div>
                 </div>
             </form >
+
+            {/* Summary Modal */}
+            {showSummary && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowSummary(false)}></div>
+                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative z-10 overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="bg-[#bda569] p-6 text-white">
+                            <h3 className="text-2xl font-serif font-bold">Tur Talebi Özeti</h3>
+                            <p className="opacity-90 text-sm">Lütfen bilgilerinizin doğruluğunu kontrol ediniz.</p>
+                        </div>
+                        <div className="p-8 max-h-[70vh] overflow-y-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                                <div>
+                                    <h4 className="font-bold text-gray-400 uppercase text-xs mb-3 tracking-wider">İletişim Bilgileri</h4>
+                                    <p className="text-gray-900 font-bold text-lg mb-1">{formData.fullName}</p>
+                                    <p className="text-gray-600">{formData.phone}</p>
+                                    <p className="text-gray-600">{formData.email || '-'}</p>
+                                    <p className="mt-2 inline-block bg-gray-100 px-3 py-1 rounded-full font-bold">
+                                        {formData.adultCount} Yetişkin + {formData.childCount} Çocuk
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-gray-400 uppercase text-xs mb-3 tracking-wider">Uçuş Bilgileri</h4>
+                                    <p className="text-gray-900 font-bold">{TURKISH_AIRPORTS.find(a => a.value === formData.departureCity)?.label || formData.departureCity}</p>
+                                    <p className="text-gray-600">{formData.startDate} gidiş</p>
+                                    <p className="text-gray-600">{formData.airline || 'En Uygun Havayolu'} ({formData.flightClass === 'Economy' ? 'Ekonomi' : 'Business'})</p>
+                                </div>
+                                <div className="md:col-span-2 border-t pt-6">
+                                    <h4 className="font-bold text-gray-400 uppercase text-xs mb-3 tracking-wider">Konaklama ve Transfer</h4>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-gray-50 p-4 rounded-xl">
+                                            <p className="text-[#bda569] font-bold text-xs mb-1">MEKKE ({formData.mekkeDays} Gece)</p>
+                                            <p className="font-bold">{hotels.find(h => h.id === formData.selectedMekkeHotelId)?.title || (formData.selectedMekkeHotelId === 'others' ? 'Farklı Bir Otel' : '-')}</p>
+                                        </div>
+                                        <div className="bg-gray-50 p-4 rounded-xl">
+                                            <p className="text-[#bda569] font-bold text-xs mb-1">MEDİNE ({formData.medineDays} Gece)</p>
+                                            <p className="font-bold">{hotels.find(h => h.id === formData.selectedMedineHotelId)?.title || (formData.selectedMedineHotelId === 'others' ? 'Farklı Bir Otel' : '-')}</p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 bg-gray-50 p-4 rounded-xl">
+                                        <p className="text-gray-500 text-xs mb-1">ARA TRANSFER & EKSTRALAR</p>
+                                        <p className="font-bold">{vehicles.find(v => v.id === formData.selectedVehicleId)?.modelName || 'Seçilmedi'}</p>
+                                        {formData.guideRequested && <p className="text-green-600 text-xs font-bold mt-1">✓ Özel Rehber Hizmeti İstiyorum</p>}
+                                    </div>
+                                </div>
+                                {formData.message && (
+                                    <div className="md:col-span-2 border-t pt-6">
+                                        <h4 className="font-bold text-gray-400 uppercase text-xs mb-2 tracking-wider">Özel Not</h4>
+                                        <p className="text-gray-600 italic">"{formData.message}"</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="p-6 bg-gray-100 border-t flex flex-col sm:flex-row gap-4">
+                            <button type="button" onClick={() => setShowSummary(false)} className="flex-1 px-8 py-4 bg-white border border-gray-300 rounded-2xl font-bold text-gray-600 hover:bg-gray-50 transition-all">
+                                Düzenle
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleSubmit}
+                                disabled={loading}
+                                className="flex-[2] px-8 py-4 bg-green-600 text-white rounded-2xl font-bold hover:bg-green-700 transition-all shadow-lg hover:shadow-xl shadow-green-600/20 disabled:opacity-50"
+                            >
+                                {loading ? 'Gönderiliyor...' : 'Talebimi Onaylıyorum ve Gönder'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 }

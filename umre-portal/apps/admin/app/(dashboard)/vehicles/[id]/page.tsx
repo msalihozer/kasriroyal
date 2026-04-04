@@ -16,6 +16,7 @@ export default function VehicleFormPage({ params }: { params: { id: string } }) 
         features: [] as string[],
         isFeatured: false,
         status: 'draft',
+        showCapacity: true,
     });
 
     const [featuresInput, setFeaturesInput] = useState('');
@@ -164,6 +165,17 @@ export default function VehicleFormPage({ params }: { params: { id: string } }) 
                             onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                         />
                         <span className="text-sm font-medium text-gray-700">Yayında</span>
+                    </label>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            checked={formData.showCapacity}
+                            onChange={(e) => setFormData({ ...formData, showCapacity: e.target.checked })}
+                        />
+                        <span className="text-sm font-medium text-gray-700">Kapasiteyi Sitede Göster</span>
                     </label>
                 </div>
 

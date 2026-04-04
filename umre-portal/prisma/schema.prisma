@@ -198,6 +198,7 @@ model Vehicle {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   publishedAt DateTime?
+  showCapacity Boolean   @default(true)
   tours       Tour[]
 }
 
@@ -302,6 +303,8 @@ model CustomTourRequest {
   phone              String
   email              String
   personCount        Int
+  adultCount         Int       @default(1)
+  childCount         Int       @default(0)
   mekkeDays          Int?
   medineDays         Int?
   startDate          DateTime?
