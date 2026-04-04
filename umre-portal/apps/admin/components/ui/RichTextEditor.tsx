@@ -98,13 +98,17 @@ export default function RichTextEditor({ value, onChange, label = "İçerik" }: 
         });
     };
 
-    // Update value if changed externally (be careful of loops)
+    // Update value if changed externally (e.g. when post data is loaded)
     useEffect(() => {
-        if (quillRef.current && value && value !== quillRef.current.root.innerHTML) {
-            // Only update if significantly different to avoid cursor jumps
-            // Simple check: if editor is empty but value has content
-            if (quillRef.current.root.innerHTML === '<p><br></p>' && value !== '<p><br></p>') {
-                quillRef.current.clipboard.dangerouslyPasteHTML(value);
+        if (quillRef.current && typeof value === 'string') {
+            const currentHtml = quillRef.current.root.innerHTML;
+            // Only update if current editor content is fundamentally different from incoming value
+            // and avoid updating if editor is just "empty" and value is empty
+            if (value !== currentHtml) {
+                // If the editor is empty (or just has a break) and we have new value, or if it's a completely different content
+                if (currentHtml === '<p><br></p>' || (value.length > 0 && !currentHtml.includes(value.substring(0, 20)))) {
+                    quillRef.current.clipboard.dangerouslyPasteHTML(value);
+                }
             }
         }
     }, [value]);

@@ -150,7 +150,10 @@ export default function Header() {
             {/* Logo */}
             <Link 
                 href="/" 
-                className={`flex-shrink-0 transition-all duration-500 z-[60] ${isOpen ? 'opacity-0 scale-90 pointer-events-none' : 'opacity-100'} bg-white p-1.5 rounded-xl shadow-sm border border-gray-100/50 flex items-center justify-center`}
+                className={`flex-shrink-0 transition-all duration-500 z-[60] ${isOpen ? 'opacity-0 scale-90 pointer-events-none' : 'opacity-100'} 
+                    bg-white p-1.5 shadow-md border border-gray-100/50 flex items-center justify-center
+                    ${(isHome && !scrolled) ? 'rounded-[2rem] px-4' : 'rounded-full w-14 h-14'}
+                `}
             >
                 <img
                     src={
