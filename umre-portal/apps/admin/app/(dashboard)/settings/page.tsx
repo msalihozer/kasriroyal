@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import RichTextEditor from '../../../components/ui/RichTextEditor';
-import { Plus, Trash2, Phone, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
 
 interface PhoneItem {
     label: string;
@@ -23,7 +23,7 @@ export default function SettingsPage() {
         heroTitle: '',
         heroSubtitle: '',
         heroTitleColor: '#ffffff',
-        tourImportantNotes: '', // Added
+        tourImportantNotes: '',
 
         // Dynamic Lists
         footerLogos: [] as FooterLogo[],
@@ -40,7 +40,13 @@ export default function SettingsPage() {
             facebook: '',
             whatsapp: '',
             youtube: ''
-        }
+        },
+
+        // Legal
+        kvkkText: '',
+        privacyPolicyText: '',
+        distanceSalesText: '',
+        cancellationText: ''
     });
     const [saving, setSaving] = useState(false);
 
@@ -98,7 +104,12 @@ export default function SettingsPage() {
                         email: data.email || '',
                         mapEmbedUrl: data.mapEmbedUrl || '',
 
-                        socialLinks: data.socialLinks || { instagram: '', facebook: '', whatsapp: '', youtube: '' }
+                        socialLinks: data.socialLinks || { instagram: '', facebook: '', whatsapp: '', youtube: '' },
+                        
+                        kvkkText: data.kvkkText || '',
+                        privacyPolicyText: data.privacyPolicyText || '',
+                        distanceSalesText: data.distanceSalesText || '',
+                        cancellationText: data.cancellationText || ''
                     });
                 }
             }
@@ -414,12 +425,6 @@ export default function SettingsPage() {
                                 value={settings.mapEmbedUrl || ''}
                                 onChange={(e) => setSettings({ ...settings, mapEmbedUrl: e.target.value })}
                             />
-                            <p className="text-xs text-gray-500 mt-1">Google Haritalar'dan 'Paylaş' (Share) butonuna basın, ardından <strong>'Haritayı yerleştir' (Embed a map)</strong> sekmesine geçip HTML'i kopyalayın.</p>
-                            {settings.mapEmbedUrl && settings.mapEmbedUrl.includes('maps.app.goo.gl') && (
-                                <p className="text-xs text-red-500 mt-1 font-bold">
-                                    Dikkat: 'maps.app.goo.gl' linki haritada çalışmaz. Lütfen 'Haritayı yerleştir' sekmesindeki kodu kullanın.
-                                </p>
-                            )}
                         </div>
                     </div>
                 </section>
@@ -428,58 +433,41 @@ export default function SettingsPage() {
                 <section>
                     <h2 className="text-xl font-semibold mb-4 pb-2 border-b">Sosyal Medya Linkleri</h2>
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
-                            <input
-                                type="text"
-                                className="w-full border rounded-lg p-2"
-                                placeholder="https://instagram.com/..."
-                                value={settings.socialLinks?.instagram || ''}
-                                onChange={(e) => setSettings({
-                                    ...settings,
-                                    socialLinks: { ...settings.socialLinks, instagram: e.target.value }
-                                })}
+                        {['instagram', 'facebook', 'whatsapp', 'youtube'].map((s) => (
+                            <div key={s}>
+                                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">{s}</label>
+                                <input
+                                    type="text"
+                                    className="w-full border rounded-lg p-2"
+                                    placeholder={`https://${s}.com/...`}
+                                    value={(settings.socialLinks as any)?.[s] || ''}
+                                    onChange={(e) => setSettings({
+                                        ...settings,
+                                        socialLinks: { ...settings.socialLinks, [s]: e.target.value }
+                                    })}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Legal Texts */}
+                <section>
+                    <h2 className="text-xl font-semibold mb-4 pb-2 border-b">Hukuki Metinler (Sözleşmeler)</h2>
+                    <div className="space-y-6">
+                        {[
+                            { id: 'kvkkText', label: 'KVKK Aydınlatma Metni' },
+                            { id: 'privacyPolicyText', label: 'Gizlilik Politikası' },
+                            { id: 'distanceSalesText', label: 'Mesafeli Satış Sözleşmesi' },
+                            { id: 'cancellationText', label: 'İptal ve İade Koşulları' }
+                        ].map((field) => (
+                            <RichTextEditor
+                                key={field.id}
+                                label={field.label}
+                                value={(settings as any)[field.id] || ''}
+                                onChange={(val) => setSettings({ ...settings, [field.id]: val })}
                             />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Facebook</label>
-                            <input
-                                type="text"
-                                className="w-full border rounded-lg p-2"
-                                placeholder="https://facebook.com/..."
-                                value={settings.socialLinks?.facebook || ''}
-                                onChange={(e) => setSettings({
-                                    ...settings,
-                                    socialLinks: { ...settings.socialLinks, facebook: e.target.value }
-                                })}
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
-                            <input
-                                type="text"
-                                className="w-full border rounded-lg p-2"
-                                placeholder="90555..."
-                                value={settings.socialLinks?.whatsapp || ''}
-                                onChange={(e) => setSettings({
-                                    ...settings,
-                                    socialLinks: { ...settings.socialLinks, whatsapp: e.target.value }
-                                })}
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">YouTube</label>
-                            <input
-                                type="text"
-                                className="w-full border rounded-lg p-2"
-                                placeholder="https://youtube.com/..."
-                                value={settings.socialLinks?.youtube || ''}
-                                onChange={(e) => setSettings({
-                                    ...settings,
-                                    socialLinks: { ...settings.socialLinks, youtube: e.target.value }
-                                })}
-                            />
-                        </div>
+                        ))}
                     </div>
                 </section>
 
@@ -493,6 +481,6 @@ export default function SettingsPage() {
                     </button>
                 </div>
             </form>
-        </div >
+        </div>
     );
 }

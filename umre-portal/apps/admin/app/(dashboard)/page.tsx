@@ -53,11 +53,11 @@ export default function DashboardPage() {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
 
             const [toursRes, reservationsRes, hotelsRes, postsRes, statsRes] = await Promise.all([
-                fetch(`${apiUrl}/api/tours`),
-                fetch(`${apiUrl}/api/reservations`, { headers }),
-                fetch(`${apiUrl}/api/hotels?status=all`),
-                fetch(`${apiUrl}/api/posts?status=all`),
-                fetch(`${apiUrl}/api/analytics/stats?range=${selectedRange}`, { headers }),
+                fetch(`${apiUrl}/api/tours?t=${Date.now()}`),
+                fetch(`${apiUrl}/api/reservations?t=${Date.now()}`, { headers }),
+                fetch(`${apiUrl}/api/hotels?status=all&t=${Date.now()}`),
+                fetch(`${apiUrl}/api/posts?status=all&t=${Date.now()}`),
+                fetch(`${apiUrl}/api/analytics/stats?range=${selectedRange}&t=${Date.now()}`, { headers }),
             ]);
 
             const [tours, reservations, hotels, posts] = await Promise.all([

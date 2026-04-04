@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, Youtube, Send } from
 import Link from 'next/link';
 
 export default function Footer() {
+    const settings = useSiteSettings();
     const { 
         footerLogos, 
         address, 
@@ -13,17 +14,19 @@ export default function Footer() {
         firmName, 
         socialLinks,
         footerDiyanetImageUrl,
-        footerAgencyImageUrl
-    } = useSiteSettings();
+        footerAgencyImageUrl,
+        kvkkText,
+        privacyPolicyText,
+        distanceSalesText,
+        cancellationText
+    } = settings;
 
     const legalLinks = [
-        { title: "KVKK Aydınlatma Metni", href: "/kurumsal/kvkk" },
-        { title: "Gizlilik Politikası", href: "/kurumsal/gizlilik-politikasi" },
-        { title: "Çerez Politikası", href: "/kurumsal/cerez-politikasi" },
-        { title: "Mesafeli Satış Sözleşmesi", href: "/kurumsal/mesafeli-satis" },
-        { title: "İptal & İade Koşulları", href: "/kurumsal/iptal-iade" },
-        { title: "Kullanım Koşulları", href: "/kurumsal/kullanim-kosullari" },
-    ];
+        { title: "KVKK Aydınlatma Metni", href: "/kurumsal/kvkk", exists: !!kvkkText },
+        { title: "Gizlilik Politikası", href: "/kurumsal/gizlilik-politikasi", exists: !!privacyPolicyText },
+        { title: "Mesafeli Satış Sözleşmesi", href: "/kurumsal/mesafeli-satis", exists: !!distanceSalesText },
+        { title: "İptal & İade Koşulları", href: "/kurumsal/iptal-iade", exists: !!cancellationText },
+    ].filter(l => l.exists);
 
     const sitemapLinks = [
         { title: "Anasayfa", href: "/" },

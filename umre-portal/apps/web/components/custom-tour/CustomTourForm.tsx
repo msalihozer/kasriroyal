@@ -287,7 +287,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                     <label className="block text-sm font-bold text-gray-700 mb-2">E-posta</label>
                                     <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-[13px] rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none transition-all" placeholder="ornek@email.com" />
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
                                     <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">

@@ -57,42 +57,75 @@ export default function CustomRequestsPage() {
     };
 
     const columns = [
-        { key: 'fullName', label: 'Ad Soyad', sortable: true },
+        { 
+            key: 'fullName', 
+            label: 'Ad Soyad', 
+            sortable: true,
+            render: (val: string, row: any) => (
+                <div className="flex flex-col">
+                    <span className="font-bold text-gray-900">{val}</span>
+                    <span className="text-xs text-gray-400">{row.email}</span>
+                </div>
+            )
+        },
         { key: 'phone', label: 'Telefon', sortable: true },
-        { key: 'personCount', label: 'Kişi Sayısı', sortable: true },
+        { 
+            key: 'personCount', 
+            label: 'Yolcu', 
+            render: (val: any, row: any) => (
+                <div className="flex items-center gap-2 text-xs">
+                    <span className="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">{row.adultCount || row.personCount} Y</span>
+                    {row.childCount > 0 && <span className="bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded font-medium">{row.childCount} Ç</span>}
+                </div>
+            )
+        },
         {
             key: 'createdAt',
             label: 'Tarih',
             sortable: true,
-            render: (value: string) => new Date(value).toLocaleDateString('tr-TR')
+            render: (value: string) => (
+                <div className="text-xs">
+                    <p className="font-medium">{new Date(value).toLocaleDateString('tr-TR')}</p>
+                    <p className="text-gray-400">{new Date(value).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</p>
+                </div>
+            )
         },
         {
             key: 'status',
             label: 'Durum',
-            render: (value: string) => (
-                <span className={`px-2 py-1 rounded text-xs ${value === 'pending' ? 'bg-yellow-100 text-yellow-800 text-center inline-block min-w-[60px]' :
-                    value === 'processed' ? 'bg-green-100 text-green-800 text-center inline-block min-w-[60px]' :
-                        'bg-gray-100 text-gray-800 text-center inline-block min-w-[60px]'
-                    }`}>
-                    {value === 'pending' ? 'Bekliyor' : value === 'processed' ? 'İşlendi' : value}
-                </span>
-            )
+            render: (value: string) => {
+                const colors: any = {
+                    pending: 'bg-amber-100 text-amber-700 border-amber-200',
+                    processed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                    cancelled: 'bg-rose-100 text-rose-700 border-rose-200'
+                };
+                const labels: any = {
+                    pending: 'Yeni Talep',
+                    processed: 'İşlendi',
+                    cancelled: 'İptal'
+                };
+                return (
+                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${colors[value] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+                        {labels[value] || value}
+                    </span>
+                );
+            }
         },
         {
             key: 'actions',
-            label: 'İşlemler',
+            label: 'İşlem',
             render: (value: any, row: any) => (
                 <div className="flex gap-2">
                     <button
                         onClick={() => handleView(row)}
-                        className="text-blue-600 hover:text-blue-900 bg-blue-50 p-1.5 rounded hover:bg-blue-100 transition-colors"
+                        className="text-indigo-600 hover:text-white hover:bg-indigo-600 bg-indigo-50 p-2 rounded-lg transition-all"
                         title="Detay Görüntüle"
                     >
                         <Eye size={18} />
                     </button>
                     <button
                         onClick={() => handleDelete(row.id)}
-                        className="text-red-600 hover:text-red-900 bg-red-50 p-1.5 rounded hover:bg-red-100 transition-colors"
+                        className="text-rose-600 hover:text-white hover:bg-rose-600 bg-rose-50 p-2 rounded-lg transition-all"
                         title="Sil"
                     >
                         <Trash2 size={18} />
