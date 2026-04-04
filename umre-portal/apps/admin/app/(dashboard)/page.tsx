@@ -67,11 +67,20 @@ export default function DashboardPage() {
                 postsRes.ok ? postsRes.json() : [],
             ]);
 
+            const getCount = (res: any) => {
+                if (Array.isArray(res)) return res.length || 0;
+                if (res && typeof res === 'object') {
+                    if (res.total !== undefined) return res.total;
+                    if (Array.isArray(res.data)) return res.data.length;
+                }
+                return 0;
+            };
+
             setCounts({
-                tours: tours.length || 0,
-                reservations: reservations.length || 0,
-                hotels: hotels.length || 0,
-                posts: posts.length || 0,
+                tours: getCount(tours),
+                reservations: getCount(reservations),
+                hotels: getCount(hotels),
+                posts: getCount(posts),
             });
 
             if (statsRes.ok) {

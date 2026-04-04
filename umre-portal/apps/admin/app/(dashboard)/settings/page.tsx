@@ -190,6 +190,7 @@ export default function SettingsPage() {
                                 value={settings.logoUrl}
                                 onChange={(url) => setSettings({ ...settings, logoUrl: url })}
                                 label="Site Logo"
+                                disabledCrop={true}
                             />
                         </div>
                         <div>
@@ -197,6 +198,7 @@ export default function SettingsPage() {
                                 value={settings.faviconUrl}
                                 onChange={(url) => setSettings({ ...settings, faviconUrl: url })}
                                 label="Favicon"
+                                disabledCrop={true}
                             />
                         </div>
                     </div>

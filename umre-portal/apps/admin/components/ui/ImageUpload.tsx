@@ -9,9 +9,10 @@ interface ImageUploadProps {
     onChange: (url: string) => void;
     label?: string;
     compact?: boolean;
+    disabledCrop?: boolean;
 }
 
-export default function ImageUpload({ value, onChange, label = "Resim Yükle", compact = false }: ImageUploadProps) {
+export default function ImageUpload({ value, onChange, label = "Resim Yükle", compact = false, disabledCrop = false }: ImageUploadProps) {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(value || '');
     const [imageToCrop, setImageToCrop] = useState<string | null>(null);
@@ -39,28 +40,11 @@ export default function ImageUpload({ value, onChange, label = "Resim Yükle", c
         }
     }, [value]);
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = () => {
-            setImageToCrop(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-    };
-
-    const handleSaveCrop = async () => {
-        if (!imageToCrop || !croppedAreaPixels) return;
-
+    const uploadFile = async (file: File) => {
         setUploading(true);
         try {
-            const croppedImageBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
-            if (!croppedImageBlob) throw new Error("Kırpma başarısız");
-
-            const uploadFile = new File([croppedImageBlob], "cropped-image.jpg", { type: "image/jpeg" });
             const formData = new FormData();
-            formData.append('file', uploadFile);
+            formData.append('file', file);
 
             const token = localStorage.getItem('token');
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/media/upload`, {
@@ -81,10 +65,41 @@ export default function ImageUpload({ value, onChange, label = "Resim Yükle", c
             }
         } catch (err) {
             console.error(err);
-            alert('Kırpma veya yükleme sırasında hata oluştu');
+            alert('Yükleme sırasında hata oluştu');
         } finally {
             setUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (disabledCrop) {
+            await uploadFile(file);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            setImageToCrop(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleSaveCrop = async () => {
+        if (!imageToCrop || !croppedAreaPixels) return;
+
+        try {
+            const croppedImageBlob = await getCroppedImg(imageToCrop, croppedAreaPixels);
+            if (!croppedImageBlob) throw new Error("Kırpma başarısız");
+
+            const uploadFileObj = new File([croppedImageBlob], "cropped-image.jpg", { type: "image/jpeg" });
+            await uploadFile(uploadFileObj);
+        } catch (err) {
+            console.error(err);
+            alert('Kırpma sırasında hata oluştu');
         }
     };
 
