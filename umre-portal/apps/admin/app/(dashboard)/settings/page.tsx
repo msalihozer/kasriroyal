@@ -48,11 +48,43 @@ export default function SettingsPage() {
         distanceSalesText: '',
         cancellationText: ''
     });
+    const [emailSettings, setEmailSettings] = useState({
+        host: '',
+        port: 587,
+        user: '',
+        pass: '',
+        fromEmail: '',
+        notificationEmail: '',
+        whatsappEnabled: false,
+        whatsappInstanceId: '',
+        whatsappToken: '',
+        whatsappPhone: ''
+    });
     const [saving, setSaving] = useState(false);
+    const [testingMail, setTestingMail] = useState(false);
+    const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
     useEffect(() => {
         fetchSettings();
+        fetchEmailSettings();
     }, []);
+
+    const fetchEmailSettings = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/settings/email`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.host) {
+                    setEmailSettings(data);
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching email settings:', err);
+        }
+    };
 
     const fetchSettings = async () => {
         try {
@@ -123,7 +155,9 @@ export default function SettingsPage() {
         setSaving(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/site-settings`, {
+            
+            // Save Site Settings
+            const siteRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/site-settings`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,15 +165,48 @@ export default function SettingsPage() {
                 },
                 body: JSON.stringify(settings)
             });
-            if (res.ok) {
-                alert('Ayarlar kaydedildi');
+
+            // Save Email Settings
+            const emailRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/settings/email`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(emailSettings)
+            });
+
+            if (siteRes.ok && emailRes.ok) {
+                alert('Tüm ayarlar kaydedildi');
             } else {
-                alert('Kaydetme başarısız');
+                alert('Bazı ayarlar kaydedilemedi');
             }
         } catch (err) {
             alert('Bir hata oluştu');
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleTestEmail = async () => {
+        setTestingMail(true);
+        setTestResult(null);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/settings/email/test`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(emailSettings)
+            });
+            const data = await res.json();
+            setTestResult(data);
+        } catch (err) {
+            setTestResult({ success: false, message: 'İstek sırasında bir hata oluştu.' });
+        } finally {
+            setTestingMail(false);
         }
     };
 
@@ -450,6 +517,95 @@ export default function SettingsPage() {
                                 />
                             </div>
                         ))}
+                    </div>
+                </section>
+
+                {/* Email / SMTP Settings */}
+                <section className="bg-blue-50/30 p-6 rounded-xl border border-blue-100">
+                    <h2 className="text-xl font-semibold mb-4 pb-2 border-b border-blue-200 text-blue-900">E-posta (SMTP) Bildirim Ayarları</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
+                            <input
+                                type="text"
+                                className="w-full border rounded-lg p-2"
+                                placeholder="Örn: smtp.yandex.com.tr"
+                                value={emailSettings.host}
+                                onChange={(e) => setEmailSettings({ ...emailSettings, host: e.target.value })}
+                            />
+                            <p className="text-[10px] text-gray-500 mt-1">Başına http:// koymayın. Sadece alan adı.</p>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Port</label>
+                            <input
+                                type="number"
+                                className="w-full border rounded-lg p-2"
+                                placeholder="465 veya 587"
+                                value={emailSettings.port}
+                                onChange={(e) => setEmailSettings({ ...emailSettings, port: parseInt(e.target.value) })}
+                            />
+                            <p className="text-[10px] text-gray-500 mt-1">SSL için 465, TLS için 587 önerilir.</p>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Kullanıcı Adı (Email)</label>
+                            <input
+                                type="text"
+                                className="w-full border rounded-lg p-2"
+                                value={emailSettings.user}
+                                onChange={(e) => setEmailSettings({ ...emailSettings, user: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
+                            <input
+                                type="password"
+                                className="w-full border rounded-lg p-2"
+                                value={emailSettings.pass}
+                                onChange={(e) => setEmailSettings({ ...emailSettings, pass: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Gönderen E-posta (From)</label>
+                            <input
+                                type="text"
+                                className="w-full border rounded-lg p-2"
+                                placeholder="info@alanadi.com"
+                                value={emailSettings.fromEmail}
+                                onChange={(e) => setEmailSettings({ ...emailSettings, fromEmail: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Bildirim Alacak E-postalar (Yönetici)</label>
+                            <input
+                                type="text"
+                                className="w-full border rounded-lg p-2"
+                                placeholder="yonetim@site.com, destek@site.com"
+                                value={emailSettings.notificationEmail}
+                                onChange={(e) => setEmailSettings({ ...emailSettings, notificationEmail: e.target.value })}
+                            />
+                            <p className="text-[10px] text-gray-500 mt-1">Birden fazla mail için virgül (,) koyarak ekleyin.</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 flex flex-col gap-3">
+                        <button
+                            type="button"
+                            onClick={handleTestEmail}
+                            disabled={testingMail}
+                            className={`w-full md:w-auto px-6 py-2 rounded-lg font-bold text-sm transition-all shadow-sm ${
+                                testingMail ? 'bg-gray-100 text-gray-400' : 'bg-white text-blue-600 border border-blue-200 hover:bg-blue-50'
+                            }`}
+                        >
+                            {testingMail ? 'Bağlantı Test Ediliyor...' : 'SMTP Bağlantısını Test Et'}
+                        </button>
+
+                        {testResult && (
+                            <div className={`p-3 rounded-lg text-xs font-medium border ${
+                                testResult.success ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
+                            }`}>
+                                {testResult.message}
+                            </div>
+                        )}
                     </div>
                 </section>
 

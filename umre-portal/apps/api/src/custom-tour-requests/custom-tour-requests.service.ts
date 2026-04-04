@@ -23,29 +23,78 @@ export class CustomTourRequestsService {
         });
 
         // Send Email
+        const now = new Intl.DateTimeFormat('tr-TR', { 
+            day: '2-digit', 
+            month: 'long', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        }).format(new Date());
         const emailHtml = `
-      <h2>Yeni Özel Tur Talebi</h2>
-      <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
-        <p><strong>Müşteri:</strong> ${data.fullName}</p>
-        <p><strong>Telefon:</strong> ${data.phone}</p>
-        <p><strong>Email:</strong> ${data.email || '-'}</p>
-        <hr />
-        <p><strong>Kişi Sayısı:</strong> ${data.adultCount} Yetişkin, ${data.childCount} Çocuk</p>
-        <p><strong>Planlanan Tarih:</strong> ${data.startDate || '-'}</p>
-        <p><strong>Kalkış Yeri:</strong> ${data.departureCity || '-'}</p>
-        <p><strong>Havayolu:</strong> ${data.airline || '-'} (${data.flightClass || 'Ekonomi'})</p>
-        <hr />
-        <p><strong>Mekke Süresi:</strong> ${data.mekkeDays} Gece</p>
-        <p><strong>Mekke Oteli:</strong> ${data.mekkeHotel || 'Seçilmedi / Diğer'}</p>
-        <p><strong>Medine Süresi:</strong> ${data.medineDays} Gece</p>
-        <p><strong>Medine Oteli:</strong> ${data.medineHotel || 'Seçilmedi / Diğer'}</p>
-        <hr />
-        <p><strong>Ara Transfer Arac:</strong> ${data.vehicle || 'Seçilmedi'}</p>
-        <p><strong>Rehber Hizmeti:</strong> ${data.guideRequested ? 'Evet' : 'Hayır'}</p>
-        <p><strong>Mesaj:</strong> ${data.message || '-'}</p>
-      </div>
-    `;
-        this.emailService.sendNotificationToAdmin('Yeni Özel Tur Talebi', emailHtml).catch(console.error);
+            <div style="font-family: Arial, sans-serif; max-width: 650px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                <div style="background-color: #1a365d; color: white; padding: 20px; text-align: center;">
+                    <h2 style="margin: 0;">YENİ ÖZEL TUR TALEBİ</h2>
+                    <p style="margin: 5px 0 0 0; font-size: 13px; opacity: 0.8;">Tarih: ${now}</p>
+                </div>
+                
+                <div style="padding: 25px;">
+                    <h3 style="color: #2c5282; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">İletişim Bilgileri</h3>
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>Ad Soyad:</strong> ${data.fullName}</p>
+                        <p><strong>Telefon:</strong> ${data.phone}</p>
+                        <p><strong>E-posta:</strong> ${data.email || '-'}</p>
+                    </div>
+
+                    <h3 style="color: #2c5282; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Konaklama & Tarih</h3>
+                    <div style="margin-bottom: 20px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 5px; background: #f7fafc; width: 30%;"><strong>Planlanan Tarih:</strong></td>
+                                <td style="padding: 5px;">${data.startDate || 'Belirtilmedi'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px; background: #f7fafc;"><strong>Kişi Sayısı:</strong></td>
+                                <td style="padding: 5px;">${data.adultCount} Yetişkin, ${data.childCount} Çocuk</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px; background: #f7fafc;"><strong>Mekke Süresi:</strong></td>
+                                <td style="padding: 5px;">${data.mekkeDays} Gece</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px; background: #f7fafc;"><strong>Mekke Oteli:</strong></td>
+                                <td style="padding: 5px;">${data.mekkeHotel || 'Seçilmedi / Diğer'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px; background: #f7fafc;"><strong>Medine Süresi:</strong></td>
+                                <td style="padding: 5px;">${data.medineDays} Gece</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px; background: #f7fafc;"><strong>Medine Oteli:</strong></td>
+                                <td style="padding: 5px;">${data.medineHotel || 'Seçilmedi / Diğer'}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3 style="color: #2c5282; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Ulaşım & Ekstra</h3>
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>Kalkış Havalimanı:</strong> ${data.departureCity || 'Belirtilmedi'}</p>
+                        <p><strong>Tercihen Havayolu:</strong> ${data.airline || '-'} (${data.flightClass || 'Ekonomi'})</p>
+                        <p><strong>Ara Transfer Aracı:</strong> ${data.vehicle || 'Seçilmedi'}</p>
+                        <p><strong>Rehberlik Hizmeti:</strong> ${data.guideRequested ? 'Evet, istiyorum' : 'Hayır, istemiyorum'}</p>
+                    </div>
+
+                    <div style="background-color: #fffaf0; border: 1px solid #feebc8; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                        <h4 style="margin: 0 0 10px 0; color: #9c4221;">Müşteri Mesajı:</h4>
+                        <p style="margin: 0; color: #7b341e; font-style: italic;">"${data.message || 'Mesaj bırakılmadı.'}"</p>
+                    </div>
+                </div>
+
+                <div style="background-color: #f8f9fa; padding: 15px; text-align: center; font-size: 12px; color: #888; border-top: 1px solid #eee;">
+                    Bu mail otomatik olarak Kasri Royal Özel Tur Planlama portalından gönderilmiştir.
+                </div>
+            </div>
+        `;
+        this.emailService.sendNotificationToAdmin('Yeni Özel Tur Talebi: ' + data.fullName, emailHtml).catch(console.error);
 
         // Send WhatsApp
         const whatsappMsg = `🌟 *Yeni Özel Tur Talebi*\n\n*İsim:* ${data.fullName}\n*Telefon:* ${data.phone}\n*Kişi:* ${data.adultCount}Y + ${data.childCount}Ç\n*Tarih:* ${data.startDate || '-'}\n*Uçuş:* ${data.departureCity || '-'} / ${data.airline || '-'}\n*Oteller:* ${data.mekkeHotel || '-'} & ${data.medineHotel || '-'}\n*Mesaj:* ${data.message || '-'}`;

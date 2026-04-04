@@ -1,11 +1,14 @@
-
-import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Post, Body, UseGuards } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthGuard } from '@nestjs/passport';
+import { EmailService } from './email.service';
 
 @Controller('settings/email')
 export class EmailSettingsController {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private emailService: EmailService
+    ) { }
 
     @Get()
     @UseGuards(AuthGuard('jwt'))
@@ -54,5 +57,11 @@ export class EmailSettingsController {
                 data,
             });
         }
+    }
+
+    @Post('test')
+    @UseGuards(AuthGuard('jwt'))
+    async testSettings(@Body() body: any) {
+        return this.emailService.testConnection(body);
     }
 }
