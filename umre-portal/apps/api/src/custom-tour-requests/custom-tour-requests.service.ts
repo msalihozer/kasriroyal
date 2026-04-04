@@ -22,7 +22,11 @@ export class CustomTourRequestsService {
             },
         });
 
-        // Send Email
+        // Date Look & Feel Improvements
+        const dateOptions: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+        const df = new Intl.DateTimeFormat('tr-TR', dateOptions);
+
+        const formattedStartDate = request.startDate ? df.format(request.startDate) : 'Belirtilmedi';
         const now = new Intl.DateTimeFormat('tr-TR', { 
             day: '2-digit', 
             month: 'long', 
@@ -30,6 +34,8 @@ export class CustomTourRequestsService {
             hour: '2-digit', 
             minute: '2-digit' 
         }).format(new Date());
+
+        // Send Email
         const emailHtml = `
             <div style="font-family: Arial, sans-serif; max-width: 650px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
                 <div style="background-color: #1a365d; color: white; padding: 20px; text-align: center;">
@@ -40,52 +46,52 @@ export class CustomTourRequestsService {
                 <div style="padding: 25px;">
                     <h3 style="color: #2c5282; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">İletişim Bilgileri</h3>
                     <div style="margin-bottom: 20px;">
-                        <p><strong>Ad Soyad:</strong> ${data.fullName}</p>
-                        <p><strong>Telefon:</strong> ${data.phone}</p>
-                        <p><strong>E-posta:</strong> ${data.email || '-'}</p>
+                        <p><strong>Ad Soyad:</strong> ${request.fullName}</p>
+                        <p><strong>Telefon:</strong> ${request.phone}</p>
+                        <p><strong>E-posta:</strong> ${request.email || '-'}</p>
                     </div>
 
                     <h3 style="color: #2c5282; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Konaklama & Tarih</h3>
                     <div style="margin-bottom: 20px;">
                         <table style="width: 100%; border-collapse: collapse;">
                             <tr>
-                                <td style="padding: 5px; background: #f7fafc; width: 30%;"><strong>Planlanan Tarih:</strong></td>
-                                <td style="padding: 5px;">${data.startDate || 'Belirtilmedi'}</td>
+                                <td style="padding: 10px; background: #f8fafc; border-bottom: 1px solid #edf2f7; width: 35%;"><strong>Planlanan Gidiş:</strong></td>
+                                <td style="padding: 10px; border-bottom: 1px solid #edf2f7; color: #bda569; font-weight: bold;">${formattedStartDate}</td>
                             </tr>
                             <tr>
-                                <td style="padding: 5px; background: #f7fafc;"><strong>Kişi Sayısı:</strong></td>
-                                <td style="padding: 5px;">${data.adultCount} Yetişkin, ${data.childCount} Çocuk</td>
+                                <td style="padding: 10px; background: #f8fafc; border-bottom: 1px solid #edf2f7;"><strong>Kişi Sayısı:</strong></td>
+                                <td style="padding: 10px; border-bottom: 1px solid #edf2f7;">${request.adultCount} Yetişkin, ${request.childCount} Çocuk</td>
                             </tr>
                             <tr>
-                                <td style="padding: 5px; background: #f7fafc;"><strong>Mekke Süresi:</strong></td>
-                                <td style="padding: 5px;">${data.mekkeDays} Gece</td>
+                                <td style="padding: 10px; background: #f8fafc; border-bottom: 1px solid #edf2f7;"><strong>Mekke Süresi:</strong></td>
+                                <td style="padding: 10px; border-bottom: 1px solid #edf2f7;">${request.mekkeDays} Gece</td>
                             </tr>
                             <tr>
-                                <td style="padding: 5px; background: #f7fafc;"><strong>Mekke Oteli:</strong></td>
-                                <td style="padding: 5px;">${data.mekkeHotel || 'Seçilmedi / Diğer'}</td>
+                                <td style="padding: 10px; background: #f8fafc; border-bottom: 1px solid #edf2f7;"><strong>Mekke Oteli:</strong></td>
+                                <td style="padding: 10px; border-bottom: 1px solid #edf2f7;">${(request.hotelSelection as any)?.mekke || 'Seçilmedi / Diğer'}</td>
                             </tr>
                             <tr>
-                                <td style="padding: 5px; background: #f7fafc;"><strong>Medine Süresi:</strong></td>
-                                <td style="padding: 5px;">${data.medineDays} Gece</td>
+                                <td style="padding: 10px; background: #f8fafc; border-bottom: 1px solid #edf2f7;"><strong>Medine Süresi:</strong></td>
+                                <td style="padding: 10px; border-bottom: 1px solid #edf2f7;">${request.medineDays} Gece</td>
                             </tr>
                             <tr>
-                                <td style="padding: 5px; background: #f7fafc;"><strong>Medine Oteli:</strong></td>
-                                <td style="padding: 5px;">${data.medineHotel || 'Seçilmedi / Diğer'}</td>
+                                <td style="padding: 10px; background: #f8fafc; border-bottom: 1px solid #edf2f7;"><strong>Medine Oteli:</strong></td>
+                                <td style="padding: 10px; border-bottom: 1px solid #edf2f7;">${(request.hotelSelection as any)?.medine || 'Seçilmedi / Diğer'}</td>
                             </tr>
                         </table>
                     </div>
 
                     <h3 style="color: #2c5282; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Ulaşım & Ekstra</h3>
                     <div style="margin-bottom: 20px;">
-                        <p><strong>Kalkış Havalimanı:</strong> ${data.departureCity || 'Belirtilmedi'}</p>
-                        <p><strong>Tercihen Havayolu:</strong> ${data.airline || '-'} (${data.flightClass || 'Ekonomi'})</p>
-                        <p><strong>Ara Transfer Aracı:</strong> ${data.vehicle || 'Seçilmedi'}</p>
-                        <p><strong>Rehberlik Hizmeti:</strong> ${data.guideRequested ? 'Evet, istiyorum' : 'Hayır, istemiyorum'}</p>
+                        <p><strong>Kalkış Havalimanı:</strong> ${request.departureCity || 'Belirtilmedi'}</p>
+                        <p><strong>Tercihen Havayolu:</strong> ${request.airline || '-'} (${request.flightClass || 'Ekonomi'})</p>
+                        <p><strong>Ara Transfer Aracı:</strong> ${request.vehicleSelection || 'Seçilmedi'}</p>
+                        <p><strong>Rehberlik Hizmeti:</strong> ${request.guideRequested ? 'Evet, istiyorum' : 'Hayır, istemiyorum'}</p>
                     </div>
 
                     <div style="background-color: #fffaf0; border: 1px solid #feebc8; padding: 15px; border-radius: 5px; margin-top: 20px;">
                         <h4 style="margin: 0 0 10px 0; color: #9c4221;">Müşteri Mesajı:</h4>
-                        <p style="margin: 0; color: #7b341e; font-style: italic;">"${data.message || 'Mesaj bırakılmadı.'}"</p>
+                        <p style="margin: 0; color: #7b341e; font-style: italic;">"${request.message || 'Mesaj bırakılmadı.'}"</p>
                     </div>
                 </div>
 

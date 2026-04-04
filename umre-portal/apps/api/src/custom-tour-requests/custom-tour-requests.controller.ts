@@ -17,6 +17,7 @@ export class CustomTourRequestsController {
             // Manual type conversion and sanitization
             const {
                 fullName, phone, email, personCount,
+                adultCount, childCount,
                 mekkeDays, medineDays, startDate,
                 airline, flightClass, departureCity,
                 guideRequested, message,
@@ -28,6 +29,8 @@ export class CustomTourRequestsController {
                 phone,
                 email,
                 personCount: Number(personCount) || 1,
+                adultCount: Number(adultCount) || 1,
+                childCount: Number(childCount) || 0,
                 mekkeDays: mekkeDays ? Number(mekkeDays) : undefined,
                 medineDays: medineDays ? Number(medineDays) : undefined,
                 startDate: startDate ? new Date(startDate) : undefined,
