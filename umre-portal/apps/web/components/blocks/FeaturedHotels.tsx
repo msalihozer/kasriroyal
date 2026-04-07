@@ -16,7 +16,7 @@ export default function FeaturedHotels({ data }: { data: { title?: string, items
                         <div key={idx} className="bg-white rounded-xl shadow border overflow-hidden group">
                             <div className="h-48 bg-gray-200 relative">
                                 <img
-                                    src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22400%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23cccccc%22%2F%3E%3C%2Fsvg%3E'}
+                                    src={hotel.imageUrl ? getImageUrl(hotel.imageUrl) : (hotel.gallery && hotel.gallery[0]) ? getImageUrl(hotel.gallery[0]) : 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22400%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23cccccc%22%2F%3E%3C%2Fsvg%3E'}
                                     alt={hotel.title}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />

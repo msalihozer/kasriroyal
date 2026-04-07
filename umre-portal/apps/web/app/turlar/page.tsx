@@ -22,7 +22,7 @@ async function getTours(searchParams: any) {
 
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tours?${params.toString()}`, {
-            cache: 'no-store'
+            next: { revalidate: 3600 }
         });
         if (res.ok) {
             const data = await res.json();
@@ -36,7 +36,7 @@ async function getTours(searchParams: any) {
 
 async function getTourTypes() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tour-types`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tour-types`, { next: { revalidate: 3600 } });
         if (res.ok) return await res.json();
     } catch (err) {
         console.error(err);
@@ -46,7 +46,7 @@ async function getTourTypes() {
 
 async function getLocations() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`, { next: { revalidate: 3600 } });
         if (res.ok) return await res.json();
     } catch (err) {
         console.error(err);

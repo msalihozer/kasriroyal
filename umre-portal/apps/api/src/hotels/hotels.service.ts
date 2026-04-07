@@ -1,11 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class HotelsService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
+    ) { }
 
     async findAll(query: any) {
+        const cacheKey = `hotels_all_${JSON.stringify(query)}`;
+        const cached = await this.cacheManager.get(cacheKey);
+        if (cached) return cached;
+
         const { locationId, featured, status } = query;
         const where: any = {};
 
@@ -18,7 +27,7 @@ export class HotelsService {
         if (locationId) where.locationId = locationId;
         if (featured) where.isFeatured = true;
 
-        return this.prisma.hotel.findMany({
+        const hotels = await this.prisma.hotel.findMany({
             where,
             include: {
                 location: true,
@@ -26,16 +35,26 @@ export class HotelsService {
             },
             orderBy: { createdAt: 'desc' }
         });
+
+        await this.cacheManager.set(cacheKey, hotels);
+        return hotels;
     }
 
     async findOne(slug: string) {
-        return this.prisma.hotel.findUnique({
+        const cacheKey = `hotel_slug_${slug}`;
+        const cached = await this.cacheManager.get(cacheKey);
+        if (cached) return cached;
+
+        const hotel = await this.prisma.hotel.findUnique({
             where: { slug },
             include: {
                 location: true,
                 features: true
             }
         });
+
+        if (hotel) await this.cacheManager.set(cacheKey, hotel);
+        return hotel;
     }
 
     async findById(id: string) {
@@ -51,7 +70,7 @@ export class HotelsService {
     async create(data: any) {
         const { features, locationId, ...rest } = data;
 
-        return this.prisma.hotel.create({
+        const hotel = await this.prisma.hotel.create({
             data: {
                 ...rest,
                 location: locationId ? { connect: { id: locationId } } : undefined,
@@ -64,12 +83,15 @@ export class HotelsService {
                 features: true
             }
         });
+
+        await this.clearHotelCache();
+        return hotel;
     }
 
     async update(id: string, data: any) {
         const { features, locationId, ...rest } = data;
 
-        return this.prisma.hotel.update({
+        const hotel = await this.prisma.hotel.update({
             where: { id },
             data: {
                 ...rest,
@@ -83,9 +105,20 @@ export class HotelsService {
                 features: true
             }
         });
+
+        await this.clearHotelCache();
+        return hotel;
     }
 
     async remove(id: string) {
-        return this.prisma.hotel.delete({ where: { id } });
+        const result = await this.prisma.hotel.delete({ where: { id } });
+        await this.clearHotelCache();
+        return result;
+    }
+
+    private async clearHotelCache() {
+        const keys = await this.cacheManager.store.keys();
+        const hotelKeys = keys.filter(key => key.startsWith('hotel'));
+        await Promise.all(hotelKeys.map(key => this.cacheManager.del(key)));
     }
 }

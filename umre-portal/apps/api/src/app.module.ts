@@ -1,4 +1,5 @@
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
@@ -27,6 +28,11 @@ import { IpBlockMiddleware } from './common/ip-block.middleware';
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
+        CacheModule.register({
+            isGlobal: true,
+            ttl: 3600000, // 1 hour in milliseconds
+            max: 1000, // maximum number of items in cache
+        }),
         ThrottlerModule.forRoot([
             { name: 'short',  ttl: 1000,  limit: 15  },
             { name: 'medium', ttl: 10000, limit: 60  },
