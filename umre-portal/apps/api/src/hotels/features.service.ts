@@ -9,6 +9,13 @@ export class FeaturesService {
     return this.prisma.hotelFeature.create({ data: createFeatureDto });
   }
 
+  async createMany(data: any[]) {
+    // Prisma createMany is only supported on some databases, 
+    // but here we can loop or use it if available.
+    // Assuming MySQL/Postgres for umre-portal
+    return this.prisma.hotelFeature.createMany({ data });
+  }
+
   findAll() {
     return this.prisma.hotelFeature.findMany({ orderBy: { name: 'asc' } });
   }

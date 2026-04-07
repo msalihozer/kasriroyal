@@ -10,8 +10,11 @@ export class FeaturesController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createFeatureDto: any) {
-    return this.featuresService.create(createFeatureDto);
+  create(@Body() body: any) {
+    if (Array.isArray(body)) {
+      return this.featuresService.createMany(body);
+    }
+    return this.featuresService.create(body);
   }
 
   @Get()
