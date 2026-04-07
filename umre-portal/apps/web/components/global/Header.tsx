@@ -205,15 +205,21 @@ export default function Header() {
                 {/* Fixed Top Bar in Menu */}
                 <div className="flex justify-between items-center px-6 py-6 border-b border-white/5 shrink-0">
                     <div className="max-w-[180px]">
-                        {logoUrl ? (
+                        <Link href="/" onClick={() => setIsOpen(false)}>
                             <img 
-                                src={logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`} 
+                                src={
+                                    logoUrl 
+                                        ? (logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`) 
+                                        : '/logo.png'
+                                } 
                                 className="h-12 object-contain brightness-0 invert" 
                                 alt="Kasrı Royal" 
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = '/logo.png';
+                                }}
                             />
-                        ) : (
-                            <span className="font-bold text-xl text-white uppercase tracking-tighter">Kasrı Royal</span>
-                        )}
+                        </Link>
                     </div>
                     <button
                         onClick={() => setIsOpen(false)}
