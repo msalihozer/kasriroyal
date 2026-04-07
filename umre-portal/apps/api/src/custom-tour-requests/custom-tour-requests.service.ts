@@ -12,13 +12,33 @@ export class CustomTourRequestsService {
     ) { }
 
     async create(data: any) {
+        const adultCount = Number(data.adultCount || 1);
+        const childCount = Number(data.childCount || 0);
+        const mekkeDays = data.mekkeDays ? Number(data.mekkeDays) : null;
+        const medineDays = data.medineDays ? Number(data.medineDays) : null;
+
         const request = await this.prisma.customTourRequest.create({
             data: {
-                ...data,
+                fullName: data.fullName,
+                phone: data.phone,
+                email: data.email || '',
+                personCount: adultCount + childCount,
+                adultCount: adultCount,
+                childCount: childCount,
+                mekkeDays,
+                medineDays,
                 startDate: data.startDate ? new Date(data.startDate) : null,
-                personCount: Number(data.adultCount || 0) + Number(data.childCount || 0),
-                adultCount: Number(data.adultCount || 0),
-                childCount: Number(data.childCount || 0),
+                airline: data.airline,
+                flightClass: data.flightClass,
+                departureCity: data.departureCity,
+                message: data.message,
+                guideRequested: data.guideRequested === true || data.guideRequested === 'true',
+                vehicleSelection: data.vehicle,
+                hotelSelection: {
+                    mekke: data.mekkeHotel,
+                    medine: data.medineHotel
+                },
+                status: 'pending'
             },
         });
 

@@ -20,6 +20,8 @@ export default function FeaturesPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingFeature, setEditingFeature] = useState<any>(null);
     const [formData, setFormData] = useState({ name: '', icon: '', category: CATEGORIES[0] });
+    const [isBulk, setIsBulk] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         fetchFeatures();
@@ -41,31 +43,53 @@ export default function FeaturesPage() {
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSaving(true);
         try {
             const token = localStorage.getItem('token');
-            const url = editingFeature
-                ? `${process.env.NEXT_PUBLIC_API_URL || ''}/api/features/${editingFeature.id}`
-                : `${process.env.NEXT_PUBLIC_API_URL || ''}/api/features`;
+            const baseUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}/api/features`;
 
-            const method = editingFeature ? 'PATCH' : 'POST';
+            if (isBulk && !editingFeature) {
+                const names = formData.name.split('\n').filter(name => name.trim() !== '');
+                if (names.length === 0) {
+                    alert('Lütfen en az bir özellik adı girin.');
+                    setIsSaving(false);
+                    return;
+                }
 
-            const res = await fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (res.ok) {
-                fetchFeatures();
-                closeModal();
+                for (const name of names) {
+                    await fetch(baseUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ ...formData, name: name.trim() })
+                    });
+                }
             } else {
-                alert('Kaydetme başarısız');
+                const url = editingFeature ? `${baseUrl}/${editingFeature.id}` : baseUrl;
+                const method = editingFeature ? 'PATCH' : 'POST';
+
+                const res = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!res.ok) {
+                    throw new Error('Kaydetme başarısız');
+                }
             }
+
+            fetchFeatures();
+            closeModal();
         } catch (err) {
             alert('Bir hata oluştu');
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -86,6 +110,7 @@ export default function FeaturesPage() {
     };
 
     const openModal = (feature: any = null) => {
+        setIsBulk(false);
         if (feature) {
             setEditingFeature(feature);
             setFormData({ name: feature.name, icon: feature.icon || '', category: feature.category || CATEGORIES[0] });
@@ -143,15 +168,40 @@ export default function FeaturesPage() {
                     <div className="bg-white p-6 rounded-lg w-full max-w-md">
                         <h2 className="text-xl font-bold mb-4">{editingFeature ? 'Özellik Düzenle' : 'Yeni Özellik'}</h2>
                         <form onSubmit={handleSave} className="space-y-4">
+                            {!editingFeature && (
+                                <div className="flex items-center gap-2 mb-4 bg-blue-50 p-2 rounded">
+                                    <input
+                                        type="checkbox"
+                                        id="bulkMode"
+                                        checked={isBulk}
+                                        onChange={(e) => setIsBulk(e.target.checked)}
+                                        className="w-4 h-4 text-blue-600"
+                                    />
+                                    <label htmlFor="bulkMode" className="text-sm font-medium text-blue-800 cursor-pointer">
+                                        Toplu Ekle (Her satıra bir özellik)
+                                    </label>
+                                </div>
+                            )}
                             <div>
                                 <label className="block text-sm font-medium mb-1">Ad</label>
-                                <input
-                                    type="text"
-                                    className="w-full border rounded p-2"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    required
-                                />
+                                {isBulk && !editingFeature ? (
+                                    <textarea
+                                        className="w-full border rounded p-2"
+                                        rows={5}
+                                        placeholder="Her satıra bir özellik yazın..."
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        required
+                                    />
+                                ) : (
+                                    <input
+                                        type="text"
+                                        className="w-full border rounded p-2"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        required
+                                    />
+                                )}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Kategori</label>
@@ -167,8 +217,10 @@ export default function FeaturesPage() {
                                 </select>
                             </div>
                             <div className="flex justify-end gap-2 mt-6">
-                                <button type="button" onClick={closeModal} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">İptal</button>
-                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Kaydet</button>
+                                <button type="button" onClick={closeModal} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded" disabled={isSaving}>İptal</button>
+                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50" disabled={isSaving}>
+                                    {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+                                </button>
                             </div>
                         </form>
                     </div>
