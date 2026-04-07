@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useCallback } from 'react';
-import { Upload, X, Image as ImageIcon, Plus } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, Plus, Maximize } from 'lucide-react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '../../utils/cropImage';
 
@@ -141,6 +141,12 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
         { label: 'Serbest', value: undefined },
     ];
 
+    const handleSelectAll = () => {
+        setZoom(1);
+        setCrop({ x: 0, y: 0 });
+        setAspect(undefined as any);
+    };
+
     return (
         <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
@@ -195,12 +201,21 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
                                     <button
                                         key={r.label}
                                         type="button"
-                                        onClick={() => setAspect(r.value || 1)}
+                                        onClick={() => setAspect(r.value as any)}
                                         className={`px-3 py-1 text-xs rounded-full border transition-all ${aspect === r.value ? 'bg-blue-600 border-blue-600' : 'bg-gray-800 border-gray-700 hover:bg-gray-700'}`}
                                     >
                                         {r.label}
                                     </button>
                                 ))}
+                                <div className="w-[1px] h-4 bg-gray-700 mx-1"></div>
+                                <button
+                                    type="button"
+                                    onClick={handleSelectAll}
+                                    className="px-3 py-1 text-xs rounded-full border bg-gray-800 border-gray-700 hover:bg-gray-700 flex items-center gap-1"
+                                >
+                                    <Maximize size={12} />
+                                    Tümünü Seç
+                                </button>
                             </div>
                         </div>
                         <div className="flex gap-3">

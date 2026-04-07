@@ -20,8 +20,17 @@ export default function FeaturesPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingFeature, setEditingFeature] = useState<any>(null);
     const [category, setCategory] = useState(CATEGORIES[0]);
+    const [customCategories, setCustomCategories] = useState<string[]>([]);
+    const [isAddingCategory, setIsAddingCategory] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
     const [names, setNames] = useState<string[]>(['']);
     const [isSaving, setIsSaving] = useState(false);
+
+    const allCategories = Array.from(new Set([
+        ...CATEGORIES, 
+        ...customCategories, 
+        ...features.map((f: any) => f.category).filter(Boolean)
+    ]));
 
     useEffect(() => {
         fetchFeatures();
@@ -62,6 +71,17 @@ export default function FeaturesPage() {
             if (index === names.length - 1 && names[index].trim() !== '') {
                 addNameField();
             }
+        }
+    };
+
+    const handleAddCategory = () => {
+        if (newCategoryName.trim()) {
+            if (!allCategories.includes(newCategoryName.trim())) {
+                setCustomCategories(prev => [...prev, newCategoryName.trim()]);
+            }
+            setCategory(newCategoryName.trim());
+            setNewCategoryName('');
+            setIsAddingCategory(false);
         }
     };
 
@@ -145,6 +165,8 @@ export default function FeaturesPage() {
         setIsModalOpen(false);
         setEditingFeature(null);
         setNames(['']);
+        setIsAddingCategory(false);
+        setNewCategoryName('');
     };
 
     const columns = [
@@ -195,17 +217,54 @@ export default function FeaturesPage() {
                         
                         <form onSubmit={handleSave} className="p-8 flex flex-col overflow-hidden">
                             <div className="mb-8">
-                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Kategorİ Seçİmİ</label>
-                                <select
-                                    className="w-full border-2 border-gray-100 rounded-2xl p-4 font-bold text-gray-700 bg-white focus:border-blue-500 outline-none transition-all"
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                    required
-                                >
-                                    {CATEGORIES.map(c => (
-                                        <option key={c} value={c}>{c}</option>
-                                    ))}
-                                </select>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-black text-gray-400 uppercase tracking-widest">Kategorİ Seçİmİ</label>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setIsAddingCategory(!isAddingCategory)}
+                                        className="text-blue-600 text-xs font-bold flex items-center gap-1 hover:underline"
+                                    >
+                                        {isAddingCategory ? <X size={14} /> : <Plus size={14} />}
+                                        {isAddingCategory ? 'Vazgeç' : 'Yeni Kategori'}
+                                    </button>
+                                </div>
+                                
+                                {isAddingCategory ? (
+                                    <div className="flex gap-2 animate-in slide-in-from-top-2 duration-200">
+                                        <input 
+                                            type="text"
+                                            className="flex-1 border-2 border-gray-100 rounded-2xl p-4 font-bold text-gray-700 focus:border-blue-500 outline-none transition-all"
+                                            placeholder="Kategori adı yazın..."
+                                            value={newCategoryName}
+                                            onChange={(e) => setNewCategoryName(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleAddCategory();
+                                                }
+                                            }}
+                                            autoFocus
+                                        />
+                                        <button 
+                                            type="button"
+                                            onClick={handleAddCategory}
+                                            className="bg-blue-600 text-white px-6 rounded-2xl font-bold hover:bg-blue-700 transition-all font-black"
+                                        >
+                                            EKLE
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <select
+                                        className="w-full border-2 border-gray-100 rounded-2xl p-4 font-bold text-gray-700 bg-white focus:border-blue-500 outline-none transition-all"
+                                        value={category}
+                                        onChange={(e) => setCategory(e.target.value)}
+                                        required
+                                    >
+                                        {allCategories.map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
+                                )}
                             </div>
 
                             <div className="flex-1 overflow-y-auto pr-2 space-y-4 min-h-[100px]">
