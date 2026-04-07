@@ -157,7 +157,7 @@ export default function Footer() {
                             &copy; {new Date().getFullYear()} {firmName || 'Kasrı Royal'}. Tüm hakları saklıdır.
                         </p>
                         <p className="text-gray-700 text-[9px] hover:text-[#bda569] transition-colors cursor-pointer">
-                            Designed by Advanced Agentic Coding
+                            Designed by Muhammed Salih Özer
                         </p>
                     </div>
                 </div>
