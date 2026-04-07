@@ -17,6 +17,7 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [aspect, setAspect] = useState(16 / 9);
+    const [imageAspect, setImageAspect] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const [pendingFiles, setPendingFiles] = useState<File[]>([]);
     
@@ -144,7 +145,7 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
     const handleSelectAll = () => {
         setZoom(1);
         setCrop({ x: 0, y: 0 });
-        setAspect(undefined as any);
+        setAspect(imageAspect);
     };
 
     return (
@@ -243,9 +244,14 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
                             crop={crop}
                             zoom={zoom}
                             aspect={aspect}
+                            minZoom={0.2}
+                            restrictPosition={false}
                             onCropChange={setCrop}
                             onCropComplete={onCropComplete}
                             onZoomChange={setZoom}
+                            onMediaLoaded={(mediaSize: any) => {
+                                setImageAspect(mediaSize.width / mediaSize.height);
+                            }}
                         />
                     </div>
 
@@ -255,7 +261,7 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
                             <input
                                 type="range"
                                 value={zoom}
-                                min={1}
+                                min={0.2}
                                 max={3}
                                 step={0.1}
                                 onChange={(e) => setZoom(Number(e.target.value))}
