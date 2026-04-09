@@ -156,11 +156,11 @@ export default function Header() {
                     src={
                         (isHome && !scrolled)
                             ? (logoUrl ? (logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`) : '/logo.png')
-                            : (faviconUrl ? (faviconUrl.startsWith('http') ? faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${faviconUrl}`) : '/favicon.ico')
+                            : (faviconUrl ? (faviconUrl.startsWith('http') ? faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${faviconUrl}`) : '/logo.png')
                     }
                     alt="Site Logo"
                     className={`object-contain transition-all duration-500 ${logoClasses}`}
-                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = (isHome && !scrolled) ? '/logo.png' : '/favicon.ico'; }}
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/logo.png'; }}
                 />
             </Link>
 

@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSiteSettings();
     const faviconUrl = settings.faviconUrl 
         ? (settings.faviconUrl.startsWith('http') ? settings.faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${settings.faviconUrl}`) 
-        : '/favicon.ico';
+        : '/logo.png';
 
     return {
         metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://kasriroyal.com'),
@@ -91,8 +91,8 @@ export default async function RootLayout({
     const siteSettings = await getSiteSettings();
 
     return (
-        <html lang="tr">
-            <body className={inter.className}>
+        <html lang="tr" suppressHydrationWarning>
+            <body className={inter.className} suppressHydrationWarning>
                 <SiteSettingsProvider initialSettings={siteSettings}>
                     <AnalyticsTracker />
                     <GoogleTranslate />
