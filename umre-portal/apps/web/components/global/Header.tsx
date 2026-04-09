@@ -204,7 +204,20 @@ export default function Header() {
             <div className={`fixed inset-0 z-50 bg-[#1a1a1a]/95 backdrop-blur-xl flex flex-col transition-all duration-500 md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
                 {/* Fixed Top Bar in Menu */}
                 <div className="flex justify-between items-center px-6 py-6 border-b border-white/5 shrink-0">
-                    <div className="max-w-[180px]">
+                    <div className="flex items-center gap-3 max-w-[220px]">
+                        {faviconUrl && (
+                            <Link href="/" onClick={() => setIsOpen(false)} className="shrink-0">
+                                <img 
+                                    src={faviconUrl.startsWith('http') ? faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${faviconUrl}`} 
+                                    className="h-8 md:h-10 w-auto object-contain brightness-0 invert" 
+                                    alt="Favicon" 
+                                    onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.style.display = 'none';
+                                    }}
+                                />
+                            </Link>
+                        )}
                         <Link href="/" onClick={() => setIsOpen(false)}>
                             <img 
                                 src={

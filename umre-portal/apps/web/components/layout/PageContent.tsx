@@ -6,7 +6,7 @@ export default function PageContent({ children }: { children: React.ReactNode })
     const isHome = pathname === '/';
 
     return (
-        <main className={`min-h-screen ${!isHome ? 'pt-32' : ''}`}>
+        <main className={`min-h-screen overflow-x-hidden ${!isHome ? 'pt-32' : ''}`}>
             {children}
         </main>
     );
