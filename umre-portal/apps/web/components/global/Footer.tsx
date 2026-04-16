@@ -156,7 +156,7 @@ export default function Footer() {
                         ))}
                     </div>
                     <div className="text-center md:text-right">
-                        <p className="text-gray-600 text-[11px] uppercase tracking-widest mb-1">
+                        <p className="text-gray-600 text-[11px] uppercase tracking-widest mb-1" suppressHydrationWarning>
                             &copy; {new Date().getFullYear()} {firmName || 'Kasrı Royal'}. Tüm hakları saklıdır.
                         </p>
                         <p className="text-gray-700 text-[9px] hover:text-[#bda569] transition-colors cursor-pointer">

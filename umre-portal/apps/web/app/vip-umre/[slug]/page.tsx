@@ -56,7 +56,7 @@ export default async function VipPageDetail({ params }: { params: { slug: string
                             {page.title}
                         </h1>
                         <div className="flex items-center gap-6 text-white/70 text-sm">
-                            <span className="flex items-center gap-2">
+                            <span className="flex items-center gap-2" suppressHydrationWarning>
                                 <Calendar size={16} /> {date}
                             </span>
                             {/* <span className="flex items-center gap-2">

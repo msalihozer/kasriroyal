@@ -95,7 +95,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { sort?
                                         {post.title}
                                     </h3>
                                     {post.createdAt && (
-                                        <time className="text-xs text-gray-500 mb-3 block">
+                                        <time className="text-xs text-gray-500 mb-3 block" suppressHydrationWarning>
                                             {new Date(post.createdAt).toLocaleDateString('tr-TR')}
                                         </time>
                                     )}

@@ -49,7 +49,7 @@ export default function TourCard({ tour }: TourCardProps) {
                             <PlaneTakeoff className="text-gray-400" size={16} />
                             <div>
                                 <div className="text-[10px] md:text-xs text-gray-500 leading-none">Gidiş:</div>
-                                <div className="font-semibold text-gray-800 text-xs md:text-sm">{startDate ? startDate.full : 'Tarih Sorunuz'}</div>
+                                <div className="font-semibold text-gray-800 text-xs md:text-sm" suppressHydrationWarning>{startDate ? startDate.full : 'Tarih Sorunuz'}</div>
                             </div>
                         </div>
                         <div className="w-full h-px bg-gray-100"></div>
@@ -57,7 +57,7 @@ export default function TourCard({ tour }: TourCardProps) {
                             <PlaneLanding className="text-gray-400" size={16} />
                             <div>
                                 <div className="text-[10px] md:text-xs text-gray-500 leading-none">Dönüş:</div>
-                                <div className="font-semibold text-gray-800 text-xs md:text-sm">{returnDate ? returnDate.full : 'Tarih Sorunuz'}</div>
+                                <div className="font-semibold text-gray-800 text-xs md:text-sm" suppressHydrationWarning>{returnDate ? returnDate.full : 'Tarih Sorunuz'}</div>
                             </div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@ export default function TourCard({ tour }: TourCardProps) {
                                 <div className="border rounded-xl p-3 md:p-6 text-center">
                                     <PlaneTakeoff className="mx-auto mb-2 text-emerald-600" size={24} />
                                     <div className="text-[10px] text-gray-500 mb-0.5">Gidiş</div>
-                                    <div className="font-bold text-sm md:text-lg mb-0.5">{startDate ? startDate.full : 'Tarih Sorunuz'}</div>
+                                    <div className="font-bold text-sm md:text-lg mb-0.5" suppressHydrationWarning>{startDate ? startDate.full : 'Tarih Sorunuz'}</div>
                                     <div className="text-[10px] text-gray-500">İstanbul - Medine</div>
                                 </div>
                                 <div className="hidden md:flex border rounded-xl p-6 text-center bg-gray-50 flex-col justify-center">
@@ -161,7 +161,7 @@ export default function TourCard({ tour }: TourCardProps) {
                                 <div className="border rounded-xl p-3 md:p-6 text-center">
                                     <PlaneLanding className="mx-auto mb-2 text-emerald-600" size={24} />
                                     <div className="text-[10px] text-gray-500 mb-0.5">Dönüş</div>
-                                    <div className="font-bold text-sm md:text-lg mb-0.5">{returnDate ? returnDate.full : 'Tarih Sorunuz'}</div>
+                                    <div className="font-bold text-sm md:text-lg mb-0.5" suppressHydrationWarning>{returnDate ? returnDate.full : 'Tarih Sorunuz'}</div>
                                     <div className="text-[10px] text-gray-500">Cidde - İstanbul</div>
                                 </div>
                             </div>

@@ -131,7 +131,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                     <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-md">{tour.title}</h1>
                     <div className="flex flex-wrap gap-6 text-xl md:text-2xl text-gray-200">
                         {startDate && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2" suppressHydrationWarning>
                                 <Calendar size={24} className="text-yellow-400" />
                                 <span>{startDate} {endDate ? `- ${endDate}` : ''}</span>
                             </div>

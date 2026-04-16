@@ -141,7 +141,7 @@ export default function FeaturedTours({ data }: { data: { title?: string, items:
                                         <div>
                                             <div className="flex items-center text-gray-500 text-[10px] md:text-xs mb-2 font-medium tracking-wide">
                                                 <Calendar size={12} className='mr-1' />
-                                                <span>{startDate}</span>
+                                                <span suppressHydrationWarning>{startDate}</span>
                                                 <span className="mx-1 md:mx-2">•</span>
                                                 <Clock size={12} className='mr-1' />
                                                 <span>{tour.durationDays} Gün</span>

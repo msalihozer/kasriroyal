@@ -373,6 +373,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                             value={formData.startDate}
                                             onChange={handleChange}
                                             className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#bda569] outline-none"
+                                            suppressHydrationWarning
                                         />
                                     </div>
                                     <div>

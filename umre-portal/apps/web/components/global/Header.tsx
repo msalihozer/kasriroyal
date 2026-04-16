@@ -184,13 +184,13 @@ export default function Header() {
 
                 {/* Language Switcher Desktop */}
                 <div className="flex items-center gap-2 ml-4 border-l pl-4 border-gray-300/30">
-                    <button onClick={() => handleLanguageChange('tr')} className={`w-6 h-6 rounded-full overflow-hidden border ${currentLang === 'tr' ? 'border-[#bda569] ring-2 ring-[#bda569]/30' : 'border-gray-200 opacity-70 hover:opacity-100'} transition-all`}>
+                    <button onClick={() => handleLanguageChange('tr')} className={`w-6 h-6 rounded-full overflow-hidden border ${currentLang === 'tr' ? 'border-[#bda569] ring-2 ring-[#bda569]/30' : 'border-gray-200 opacity-70 hover:opacity-100'} transition-all`} suppressHydrationWarning>
                         <img src="https://flagcdn.com/w40/tr.png" alt="Türkçe" className="w-full h-full object-cover" />
                     </button>
-                    <button onClick={() => handleLanguageChange('en')} className={`w-6 h-6 rounded-full overflow-hidden border ${currentLang === 'en' ? 'border-[#bda569] ring-2 ring-[#bda569]/30' : 'border-gray-200 opacity-70 hover:opacity-100'} transition-all`}>
+                    <button onClick={() => handleLanguageChange('en')} className={`w-6 h-6 rounded-full overflow-hidden border ${currentLang === 'en' ? 'border-[#bda569] ring-2 ring-[#bda569]/30' : 'border-gray-200 opacity-70 hover:opacity-100'} transition-all`} suppressHydrationWarning>
                         <img src="https://flagcdn.com/w40/gb.png" alt="English" className="w-full h-full object-cover" />
                     </button>
-                    <button onClick={() => handleLanguageChange('ar')} className={`w-6 h-6 rounded-full overflow-hidden border ${currentLang === 'ar' ? 'border-[#bda569] ring-2 ring-[#bda569]/30' : 'border-gray-200 opacity-70 hover:opacity-100'} transition-all`}>
+                    <button onClick={() => handleLanguageChange('ar')} className={`w-6 h-6 rounded-full overflow-hidden border ${currentLang === 'ar' ? 'border-[#bda569] ring-2 ring-[#bda569]/30' : 'border-gray-200 opacity-70 hover:opacity-100'} transition-all`} suppressHydrationWarning>
                         <img src="https://flagcdn.com/w40/sa.png" alt="Arabic" className="w-full h-full object-cover" />
                     </button>
                 </div>
@@ -278,17 +278,17 @@ export default function Header() {
                 <div className="mt-auto w-full p-8 border-t border-white/10 bg-black/5">
                     <p className="text-center text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] mb-4">Dil Seçimi / Language</p>
                     <div className="flex items-center justify-center gap-8">
-                        <button onClick={() => handleLanguageChange('tr')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'tr' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
+                        <button onClick={() => handleLanguageChange('tr')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'tr' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`} suppressHydrationWarning>
                             <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'tr' ? 'border-white' : 'border-transparent'}`}>
                                 <img src="https://flagcdn.com/w80/tr.png" alt="Türkçe" className="w-full h-full object-cover rounded-xl" />
                             </div>
                         </button>
-                        <button onClick={() => handleLanguageChange('en')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'en' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
+                        <button onClick={() => handleLanguageChange('en')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'en' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`} suppressHydrationWarning>
                             <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'en' ? 'border-white' : 'border-transparent'}`}>
                                 <img src="https://flagcdn.com/w80/gb.png" alt="English" className="w-full h-full object-cover rounded-xl" />
                             </div>
                         </button>
-                        <button onClick={() => handleLanguageChange('ar')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'ar' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}>
+                        <button onClick={() => handleLanguageChange('ar')} className={`group flex flex-col items-center gap-2 transition-all ${currentLang === 'ar' ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`} suppressHydrationWarning>
                             <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 ${currentLang === 'ar' ? 'border-white' : 'border-transparent'}`}>
                                 <img src="https://flagcdn.com/w80/sa.png" alt="Arabic" className="w-full h-full object-cover rounded-xl" />
                             </div>

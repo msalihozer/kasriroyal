@@ -27,7 +27,7 @@ export default function LatestPosts({ data }: { data: { title?: string, items: a
                             <div className="p-5">
                                 <div className="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">
                                     <Calendar size={10} />
-                                    <span>{new Date(post.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                    <span suppressHydrationWarning>{new Date(post.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                 </div>
                                 <h3 className="text-lg font-serif font-bold mb-2 text-gray-900 group-hover:text-[#bda569] transition-colors leading-tight line-clamp-2">
                                     <Link href={`/blog/${post.slug}`}>

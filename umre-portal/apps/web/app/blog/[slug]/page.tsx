@@ -110,7 +110,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                         {publishDate && (
                             <div className="flex items-center gap-2">
                                 <Calendar size={18} className="text-primary-500" />
-                                <time>{publishDate}</time>
+                                <time suppressHydrationWarning>{publishDate}</time>
                             </div>
                         )}
                         <div className="flex items-center gap-2">
