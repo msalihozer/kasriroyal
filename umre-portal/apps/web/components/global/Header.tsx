@@ -147,22 +147,28 @@ export default function Header() {
 
     return (
         <header className={headerClasses}>
-            {/* Logo */}
-            <Link 
-                href="/" 
-                className={`flex-shrink-0 transition-all duration-500 z-[60] ${isOpen ? 'opacity-0 scale-90 pointer-events-none' : 'opacity-100'}`}
-            >
-                <img
-                    src={
-                        (isHome && !scrolled)
-                            ? (logoUrl ? (logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`) : '/logo.png')
-                            : (faviconUrl ? (faviconUrl.startsWith('http') ? faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${faviconUrl}`) : '/logo.png')
-                    }
-                    alt="Site Logo"
-                    className={`object-contain transition-all duration-500 ${logoClasses}`}
-                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/logo.png'; }}
-                />
-            </Link>
+            {/* Logo & Branding */}
+            <div className={`flex flex-col ${isHome && !scrolled ? 'items-center' : 'items-start'} transition-all duration-500`}>
+                <Link 
+                    href="/" 
+                    className={`flex-shrink-0 transition-all duration-500 z-[60] ${isOpen ? 'opacity-0 scale-90 pointer-events-none' : 'opacity-100'}`}
+                >
+                    <img
+                        src={
+                            (isHome && !scrolled)
+                                ? (logoUrl ? (logoUrl.startsWith('http') ? logoUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${logoUrl}`) : '/logo.png')
+                                : (faviconUrl ? (faviconUrl.startsWith('http') ? faviconUrl : `${process.env.NEXT_PUBLIC_API_URL || ''}${faviconUrl}`) : '/logo.png')
+                        }
+                        alt="Site Logo"
+                        className={`object-contain transition-all duration-500 ${logoClasses}`}
+                        onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/logo.png'; }}
+                    />
+                </Link>
+                <div className={`hidden md:block transition-all duration-500 ${isHome && !scrolled ? 'text-white/60 text-center mt-2' : 'text-gray-400 mt-1'} leading-tight`}>
+                    <p className="text-[8px] font-bold tracking-[0.15em] uppercase whitespace-nowrap">KASRI ROYAL TURİZM SEYAHAT ACENTASI</p>
+                    <p className="text-[7px] tracking-[0.25em] uppercase opacity-80">BELGE NO: 18760</p>
+                </div>
+            </div>
 
             {/* Desktop Menu */}
             <nav className={menuContainerClasses}>

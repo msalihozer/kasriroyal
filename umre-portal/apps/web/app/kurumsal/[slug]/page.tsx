@@ -2,6 +2,35 @@ import { notFound } from 'next/navigation';
 import CommentSection from '@/components/global/CommentSection';
 
 async function getPage(slug: string) {
+    // Check if it's a special legal slug
+    const legalSlugs: Record<string, { title: string, field: string }> = {
+        'kvkk': { title: 'KVKK Aydınlatma Metni', field: 'kvkkText' },
+        'gizlilik-politikasi': { title: 'Gizlilik Politikası', field: 'privacyPolicyText' },
+        'mesafeli-satis': { title: 'Mesafeli Satış Sözleşmesi', field: 'distanceSalesText' },
+        'iptal-iade': { title: 'İptal & İade Koşulları', field: 'cancellationText' }
+    };
+
+    if (legalSlugs[slug]) {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/site-settings`, {
+                cache: 'no-store'
+            });
+            if (res.ok) {
+                const settings = await res.json();
+                const content = settings[legalSlugs[slug].field];
+                if (content) {
+                    return {
+                        id: slug,
+                        title: legalSlugs[slug].title,
+                        content: content
+                    };
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching site settings for legal page:', err);
+        }
+    }
+
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/pages/${slug}`, {
             cache: 'no-store'

@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { X, Loader2, Calendar } from 'lucide-react';
+import Link from 'next/link';
 
 interface ReservationModalProps {
     isOpen: boolean;
@@ -18,7 +19,8 @@ export default function ReservationModal({ isOpen, onClose, tourId, tourName }: 
         email: '',
         city: '',
         personCount: 1,
-        note: ''
+        note: '',
+        isKvkkAccepted: false
     });
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
@@ -26,6 +28,12 @@ export default function ReservationModal({ isOpen, onClose, tourId, tourName }: 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!formData.isKvkkAccepted) {
+            alert("Lütfen KVKK Aydınlatma Metni'ni kabul ediniz.");
+            return;
+        }
+
         setStatus('submitting');
 
         try {
@@ -44,7 +52,7 @@ export default function ReservationModal({ isOpen, onClose, tourId, tourName }: 
                 setTimeout(() => {
                     onClose();
                     setStatus('idle');
-                    setFormData({ name: '', phone: '', email: '', city: '', personCount: 1, note: '' });
+                    setFormData({ name: '', phone: '', email: '', city: '', personCount: 1, note: '', isKvkkAccepted: false });
                 }, 3000);
             } else {
                 setStatus('error');
@@ -154,6 +162,21 @@ export default function ReservationModal({ isOpen, onClose, tourId, tourName }: 
                                 value={formData.note}
                                 onChange={e => setFormData({ ...formData, note: e.target.value })}
                             />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="flex items-start cursor-pointer gap-2">
+                                <input 
+                                    type="checkbox" 
+                                    required 
+                                    className="mt-1 w-4 h-4 accent-[#bda569]"
+                                    checked={formData.isKvkkAccepted}
+                                    onChange={e => setFormData({ ...formData, isKvkkAccepted: e.target.checked })}
+                                />
+                                <span className="text-xs text-gray-600">
+                                    <Link href="/kurumsal/kvkk" target="_blank" className="font-bold text-[#bda569] underline hover:text-[#a38b55]">KVKK Aydınlatma Metni</Link>&apos;ni okudum ve onaylıyorum.
+                                </span>
+                            </label>
                         </div>
 
                         <button

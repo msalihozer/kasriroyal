@@ -40,6 +40,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
+    const [isKvkkAccepted, setIsKvkkAccepted] = useState(false);
     const [showSummary, setShowSummary] = useState(false);
 
     // Client-side data fetching state
@@ -171,6 +172,14 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
             return;
         }
         if (step === 4) {
+            if (!isConfirmed) {
+                alert("Lütfen bilgilerin doğruluğunu onaylayınız.");
+                return;
+            }
+            if (!isKvkkAccepted) {
+                alert("Lütfen KVKK Aydınlatma Metni'ni kabul ediniz.");
+                return;
+            }
             setShowSummary(true);
             return;
         }
@@ -276,7 +285,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                     <PhoneInput
                                         country={'tr'}
                                         value={formData.phone}
-                                        onChange={phone => setFormData(prev => ({ ...prev, phone }))}
+                                        onChange={(phone: string) => setFormData(prev => ({ ...prev, phone }))}
                                         inputClass="!w-full !h-[50px] !rounded-xl !border-gray-300 !focus:ring-2 !focus:ring-[#bda569]"
                                         containerClass="!w-full"
                                         buttonClass="!rounded-l-xl !border-gray-300"
@@ -390,7 +399,7 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                             placeholder="Havalimanı seçiniz..."
                                             noOptionsMessage={() => "Havalimanı bulunamadı"}
                                             styles={{
-                                                control: (base) => ({
+                                                control: (base: any) => ({
                                                     ...base,
                                                     borderRadius: '12px',
                                                     padding: '4px',
@@ -661,10 +670,17 @@ export default function CustomTourForm({ hotels: initialHotels = [], vehicles: i
                                 <span>Gönder butonuna bastıktan sonra uzmanlarımız seçtiğiniz kriterlere en uygun paketi hazırlayıp size dönüş yapacaktır.</span>
                             </div>
 
-                            <div className="mb-4">
-                                <label className="flex items-center cursor-pointer gap-2">
+                            <div className="space-y-4 mb-6">
+                                <label className="flex items-center cursor-pointer gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
                                     <input type="checkbox" checked={isConfirmed} onChange={e => setIsConfirmed(e.target.checked)} className="w-5 h-5 accent-[#bda569]" />
                                     <span className="font-bold text-gray-700 text-sm">Bilgilerin doğruluğunu onaylıyorum.</span>
+                                </label>
+
+                                <label className="flex items-center cursor-pointer gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                                    <input type="checkbox" checked={isKvkkAccepted} onChange={e => setIsKvkkAccepted(e.target.checked)} className="w-5 h-5 accent-[#bda569]" />
+                                    <span className="text-gray-700 text-sm">
+                                        <Link href="/kurumsal/kvkk" target="_blank" className="font-bold text-[#bda569] underline hover:text-[#a38b55]" onClick={(e) => e.stopPropagation()}>KVKK Aydınlatma Metni</Link>&apos;ni okudum ve onaylıyorum.
+                                    </span>
                                 </label>
                             </div>
                         </div>
