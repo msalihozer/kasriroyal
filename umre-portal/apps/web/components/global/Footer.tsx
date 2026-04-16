@@ -53,7 +53,7 @@ export default function Footer() {
                         <h3 className="font-serif font-bold text-2xl text-[#bda569]">
                             {firmName || 'Kasrı Royal'}
                         </h3>
-                        <p className="text-[#bda569]/80 text-[10px] font-bold tracking-[0.2em] uppercase -mt-2 mb-4">
+                        <p className="text-white text-xs font-bold tracking-[0.2em] uppercase -mt-2 mb-4">
                             BELGE NO: 18760
                         </p>
                         <p className="text-gray-400 text-sm leading-relaxed max-w-xs">

@@ -21,14 +21,21 @@ export default function Header() {
                 window.location.hostname,
                 '.' + window.location.hostname,
                 window.location.host,
-                '.' + window.location.host
+                '.' + window.location.host,
+                'kasriroyal.com',
+                '.kasriroyal.com'
             ];
 
             domains.forEach(domain => {
                 document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain}`;
+                document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=`;
             });
-            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             
+            // Clear current select value if it exists
+            const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+            if (select) select.value = '';
+
             // Force reload to original source
             window.location.reload();
             return;
