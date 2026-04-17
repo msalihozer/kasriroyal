@@ -8,6 +8,7 @@ import { SiteSettingsProvider } from '../context/SiteSettingsContext';
 import PageContent from '../components/layout/PageContent';
 import GoogleTranslate from '../components/global/GoogleTranslate';
 import AnalyticsTracker from '../components/AnalyticsTracker';
+import CookieConsent from '../components/global/CookieConsent';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -103,6 +104,7 @@ export default async function RootLayout({
                     </PageContent>
                     <Footer />
                     <WhatsAppButton />
+                    <CookieConsent />
                 </SiteSettingsProvider>
             </body>
         </html>

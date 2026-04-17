@@ -155,60 +155,81 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
 
                         {/* Info Cards */}
                         <div className="bg-white rounded-xl shadow-lg p-6 grid grid-cols-2 md:grid-cols-5 gap-4">
-                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between">
+                            {/* Card 1: Süre */}
+                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between min-h-[140px]">
                                 <div>
                                     <Clock className="w-6 h-6 mx-auto mb-2 text-primary-600" />
-                                    <div className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Süre</div>
-                                    <div className="font-bold text-gray-900">{tour.durationDays} Gün</div>
-                                    <div className="text-[10px] text-gray-500">{tour.durationNights} Gece</div>
+                                    <div className="text-[10px] text-gray-500 uppercase font-black tracking-tighter mb-1">Toplam Süre</div>
+                                    <div className="font-black text-gray-900 text-sm md:text-base leading-tight">
+                                        {tour.durationDays} Gün
+                                        <span className="block text-[10px] text-gray-400 font-bold">{tour.durationNights} Gece</span>
+                                    </div>
                                 </div>
-                                <div className="mt-2 pt-2 border-t border-gray-100 text-[10px] font-bold text-primary-600">
+                                <div className="mt-auto pt-2 border-t border-gray-200/50 text-[9px] font-black text-primary-600 uppercase tracking-tighter">
                                     {startDate && endDate ? `${startDate} - ${endDate}` : 'Tarih Sorunuz'}
                                 </div>
                             </div>
-                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between">
+
+                            {/* Card 2: Hava Yolu */}
+                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between min-h-[140px]">
                                 <div>
                                     <Plane className="w-6 h-6 mx-auto mb-2 text-primary-600" />
-                                    <div className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Hava Yolu</div>
-                                    <div className="font-bold text-gray-900 line-clamp-1">{tour.airline || 'Belirtilmedi'}</div>
+                                    <div className="text-[10px] text-gray-500 uppercase font-black tracking-tighter mb-1">Hava Yolu</div>
+                                    <div className="font-black text-gray-900 text-sm md:text-base">{tour.airline || 'Hava Yolu'}</div>
+                                    <div className="text-[9px] text-gray-400 font-bold uppercase">Tarifeli Uçuş</div>
                                 </div>
-                                <div className="mt-2 pt-2 border-t border-gray-100 text-[10px] font-bold text-gray-400">
-                                    Tarifeli Uçuş
+                                <div className="mt-auto pt-2 border-t border-gray-200/50 text-[9px] font-black text-gray-400 uppercase tracking-tighter">
+                                    Paket Dahil
                                 </div>
                             </div>
-                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between">
+
+                            {/* Card 3: Hareket (Gidiş) */}
+                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between min-h-[140px]">
                                 <div>
                                     <MapPin className="w-6 h-6 mx-auto mb-2 text-primary-600" />
-                                    <div className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Hareket</div>
-                                    <div className="font-bold text-gray-900 leading-tight">
+                                    <div className="text-[10px] text-gray-500 uppercase font-black tracking-tighter mb-1">Gidiş Rota</div>
+                                    <div className="font-black text-gray-900 text-sm md:text-base leading-tight">
                                         {tour.departureLocation || '-'}
-                                        {tour.arrivalLocation && <span className="block text-[10px] text-gray-400 font-normal">➔ {tour.arrivalLocation}</span>}
+                                        {tour.arrivalLocation && (
+                                            <span className="flex items-center justify-center gap-1 text-[11px] text-primary-600 mt-0.5">
+                                                <ArrowRight size={10} /> {tour.arrivalLocation}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="mt-2 pt-2 border-t border-gray-100 text-[10px] font-bold text-primary-600">
+                                <div className="mt-auto pt-2 border-t border-gray-200/50 text-[9px] font-black text-primary-600 uppercase tracking-tighter">
                                     {startDate || 'Tarih Sorunuz'}
                                 </div>
                             </div>
-                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between">
+
+                            {/* Card 4: Uçuş Dönüş */}
+                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between min-h-[140px]">
                                 <div>
-                                    <ArrowRight className="w-6 h-6 mx-auto mb-2 text-primary-600" />
-                                    <div className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Uçuş Dönüş</div>
-                                    <div className="font-bold text-gray-900 leading-tight">
+                                    <ArrowRight className="w-6 h-6 mx-auto mb-2 text-primary-600 rotate-180 md:rotate-0" />
+                                    <div className="text-[10px] text-gray-500 uppercase font-black tracking-tighter mb-1">Dönüş Rota</div>
+                                    <div className="font-black text-gray-900 text-sm md:text-base leading-tight">
                                         {tour.returnLocation || '-'}
-                                        {tour.returnArrivalLocation && <span className="block text-[10px] text-gray-400 font-normal">➔ {tour.returnArrivalLocation}</span>}
+                                        {tour.returnArrivalLocation && (
+                                            <span className="flex items-center justify-center gap-1 text-[11px] text-primary-600 mt-0.5">
+                                                <ArrowRight size={10} /> {tour.returnArrivalLocation}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="mt-2 pt-2 border-t border-gray-100 text-[10px] font-bold text-primary-600">
+                                <div className="mt-auto pt-2 border-t border-gray-200/50 text-[9px] font-black text-primary-600 uppercase tracking-tighter">
                                     {returnDate || 'Tarih Sorunuz'}
                                 </div>
                             </div>
-                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between">
+
+                            {/* Card 5: Tur Sonu */}
+                            <div className="text-center p-4 border rounded-lg bg-gray-50 flex flex-col justify-between min-h-[140px]">
                                 <div>
                                     <Calendar className="w-6 h-6 mx-auto mb-2 text-red-600" />
-                                    <div className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Tur Sonu</div>
-                                    <div className="font-bold text-gray-900">Final</div>
+                                    <div className="text-[10px] text-gray-500 uppercase font-black tracking-tighter mb-1">Tur Sonu</div>
+                                    <div className="font-black text-gray-900 text-sm md:text-base">Final</div>
+                                    <div className="text-[9px] text-gray-400 font-bold uppercase">Varış & Bitiş</div>
                                 </div>
-                                <div className="mt-2 pt-2 border-t border-gray-100 text-[10px] font-bold text-red-600">
+                                <div className="mt-auto pt-2 border-t border-gray-200/50 text-[9px] font-black text-red-600 uppercase tracking-tighter">
                                     {endDate || 'Tarih Sorunuz'}
                                 </div>
                             </div>
