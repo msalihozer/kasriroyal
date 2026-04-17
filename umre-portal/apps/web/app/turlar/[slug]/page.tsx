@@ -5,6 +5,7 @@ import { Calendar, MapPin, Plane, Clock, Info, CheckCircle, ArrowRight } from 'l
 import Image from 'next/image';
 import CommentSection from '@/components/global/CommentSection';
 import TourBookingWidget from '@/components/tours/TourBookingWidget';
+import TourGallerySlider from '@/components/tours/TourGallerySlider';
 
 async function getTour(slug: string) {
     try {
@@ -170,6 +171,14 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                                 <div className="font-bold">{tour.returnLocation || '-'}</div>
                             </div>
                         </div>
+
+                        {/* Image Slider */}
+                        {tour.gallery && tour.gallery.length > 0 && (
+                            <TourGallerySlider 
+                                images={tour.gallery} 
+                                getFullUrl={getFullUrl} 
+                            />
+                        )}
 
                         {/* Location Stays Breakdown */}
                         {tour.locationStays && Array.isArray(tour.locationStays) && tour.locationStays.length > 0 && (

@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import { ChevronLeft, Check, MapPin, Globe, Star } from 'lucide-react';
 import CommentSection from '@/components/global/CommentSection';
 import HotelGallery from '@/components/hotels/HotelGallery';
+import CollapsibleSection from '@/components/ui/CollapsibleSection';
 import { notFound } from 'next/navigation';
 
 async function getHotel(slug: string) {
@@ -75,24 +75,34 @@ export default async function HotelDetailPage({ params }: { params: { slug: stri
                         <div className="prose prose-lg max-w-none text-gray-600 leading-relaxed font-medium" dangerouslySetInnerHTML={{ __html: hotel.description || '' }} />
                     </div>
 
-                    <div className="bg-gray-900 rounded-3xl p-8 md:p-12 text-white">
-                        <h3 className="font-black text-2xl md:text-3xl mb-10 text-white border-b border-white/10 pb-6 uppercase tracking-widest">Sunduğumuz İmkanlar</h3>
+                    <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-gray-100">
+                        <h3 className="font-black text-2xl md:text-3xl mb-10 text-gray-900 border-b border-gray-100 pb-6 uppercase tracking-widest">Sunduğumuz İmkanlar</h3>
                         {Object.keys(groupedFeatures).length > 0 ? (
-                            <div className="space-y-12">
+                            <div className="space-y-6">
                                 {Object.entries(groupedFeatures).map(([category, features]: any) => (
-                                    <div key={category}>
-                                        <h4 className="font-bold text-lg text-primary-400 mb-6 uppercase tracking-widest opacity-80">{category}</h4>
+                                    <CollapsibleSection
+                                        key={category}
+                                        defaultOpen={false}
+                                        className="bg-gray-50/50 rounded-2xl overflow-hidden border border-gray-100 hover:border-primary-100 transition-all"
+                                        contentClassName="p-8 pt-2"
+                                        title={
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-1.5 h-6 bg-primary-600 rounded-full" />
+                                                <h4 className="font-bold text-lg text-gray-900 uppercase tracking-widest">{category}</h4>
+                                            </div>
+                                        }
+                                    >
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {features.map((feature: any) => (
-                                                <div key={feature.id} className="flex items-center gap-4 text-white bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-primary-500/30 hover:bg-white/10 transition-all group">
-                                                    <div className="w-10 h-10 rounded-xl bg-primary-600/20 flex items-center justify-center flex-shrink-0 text-primary-500 group-hover:scale-110 transition-transform">
-                                                        <Check size={20} strokeWidth={3} />
+                                                <div key={feature.id} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm group hover:border-primary-200 transition-all">
+                                                    <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 text-primary-600 group-hover:scale-110 transition-transform">
+                                                        <Check size={16} strokeWidth={3} />
                                                     </div>
-                                                    <span className="font-bold tracking-wide">{feature.name}</span>
+                                                    <span className="font-bold text-gray-700 tracking-wide text-sm">{feature.name}</span>
                                                 </div>
                                             ))}
                                         </div>
-                                    </div>
+                                    </CollapsibleSection>
                                 ))}
                             </div>
                         ) : (
@@ -122,32 +132,57 @@ export default async function HotelDetailPage({ params }: { params: { slug: stri
                         </div>
                     )}
 
-                    {/* Map Section */}
-                    {(hotel.lat && hotel.lng) && (
-                        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                            <h2 className="text-lg font-black mb-6 flex items-center gap-3 uppercase tracking-wider">
-                                <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
-                                    <MapPin size={18} />
-                                </div>
-                                KONUM HARİTASI
-                            </h2>
-                            <div className="rounded-2xl overflow-hidden h-64 shadow-inner bg-gray-100 relative grayscale hover:grayscale-0 transition-all duration-700">
-                                <iframe
-                                    width="100%"
-                                    height="100%"
-                                    frameBorder="0"
-                                    scrolling="no"
-                                    marginHeight={0}
-                                    marginWidth={0}
-                                    src={`https://maps.google.com/maps?q=${hotel.lat},${hotel.lng}&z=15&output=embed`}
-                                    className="absolute inset-0 w-full h-full"
-                                >
-                                </iframe>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
+
+            {/* Map Section - Full Width Below Content */}
+            {(hotel.lat && hotel.lng) && (
+                <div className="mt-16 bg-white p-8 md:p-12 rounded-[3rem] shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                        <h2 className="text-2xl md:text-3xl font-black flex items-center gap-4 uppercase tracking-wider text-gray-900">
+                            <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center shadow-lg shadow-red-50">
+                                <MapPin size={28} />
+                            </div>
+                            KONUM VE ULAŞIM
+                        </h2>
+                        <div className="flex items-center gap-3 bg-gray-50 px-6 py-3 rounded-2xl border border-gray-100">
+                            <Star className="text-yellow-500 fill-yellow-500" size={20} />
+                            <span className="font-bold text-gray-700">{hotel.location?.name || 'Konum Belirtilmedi'}</span>
+                        </div>
+                    </div>
+                    
+                    <div className="rounded-[2.5rem] overflow-hidden h-[500px] shadow-2xl bg-gray-100 relative border-8 border-gray-50">
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            frameBorder="0"
+                            scrolling="no"
+                            marginHeight={0}
+                            marginWidth={0}
+                            src={`https://maps.google.com/maps?q=${hotel.lat},${hotel.lng}&z=15&output=embed`}
+                            className="absolute inset-0 w-full h-full"
+                        >
+                        </iframe>
+                        
+                        {/* Overlay detail */}
+                        <div className="absolute bottom-8 left-8 right-8 md:right-auto bg-white/95 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-white/50 max-w-md hidden md:block">
+                            <h4 className="font-black text-gray-900 mb-2 uppercase tracking-tight">{hotel.title}</h4>
+                            <p className="text-gray-500 text-sm font-medium flex items-center gap-2">
+                                <MapPin size={14} className="text-primary-600" />
+                                {hotel.locationText}
+                            </p>
+                            <a 
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${hotel.lat},${hotel.lng}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-4 inline-flex items-center gap-2 text-primary-600 font-bold text-sm hover:underline"
+                            >
+                                YOL TARİFİ AL <ChevronLeft className="rotate-180" size={16} />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Comments Section */}
             <div className="mt-20 bg-gray-50 rounded-[3rem] p-8 md:p-16 border border-gray-100">

@@ -18,6 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
         : '/logo.png';
 
     return {
+        referrer: 'origin',
         metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://kasriroyal.com'),
         title: {
             default: 'Kasri Royal | Umre ve Turizm',

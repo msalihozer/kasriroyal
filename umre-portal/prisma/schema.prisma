@@ -137,6 +137,7 @@ model Tour {
   returnDate        DateTime?
   returnLocation    String?
   startDate         DateTime?
+  thumbnailUrl     String?
   tourTypeId        String?
   vehicleId         String?
   category          TourCategory?   @relation(fields: [categoryId], references: [id])

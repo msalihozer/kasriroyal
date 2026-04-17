@@ -1,10 +1,39 @@
 "use client";
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, Youtube, Send } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {
     const settings = useSiteSettings();
+    const pathname = usePathname();
+    const [currentLang, setCurrentLang] = useState('tr');
+
+    useEffect(() => {
+        const detectLang = () => {
+            const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+            if (select && select.value) {
+                setCurrentLang(select.value || 'tr');
+                return;
+            }
+            const cookies = document.cookie.split(';');
+            const gtCookie = cookies.find(c => c.trim().startsWith('googtrans='));
+            if (gtCookie) {
+                const val = decodeURIComponent(gtCookie.split('=').slice(1).join('='));
+                const parts = val.split('/');
+                const lang = parts[parts.length - 1];
+                if (lang && lang !== 'tr') {
+                    setCurrentLang(lang);
+                    return;
+                }
+            }
+            setCurrentLang('tr');
+        };
+
+        const timer = setTimeout(detectLang, 800);
+        return () => clearTimeout(timer);
+    }, [pathname]);
     const { 
         footerLogos, 
         address, 
@@ -125,6 +154,20 @@ export default function Footer() {
                     <div>
                         <h3 className="font-serif font-bold text-lg mb-8 text-[#bda569] uppercase tracking-widest">Resmi Üyelikler</h3>
                         <div className="grid grid-cols-2 gap-3">
+                            {/* TÜRSAB Digital Verification - Mandatory Link - NO noreferrer */}
+                            <a 
+                                href="https://www.tursab.org.tr/tr/ddsv" 
+                                target="_blank" 
+                                rel="noopener"
+                                className="bg-white/5 p-3 rounded-xl aspect-square flex items-center justify-center group hover:bg-white/10 transition-colors"
+                            >
+                                <img 
+                                    src={currentLang === 'en' ? '/tursab-eng.jpeg' : '/tursab-tr.jpeg'} 
+                                    alt="TÜRSAB Dijital Doğrulama" 
+                                    className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" 
+                                />
+                            </a>
+
                             {Array.isArray(footerLogos) && footerLogos.length > 0 ? (
                                 footerLogos.map((logo: any, idx: number) => (
                                     <div key={idx} className="bg-white/5 p-3 rounded-xl aspect-square flex items-center justify-center group hover:bg-white/10 transition-colors">

@@ -114,7 +114,7 @@ export default function FeaturedTours({ data }: { data: { title?: string, items:
                                 ? new Date(tour.startDates[0]).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })
                                 : 'Tarih Sorunuz';
 
-                            const coverImage = tour.gallery && Array.isArray(tour.gallery) && tour.gallery.length > 0 ? tour.gallery[0] : null;
+                            const coverImage = tour.thumbnailUrl || (tour.gallery && Array.isArray(tour.gallery) && tour.gallery.length > 0 ? tour.gallery[0] : null);
 
                             return (
                                 <Link

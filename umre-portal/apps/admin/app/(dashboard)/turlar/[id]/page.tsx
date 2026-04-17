@@ -22,6 +22,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
         isFeatured: false,
         status: 'draft',
         gallery: [] as string[],
+        thumbnailUrl: '', // New
         excludedText: '', // Added
 
         // New Fields
@@ -138,6 +139,23 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
         }));
     };
 
+    const sanitizeSlug = (text: string) => {
+        const trMap: any = {
+            'ç': 'c', 'ğ': 'g', 'ı': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
+            'Ç': 'c', 'Ğ': 'g', 'İ': 'i', 'Ö': 'o', 'Ş': 's', 'Ü': 'u'
+        };
+        for (let key in trMap) {
+            text = text.replace(new RegExp(key, 'g'), trMap[key]);
+        }
+        return text
+            .toLowerCase()
+            .replace(/[^-a-zA-Z0-9\s]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    };
+
     const addItineraryItem = () => {
         setFormData(prev => ({
             ...prev,
@@ -221,8 +239,16 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                             <input type="text" className="w-full border rounded p-2" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Slug</label>
-                            <input type="text" className="w-full border rounded p-2" value={formData.slug} onChange={e => setFormData({ ...formData, slug: e.target.value })} required />
+                            <label className="block text-sm font-medium mb-1">Slug (Sadece İngilizce Karakterler)</label>
+                            <input 
+                                type="text" 
+                                className="w-full border rounded p-2 bg-gray-50" 
+                                value={formData.slug} 
+                                onChange={e => setFormData({ ...formData, slug: sanitizeSlug(e.target.value) })} 
+                                placeholder="tur-ismi-ingilizce"
+                                required 
+                            />
+                            <p className="text-[10px] text-gray-400 mt-1">Örn: vip-umre-tur-2026</p>
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1">Etiket (Label)</label>
@@ -436,7 +462,30 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                         onChange={(html) => setFormData({ ...formData, excludedText: html })}
                         label="Fiyata Dahil Olmayan Hizmetler"
                     />
-                    <GalleryUpload value={formData.gallery} onChange={(urls) => setFormData({ ...formData, gallery: urls })} label="Tur Görselleri" />
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t">
+                        <ImageUpload 
+                            value={formData.thumbnailUrl} 
+                            onChange={(url) => setFormData({ ...formData, thumbnailUrl: url })} 
+                            label="Thumbnail (Liste Görseli)" 
+                        />
+                        <div className="flex flex-col justify-center">
+                            <p className="text-sm font-bold text-gray-700 mb-2">Görsel Alanı Hakkında</p>
+                            <ul className="text-xs text-gray-500 space-y-1 list-disc pl-4">
+                                <li>Thumbnail görseli site genelinde turların listelendiği kartlarda kullanılacaktır.</li>
+                                <li>Yüklerken kırpma (crop) işlemi yaparak ideal boyuta getirebilirsiniz.</li>
+                                <li>Tur sayfasındaki slider için aşağıdan Galeri görselleri eklemeye devam edebilirsiniz.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="pt-6 border-t">
+                        <div className="flex items-center justify-between mb-4">
+                            <label className="block text-sm font-medium">Tur Galeri Görselleri (Slider)</label>
+                            <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold uppercase tracking-widest">Slider'da Boyut Sınırı Yoktur</span>
+                        </div>
+                        <GalleryUpload value={formData.gallery} onChange={(urls) => setFormData({ ...formData, gallery: urls })} label="" />
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4 bg-white p-4 rounded-lg shadow">
