@@ -83,7 +83,7 @@ export default function TourGallerySlider({ images, getFullUrl }: TourGallerySli
                         animate="center"
                         exit="exit"
                         transition={{
-                            x: { type: "spring", stiffness: 300, damping: 30; },
+                            x: { type: "spring", stiffness: 300, damping: 30 },
                             opacity: { duration: 0.2 }
                         }}
                         className="absolute inset-0"
