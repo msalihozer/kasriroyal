@@ -3,6 +3,7 @@ import CommentSection from '@/components/global/CommentSection';
 import HotelGallery from '@/components/hotels/HotelGallery';
 import CollapsibleSection from '@/components/ui/CollapsibleSection';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 async function getHotel(slug: string) {
     try {
