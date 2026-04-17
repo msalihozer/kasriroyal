@@ -270,6 +270,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                         { label: 'Single Oda', key: 'single', desc: '*Kişi başı' },
                                         { label: 'İkili Oda', key: 'double', desc: '*Kişi başı' },
                                         { label: 'Üçlü Oda', key: 'triple', desc: '*Kişi başı' },
+                                        { label: 'Dörtlü Oda', key: 'quad', desc: '*Kişi başı' },
                                         { label: '0-2 Yaş', key: 'child_0_2', desc: '*Yataksız' },
                                         { label: '3-6 Yaş', key: 'child_3_6', desc: '*Yataksız' },
                                         { label: '7-11 Yaş', key: 'child_7_11', desc: '*Yataksız' },

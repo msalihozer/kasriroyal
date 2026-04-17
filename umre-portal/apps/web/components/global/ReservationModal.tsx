@@ -63,10 +63,10 @@ export default function ReservationModal({ isOpen, onClose, tourId, tourName }: 
     };
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-            <div className="relative bg-white rounded-2xl w-full max-w-lg shadow-2xl p-6 md:p-8 animate-in fade-in zoom-in duration-300">
+            <div className="relative bg-white rounded-2xl w-full max-w-lg shadow-2xl p-6 md:p-8 animate-in fade-in zoom-in duration-300 max-h-[95vh] overflow-y-auto custom-scrollbar">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"

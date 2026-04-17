@@ -30,7 +30,9 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
         vehicleId: '',
         airline: '',
         departureLocation: '',
+        arrivalLocation: '',
         returnLocation: '',
+        returnArrivalLocation: '',
         label: '',
 
         // Date Fields
@@ -67,6 +69,24 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
             fetchTour();
         }
     }, []);
+    
+    // Auto-calculate durations based on dates
+    useEffect(() => {
+        if (formData.startDate && formData.endDate) {
+            const start = new Date(formData.startDate);
+            const end = new Date(formData.endDate);
+            const diffTime = end.getTime() - start.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (diffDays > 0) {
+                setFormData(prev => ({
+                    ...prev,
+                    durationDays: diffDays,
+                    durationNights: diffDays - 1
+                }));
+            }
+        }
+    }, [formData.startDate, formData.endDate]);
 
     const fetchResources = async () => {
         try {
@@ -100,6 +120,8 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                     startDate: data.startDate ? data.startDate.split('T')[0] : '',
                     endDate: data.endDate ? data.endDate.split('T')[0] : '',
                     returnDate: data.returnDate ? data.returnDate.split('T')[0] : '',
+                    arrivalLocation: data.arrivalLocation || '',
+                    returnArrivalLocation: data.returnArrivalLocation || '',
                     locationStays: data.locationStays || [],
                     pricing: data.pricing || { single: '', double: '', triple: '', child_0_2: '', child_3_6: '', child_7_11: '' },
                     itinerary: data.itinerary || [],
@@ -292,12 +314,20 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                             <input type="date" className="w-full border rounded p-2" value={formData.returnDate} onChange={e => setFormData({ ...formData, returnDate: e.target.value })} />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Kalkış Yeri</label>
+                            <label className="block text-sm font-medium mb-1">Gidiş: Kalkış Yeri</label>
                             <input type="text" className="w-full border rounded p-2" value={formData.departureLocation} onChange={e => setFormData({ ...formData, departureLocation: e.target.value })} placeholder="İstanbul" />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Varış Yeri</label>
-                            <input type="text" className="w-full border rounded p-2" value={formData.returnLocation} onChange={e => setFormData({ ...formData, returnLocation: e.target.value })} placeholder="Cidde/Medine" />
+                            <label className="block text-sm font-medium mb-1">Gidiş: Varış Yeri</label>
+                            <input type="text" className="w-full border rounded p-2" value={formData.arrivalLocation} onChange={e => setFormData({ ...formData, arrivalLocation: e.target.value })} placeholder="Medine" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Dönüş: Kalkış Yeri</label>
+                            <input type="text" className="w-full border rounded p-2" value={formData.returnLocation} onChange={e => setFormData({ ...formData, returnLocation: e.target.value })} placeholder="Cidde" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Dönüş: Varış Yeri</label>
+                            <input type="text" className="w-full border rounded p-2" value={formData.returnArrivalLocation} onChange={e => setFormData({ ...formData, returnArrivalLocation: e.target.value })} placeholder="İstanbul" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1">Gün Sayısı</label>

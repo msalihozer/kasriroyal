@@ -134,6 +134,8 @@ model Tour {
   label             String?
   locationStays     Json?
   pricing           Json?
+  arrivalLocation       String?
+  returnArrivalLocation String?
   returnDate        DateTime?
   returnLocation    String?
   startDate         DateTime?

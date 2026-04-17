@@ -168,7 +168,7 @@ export default function Footer() {
                                 />
                             </a>
 
-                            {Array.isArray(footerLogos) && footerLogos.length > 0 ? (
+                            {Array.isArray(footerLogos) && footerLogos.length > 0 && (
                                 footerLogos.map((logo: any, idx: number) => (
                                     <div key={idx} className="bg-white/5 p-3 rounded-xl aspect-square flex items-center justify-center group hover:bg-white/10 transition-colors">
                                         <img
@@ -178,14 +178,6 @@ export default function Footer() {
                                         />
                                     </div>
                                 ))
-                            ) : (
-                                <>
-                                    {[footerDiyanetImageUrl, footerAgencyImageUrl].filter(Boolean).map((url, idx) => (
-                                        <div key={idx} className="bg-white/5 p-3 rounded-xl aspect-square flex items-center justify-center group hover:bg-white/10 transition-colors">
-                                            <img src={url!} alt="Resmi Üye" className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" />
-                                        </div>
-                                    ))}
-                                </>
                             )}
                         </div>
                     </div>

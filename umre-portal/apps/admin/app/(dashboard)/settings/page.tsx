@@ -101,24 +101,8 @@ export default function SettingsPage() {
                         initialPhones = [{ label: 'Merkez', number: data.phone }];
                     }
 
-                    // Migration Logic for Footer Logos
+                    // Migration Logic for Footer Logos (Removed to allow empty state)
                     let initialFooterLogos = Array.isArray(data.footerLogos) ? data.footerLogos : [];
-                    if (initialFooterLogos.length === 0) {
-                        if (data.footerDiyanetImageUrl) {
-                            initialFooterLogos.push({
-                                imageUrl: data.footerDiyanetImageUrl,
-                                link: data.footerDiyanetLink || '#',
-                                alt: 'Diyanet'
-                            });
-                        }
-                        if (data.footerAgencyImageUrl) {
-                            initialFooterLogos.push({
-                                imageUrl: data.footerAgencyImageUrl,
-                                link: data.footerAgencyLink || '#',
-                                alt: 'TURSAB'
-                            });
-                        }
-                    }
 
                     setSettings({
                         ...data,

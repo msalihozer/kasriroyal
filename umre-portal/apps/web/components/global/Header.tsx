@@ -171,10 +171,12 @@ export default function Header() {
                         onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/logo.png'; }}
                     />
                 </Link>
-                <div className={`hidden md:block transition-all duration-500 ${isHome && !scrolled ? 'text-white/60 text-center mt-2' : 'text-gray-400 mt-1'} leading-tight`}>
-                    <p className="text-[8px] font-bold tracking-[0.15em] uppercase whitespace-nowrap">KASRI ROYAL TURİZM SEYAHAT ACENTASI</p>
-                    <p className="text-[7px] tracking-[0.25em] uppercase opacity-80">BELGE NO: 18760</p>
-                </div>
+                {(isHome && !scrolled) && (
+                    <div className="hidden md:block transition-all duration-500 text-white/60 text-center mt-2 leading-tight">
+                        <p className="text-[8px] font-bold tracking-[0.15em] uppercase whitespace-nowrap">KASRI ROYAL TURİZM SEYAHAT ACENTASI</p>
+                        <p className="text-[7px] tracking-[0.25em] uppercase opacity-80">BELGE NO: 18760</p>
+                    </div>
+                )}
             </div>
 
             {/* Desktop Menu */}

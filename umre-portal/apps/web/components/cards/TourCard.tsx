@@ -184,6 +184,7 @@ export default function TourCard({ tour }: TourCardProps) {
                                         { label: 'Single Oda', price: pricing.single ? `${Number(pricing.single).toLocaleString()} ${tour.currency}` : 'Sorunuz', note: '*kişi başı' },
                                         { label: 'İkili Oda', price: pricing.double ? `${Number(pricing.double).toLocaleString()} ${tour.currency}` : 'Sorunuz', note: '*kişi başı' },
                                         { label: 'Üçlü Oda', price: pricing.triple ? `${Number(pricing.triple).toLocaleString()} ${tour.currency}` : 'Sorunuz', note: '*kişi başı' },
+                                        { label: 'Dörtlü Oda', price: pricing.quad ? `${Number(pricing.quad).toLocaleString()} ${tour.currency}` : 'Sorunuz', note: '*kişi başı' },
                                         { label: '0-2 Yaş', price: pricing.child_0_2 ? `${Number(pricing.child_0_2).toLocaleString()} ${tour.currency}` : 'Sorunuz', note: '*yataksız' },
                                         { label: '3-6 Yaş', price: pricing.child_3_6 ? `${Number(pricing.child_3_6).toLocaleString()} ${tour.currency}` : 'Sorunuz', note: '*yataksız' }
                                     ] : []).map((p, i) => (

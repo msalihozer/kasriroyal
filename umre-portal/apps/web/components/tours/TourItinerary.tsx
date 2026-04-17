@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { getImageUrl } from '@/utils/image-url';
 
 export default function TourItinerary({ itinerary }: { itinerary: any[] }) {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     if (!itinerary || itinerary.length === 0) return null;
 
