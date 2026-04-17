@@ -484,7 +484,12 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                             <label className="block text-sm font-medium">Tur Galeri Görselleri (Slider)</label>
                             <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold uppercase tracking-widest">Slider'da Boyut Sınırı Yoktur</span>
                         </div>
-                        <GalleryUpload value={formData.gallery} onChange={(urls) => setFormData({ ...formData, gallery: urls })} label="" />
+                        <GalleryUpload 
+                            value={formData.gallery} 
+                            onChange={(urls) => setFormData({ ...formData, gallery: urls })} 
+                            label="" 
+                            disabledCrop={true}
+                        />
                     </div>
                 </div>
 

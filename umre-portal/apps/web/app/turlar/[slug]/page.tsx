@@ -176,7 +176,6 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                         {tour.gallery && tour.gallery.length > 0 && (
                             <TourGallerySlider 
                                 images={tour.gallery} 
-                                getFullUrl={getFullUrl} 
                             />
                         )}
 

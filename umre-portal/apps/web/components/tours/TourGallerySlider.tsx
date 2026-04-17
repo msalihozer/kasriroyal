@@ -7,10 +7,15 @@ import Image from 'next/image';
 
 interface TourGallerySliderProps {
     images: string[];
-    getFullUrl: (url: string) => string;
 }
 
-export default function TourGallerySlider({ images, getFullUrl }: TourGallerySliderProps) {
+export default function TourGallerySlider({ images }: TourGallerySliderProps) {
+    const getFullUrl = (url: string) => {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url.startsWith('/') ? '' : '/'}${url}`;
+    };
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(0);
 
