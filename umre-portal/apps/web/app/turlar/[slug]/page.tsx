@@ -151,7 +151,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
             <div className="container mx-auto px-4 -mt-10 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-2 space-y-6 relative z-10">
 
                         {/* Info Cards */}
                         <div className="bg-white rounded-xl shadow-lg p-6 grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -345,7 +345,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                     </div>
 
                     {/* Sidebar / Pricing - Sticky & Compact */}
-                    <div className="lg:col-span-1">
+                    <div className="lg:col-span-1 relative z-20">
                         <div className="sticky top-24 space-y-6">
                             <div className="bg-white rounded-xl shadow-xl p-5 border border-gray-100">
                                 <div className="text-center mb-4 pb-4 border-b border-gray-100">
