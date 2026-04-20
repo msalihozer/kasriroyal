@@ -80,6 +80,11 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                 {tour.title}
                             </Link>
                         </h3>
+                        {tour.shortDescription && (
+                            <p className="text-[10px] md:text-xs text-gray-600 mt-1 line-clamp-1 italic">
+                                {tour.shortDescription}
+                            </p>
+                        )}
                         <div className="text-[10px] md:text-xs font-semibold text-gray-500 mt-0.5 uppercase tracking-wider">
                             {tour.tourType?.name} &bull; {tour.durationDays} GÜN / {tour.durationNights} GECE
                         </div>
@@ -157,7 +162,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                         <div className="text-lg md:text-xl font-bold text-green-600 leading-none">
                             {tour.priceFrom ? `${Number(tour.priceFrom).toLocaleString()} ${tour.currency}` : 'Fiyat Sorunuz'}
                         </div>
-                        <div className="text-[10px] text-gray-400">İkili odada kişi başı</div>
+                        <div className="text-[10px] text-gray-400">Başlangıç fiyatı</div>
                     </div>
 
                     <div className="flex gap-2 w-full md:w-auto">

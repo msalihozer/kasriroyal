@@ -35,10 +35,17 @@ export default function TourCard({ tour }: TourCardProps) {
             <div className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
                 {/* Header Strip */}
                 <div className="bg-slate-50 border-b px-3 py-2 md:px-4 md:py-2 flex justify-between items-center">
-                    <div className="font-bold text-slate-700 text-xs md:text-sm">
-                        <span className="text-blue-600">{tour.title}</span>
-                        <span className="px-1 md:px-2 text-gray-400">&gt;</span>
-                        {tour.durationDays} GÜN
+                    <div className="flex flex-col">
+                        <div className="font-bold text-slate-700 text-xs md:text-sm">
+                            <span className="text-blue-600">{tour.title}</span>
+                            <span className="px-1 md:px-2 text-gray-400">&gt;</span>
+                            {tour.durationDays} GÜN
+                        </div>
+                        {tour.shortDescription && (
+                            <p className="text-[10px] text-gray-400 font-medium italic mt-0.5 line-clamp-1">
+                                {tour.shortDescription}
+                            </p>
+                        )}
                     </div>
                     <div className="flex items-center gap-2">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Turkish_Airlines_logo_2019_compact.svg/1200px-Turkish_Airlines_logo_2019_compact.svg.png" className="h-3 md:h-5 object-contain" alt="THY" />
@@ -101,7 +108,7 @@ export default function TourCard({ tour }: TourCardProps) {
                         <div className="text-lg md:text-xl font-bold text-emerald-600 leading-none">
                             {tour.priceFrom ? `${Number(tour.priceFrom).toLocaleString()} ${tour.currency}` : 'Fiyat Sorunuz'}
                         </div>
-                        <div className="text-[10px] text-gray-400 md:text-left text-right">İkili odada kişi başı</div>
+                        <div className="text-[10px] text-gray-400 md:text-left text-right">Başlangıç fiyatı</div>
                     </div>
 
                     <div className="hidden md:block text-xs text-emerald-600 font-medium text-center bg-emerald-50 px-2 py-1 rounded">

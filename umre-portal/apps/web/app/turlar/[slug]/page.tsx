@@ -131,6 +131,11 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                         </span>
                     )}
                     <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-md">{tour.title}</h1>
+                    {tour.shortDescription && (
+                        <p className="text-lg md:text-xl text-gray-100/90 mb-6 font-medium max-w-3xl leading-relaxed">
+                            {tour.shortDescription}
+                        </p>
+                    )}
                     <div className="flex flex-wrap gap-6 text-xl md:text-2xl text-gray-200">
                         {startDate && (
                             <div className="flex items-center gap-2" suppressHydrationWarning>
@@ -152,6 +157,13 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-6 relative z-10">
+                        {tour.summary && (
+                            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-600">
+                                <p className="text-gray-700 leading-relaxed italic text-lg">
+                                    "{tour.summary}"
+                                </p>
+                            </div>
+                        )}
 
                         {/* Info Cards */}
                         <div className="bg-white rounded-xl shadow-lg p-6 grid grid-cols-2 md:grid-cols-5 gap-4">

@@ -139,6 +139,7 @@ model Tour {
   returnDate        DateTime?
   returnLocation    String?
   startDate         DateTime?
+  shortDescription String?
   thumbnailUrl     String?
   tourTypeId        String?
   vehicleId         String?

@@ -14,6 +14,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
         title: '',
         slug: '',
         summary: '',
+        shortDescription: '',
         content: '',
         durationDays: 7,
         durationNights: 0,
@@ -124,6 +125,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                     returnArrivalLocation: data.returnArrivalLocation || '',
                     locationStays: data.locationStays || [],
                     pricing: data.pricing || { single: '', double: '', triple: '', child_0_2: '', child_3_6: '', child_7_11: '' },
+                    shortDescription: data.shortDescription || '',
                     itinerary: data.itinerary || [],
                     excludedText: data.excludedText || '', // Added
                 });
@@ -483,7 +485,11 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                 <div className="bg-white rounded-lg shadow p-6 space-y-4">
                     <h2 className="text-xl font-semibold border-b pb-2">Medya ve İçerik</h2>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Özet</label>
+                        <label className="block text-sm font-medium mb-1">Tur Kısa Açıklaması (Tüm listelerde görünür)</label>
+                        <textarea className="w-full border rounded-lg p-2" rows={2} value={formData.shortDescription} onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Özet (Tur detay sayfasında görünür)</label>
                         <textarea className="w-full border rounded-lg p-2" rows={3} value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} />
                     </div>
                     <RichTextEditor value={formData.content} onChange={(html) => setFormData({ ...formData, content: html })} label="Detaylı İçerik" />
