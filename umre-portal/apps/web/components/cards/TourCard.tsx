@@ -51,13 +51,20 @@ export default function TourCard({ tour }: TourCardProps) {
                     <div className="flex items-center gap-2">
                         {tour.airlines && tour.airlines.length > 0 ? (
                             tour.airlines.map((airline: any) => (
-                                <img 
+                                <a 
                                     key={airline.id}
-                                    src={getImageUrl(airline.logoUrl)} 
-                                    className="h-3 md:h-5 object-contain" 
-                                    alt={airline.name} 
-                                    title={airline.name}
-                                />
+                                    href={airline.websiteUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="hover:scale-110 transition-transform"
+                                >
+                                    <img 
+                                        src={getImageUrl(airline.logoUrl)} 
+                                        className="h-4 md:h-6 object-contain bg-white rounded p-0.5 shadow-sm border border-gray-100" 
+                                        alt={airline.name} 
+                                        title={`${airline.name} - Web Sitesine Git`}
+                                    />
+                                </a>
                             ))
                         ) : (
                             tour.airline && <span className="text-[10px] font-bold text-gray-400">{tour.airline}</span>
@@ -175,8 +182,21 @@ export default function TourCard({ tour }: TourCardProps) {
 
                             {/* Flight Details Section */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-colors">
-                                    <PlaneTakeoff className="mx-auto mb-3 text-primary-600/50 group-hover:text-primary-600 transition-colors" size={20} />
+                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-colors relative overflow-hidden">
+                                    <div className="flex justify-center gap-2 mb-3">
+                                        {tour.airlines && tour.airlines.length > 0 ? (
+                                            tour.airlines.map((airline: any) => (
+                                                <img 
+                                                    key={airline.id}
+                                                    src={getImageUrl(airline.logoUrl)} 
+                                                    className="h-6 md:h-8 object-contain" 
+                                                    alt={airline.name} 
+                                                />
+                                            ))
+                                        ) : (
+                                            <PlaneTakeoff className="text-primary-600/50 group-hover:text-primary-600 transition-colors" size={20} />
+                                        )}
+                                    </div>
                                     <div className="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">Gidiş Uçuşu</div>
                                     <div className="font-bold text-gray-800 text-sm md:text-base mb-1" suppressHydrationWarning>{startDate ? startDate.full : 'Tarih Sorunuz'}</div>
                                     <div className="text-[10px] font-bold text-gray-400">İstanbul &bull; Medine</div>
@@ -188,8 +208,21 @@ export default function TourCard({ tour }: TourCardProps) {
                                     <div className="absolute left-0 top-1/2 -translate-x-1/2 w-4 h-4 bg-white border border-gray-100 rounded-full hidden md:block"></div>
                                     <div className="absolute right-0 top-1/2 translate-x-1/2 w-4 h-4 bg-white border border-gray-100 rounded-full hidden md:block"></div>
                                 </div>
-                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-colors">
-                                    <PlaneLanding className="mx-auto mb-3 text-primary-600/50 group-hover:text-primary-600 transition-colors" size={20} />
+                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-colors relative overflow-hidden">
+                                    <div className="flex justify-center gap-2 mb-3">
+                                        {tour.airlines && tour.airlines.length > 0 ? (
+                                            tour.airlines.map((airline: any) => (
+                                                <img 
+                                                    key={airline.id}
+                                                    src={getImageUrl(airline.logoUrl)} 
+                                                    className="h-6 md:h-8 object-contain" 
+                                                    alt={airline.name} 
+                                                />
+                                            ))
+                                        ) : (
+                                            <PlaneLanding className="text-primary-600/50 group-hover:text-primary-600 transition-colors" size={20} />
+                                        )}
+                                    </div>
                                     <div className="text-[10px] font-black text-gray-400 uppercase tracking-tighter mb-1">Dönüş Uçuşu</div>
                                     <div className="font-bold text-gray-800 text-sm md:text-base mb-1" suppressHydrationWarning>{returnDate ? returnDate.full : 'Tarih Sorunuz'}</div>
                                     <div className="text-[10px] font-bold text-gray-400">Cidde &bull; İstanbul</div>
