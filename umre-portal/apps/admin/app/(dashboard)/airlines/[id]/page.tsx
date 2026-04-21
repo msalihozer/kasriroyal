@@ -101,6 +101,7 @@ export default function AirlineFormPage({ params }: { params: { id: string } }) 
                         value={formData.logoUrl}
                         onChange={(url) => setFormData({ ...formData, logoUrl: url })}
                         label="Havayolu Logosu"
+                        disabledCrop={true}
                     />
                 </div>
 

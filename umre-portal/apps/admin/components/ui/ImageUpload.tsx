@@ -31,7 +31,9 @@ export default function ImageUpload({ value, onChange, label = "Resim Yükle", c
     const getFullUrl = (url: string) => {
         if (!url) return '';
         if (url.startsWith('http') || url.startsWith('data:')) return url;
-        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+        const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+        return `${apiBase}${cleanUrl}`;
     };
 
     // Sync with prop change and initial value
@@ -62,7 +64,9 @@ export default function ImageUpload({ value, onChange, label = "Resim Yükle", c
                 setPreview(getFullUrl(data.url));
                 setImageToCrop(null);
             } else {
-                alert('Yükleme başarısız');
+                const errorData = await res.json().catch(() => ({}));
+                console.error("Upload failed details:", errorData);
+                alert(`Yükleme başarısız: ${res.status} ${res.statusText}`);
             }
         } catch (err) {
             console.error(err);
