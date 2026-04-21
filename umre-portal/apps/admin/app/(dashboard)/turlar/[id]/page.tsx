@@ -54,6 +54,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
             child_3_6: '',
             child_7_11: ''
         },
+        airlineIds: [] as string[],
         itinerary: [] as any[] // { day, title, description, locationId, hotelId }
     });
 
@@ -62,6 +63,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
     const [vehicles, setVehicles] = useState<any[]>([]);
     const [locations, setLocations] = useState<any[]>([]);
     const [hotels, setHotels] = useState<any[]>([]);
+    const [allAirlines, setAllAirlines] = useState<any[]>([]);
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
@@ -91,17 +93,19 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
 
     const fetchResources = async () => {
         try {
-            const [typesRes, vehiclesRes, locsRes, hotelsRes] = await Promise.all([
+            const [typesRes, vehiclesRes, locsRes, hotelsRes, allAirlinesRes] = await Promise.all([
                 fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tour-types`),
                 fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/vehicles`),
                 fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/locations`),
-                fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/hotels?status=all`)
+                fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/hotels?status=all`),
+                fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/airlines`)
             ]);
 
             if (typesRes.ok) setTourTypes(await typesRes.json());
             if (vehiclesRes.ok) setVehicles(await vehiclesRes.json());
             if (locsRes.ok) setLocations(await locsRes.json());
             if (hotelsRes.ok) setHotels(await hotelsRes.json());
+            if (allAirlinesRes.ok) setAllAirlines(await allAirlinesRes.json());
 
         } catch (err) {
             console.error("Resource fetch error:", err);
@@ -128,6 +132,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                     shortDescription: data.shortDescription || '',
                     itinerary: data.itinerary || [],
                     excludedText: data.excludedText || '', // Added
+                    airlineIds: data.airlines ? data.airlines.map((a: any) => a.id) : [],
                 });
             }
         } catch (err) {
@@ -293,8 +298,37 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Havayolu Şirketi</label>
-                            <input type="text" className="w-full border rounded p-2" value={formData.airline} onChange={e => setFormData({ ...formData, airline: e.target.value })} placeholder="THY, Pegasus vb." />
+                            <label className="block text-sm font-medium mb-1">Havayolu Şirketi (Eski - Metin)</label>
+                            <input type="text" className="w-full border rounded p-2" value={formData.airline || ''} onChange={e => setFormData({ ...formData, airline: e.target.value })} placeholder="THY, Pegasus vb." />
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium mb-2">Havayolu Şirketleri (Yeni - Çoklu Seçim)</label>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border rounded-lg p-4 bg-gray-50">
+                                {allAirlines.map(airline => (
+                                    <label key={airline.id} className="flex items-center gap-2 p-2 bg-white border rounded hover:border-blue-300 cursor-pointer transition-colors">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={formData.airlineIds.includes(airline.id)}
+                                            onChange={(e) => {
+                                                const ids = e.target.checked 
+                                                    ? [...formData.airlineIds, airline.id]
+                                                    : formData.airlineIds.filter(id => id !== airline.id);
+                                                setFormData({ ...formData, airlineIds: ids });
+                                            }}
+                                            className="w-4 h-4 rounded text-blue-600"
+                                        />
+                                        <div className="flex items-center gap-2 overflow-hidden">
+                                            {airline.logoUrl && <img src={airline.logoUrl} className="h-4 w-6 object-contain shrink-0" alt="" />}
+                                            <span className="text-xs font-medium truncate">{airline.name}</span>
+                                        </div>
+                                    </label>
+                                ))}
+                                {allAirlines.length === 0 && (
+                                    <p className="col-span-full text-center text-gray-400 text-xs py-2">
+                                        Henüz havayolu eklenmemiş. Lütfen "Havayolları" menüsünden ekleyin.
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

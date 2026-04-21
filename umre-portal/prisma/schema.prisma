@@ -147,6 +147,18 @@ model Tour {
   tourType          TourType?       @relation(fields: [tourTypeId], references: [id])
   vehicle           Vehicle?        @relation(fields: [vehicleId], references: [id])
   itinerary         TourItinerary[]
+  airlines          Airline[]       @relation("TourToAirline")
+}
+
+model Airline {
+  id          String   @id @default(uuid())
+  name        String
+  logoUrl     String?
+  code        String?  
+  websiteUrl  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tours       Tour[]   @relation("TourToAirline")
 }
 
 model Location {

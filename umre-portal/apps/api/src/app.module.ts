@@ -23,6 +23,7 @@ import { ContactModule } from './contact/contact.module';
 import { CustomTourRequestsModule } from './custom-tour-requests/custom-tour-requests.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
+import { AirlinesModule } from './airlines/airlines.module';
 import { IpBlockMiddleware } from './common/ip-block.middleware';
 
 @Module({
@@ -60,6 +61,7 @@ import { IpBlockMiddleware } from './common/ip-block.middleware';
         CustomTourRequestsModule,
         AnalyticsModule,
         WhatsappModule,
+        AirlinesModule,
     ],
     providers: [
         { provide: APP_GUARD, useClass: ThrottlerGuard },

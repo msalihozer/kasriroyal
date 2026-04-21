@@ -48,7 +48,19 @@ export default function TourCard({ tour }: TourCardProps) {
                         )}
                     </div>
                     <div className="flex items-center gap-2">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Turkish_Airlines_logo_2019_compact.svg/1200px-Turkish_Airlines_logo_2019_compact.svg.png" className="h-3 md:h-5 object-contain" alt="THY" />
+                        {tour.airlines && tour.airlines.length > 0 ? (
+                            tour.airlines.map((airline: any) => (
+                                <img 
+                                    key={airline.id}
+                                    src={airline.logoUrl} 
+                                    className="h-3 md:h-5 object-contain" 
+                                    alt={airline.name} 
+                                    title={airline.name}
+                                />
+                            ))
+                        ) : (
+                            tour.airline && <span className="text-[10px] font-bold text-gray-400">{tour.airline}</span>
+                        )}
                     </div>
                 </div>
 
@@ -151,7 +163,12 @@ export default function TourCard({ tour }: TourCardProps) {
                                 <div className="flex justify-center items-center gap-3 text-gray-500 font-bold text-[10px] md:text-xs tracking-widest">
                                     <span className="bg-gray-100 px-3 py-1 rounded-full">{tour.durationDays} GÜN - {tour.durationDays - 1} GECE</span>
                                     <span className="w-1.5 h-1.5 rounded-full bg-primary-600/30"></span>
-                                    <span className="uppercase">THY ile Ulaşım</span>
+                                    <span className="uppercase">
+                                        {tour.airlines && tour.airlines.length > 0 
+                                            ? tour.airlines.map((a: any) => a.name).join(' & ') + ' ile Ulaşım'
+                                            : (tour.airline ? `${tour.airline} ile Ulaşım` : 'Ulaşım Dahil')
+                                        }
+                                    </span>
                                 </div>
                             </div>
 

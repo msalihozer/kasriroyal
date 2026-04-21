@@ -39,6 +39,7 @@ export class ToursService {
                     category: true,
                     tourType: true,
                     vehicle: true,
+                    airlines: true,
                     itinerary: {
                         include: {
                             hotel: true
@@ -68,6 +69,7 @@ export class ToursService {
                 category: true,
                 tourType: true,
                 vehicle: true,
+                airlines: true,
                 itinerary: {
                     include: {
                         location: true,
@@ -84,9 +86,7 @@ export class ToursService {
 
     // Admin methods
     async create(data: any) {
-        // Handle relations manually if needed, or rely on frontend sending correct structure
-        // assuming payload has: { title, ..., itinerary: [{ day, title, locationId, hotelId }] }
-        const { itinerary, vehicleId, categoryId, tourTypeId, vehicle, category, tourType, ...rest } = data;
+        const { itinerary, vehicleId, categoryId, tourTypeId, airlineIds, vehicle, category, tourType, airlines, ...rest } = data;
 
         const tour = await this.prisma.tour.create({
             data: {
@@ -94,6 +94,9 @@ export class ToursService {
                 vehicleId: vehicleId || null,
                 categoryId: categoryId || null,
                 tourTypeId: tourTypeId || null,
+                airlines: airlineIds ? {
+                    connect: airlineIds.map((id: string) => ({ id }))
+                } : undefined,
                 itinerary: itinerary ? {
                     create: itinerary.map((item: any) => ({
                         day: item.day,
@@ -114,7 +117,7 @@ export class ToursService {
     }
 
     async update(id: string, data: any) {
-        const { itinerary, vehicleId, categoryId, tourTypeId, vehicle, category, tourType, ...rest } = data;
+        const { itinerary, vehicleId, categoryId, tourTypeId, airlineIds, vehicle, category, tourType, airlines, ...rest } = data;
 
         // If itinerary is provided, we might want to delete existing and recreate, or update incrementally.
         if (itinerary) {
@@ -128,6 +131,12 @@ export class ToursService {
         if (vehicleId !== undefined) updateData.vehicleId = vehicleId || null;
         if (categoryId !== undefined) updateData.categoryId = categoryId || null;
         if (tourTypeId !== undefined) updateData.tourTypeId = tourTypeId || null;
+
+        if (airlineIds !== undefined) {
+            updateData.airlines = {
+                set: airlineIds.map((id: string) => ({ id }))
+            };
+        }
 
         if (itinerary) {
             updateData.itinerary = {

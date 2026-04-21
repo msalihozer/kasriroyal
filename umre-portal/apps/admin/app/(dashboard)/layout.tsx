@@ -20,6 +20,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         { label: 'Lokasyonlar', url: '/locations', icon: Map },
         { label: 'Otel Özellikleri', url: '/features', icon: Settings },
         { label: 'Transfer', url: '/vehicles', icon: Bus },
+        { label: 'Havayolları', url: '/airlines', icon: Bus },
         { label: 'Yorumlar', url: '/comments', icon: MessageSquare },
         { label: 'Başvurular', url: '/reservations', icon: Calendar },
         { label: 'Özel Tur Talepleri', url: '/custom-requests', icon: ClipboardList },

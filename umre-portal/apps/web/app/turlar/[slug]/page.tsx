@@ -187,8 +187,19 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                                 <div>
                                     <Plane className="w-6 h-6 mx-auto mb-2 text-primary-600" />
                                     <div className="text-[10px] text-gray-500 uppercase font-black tracking-tighter mb-1">Hava Yolu</div>
-                                    <div className="font-black text-gray-900 text-sm md:text-base">{tour.airline || 'Hava Yolu'}</div>
-                                    <div className="text-[9px] text-gray-400 font-bold uppercase">Tarifeli Uçuş</div>
+                                    <div className="flex flex-wrap justify-center gap-1 mb-1">
+                                        {tour.airlines && tour.airlines.length > 0 ? (
+                                            tour.airlines.map((airline: any) => (
+                                                <div key={airline.id} className="flex flex-col items-center">
+                                                    {airline.logoUrl && <img src={airline.logoUrl} className="h-4 md:h-6 object-contain mb-1" alt={airline.name} />}
+                                                    <div className="font-black text-gray-900 text-[10px] md:text-xs leading-tight">{airline.name}</div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="font-black text-gray-900 text-sm md:text-base">{tour.airline || 'Havayolu'}</div>
+                                        )}
+                                    </div>
+                                    <div className="text-[9px] text-gray-400 font-bold uppercase">Ulaşım Paketi</div>
                                 </div>
                                 <div className="mt-auto pt-2 border-t border-gray-200/50 text-[9px] font-black text-gray-400 uppercase tracking-tighter">
                                     Paket Dahil
