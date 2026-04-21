@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['localhost', 'images.unsplash.com', 'api.kasriroyal.com'],
+        remotePatterns: [
+            { protocol: 'https', hostname: 'api.kasriroyal.com' },
+            { protocol: 'https', hostname: 'www.kasriroyal.com' },
+            { protocol: 'https', hostname: 'kasriroyal.com' },
+            { protocol: 'https', hostname: 'images.unsplash.com' },
+            { protocol: 'http', hostname: 'localhost' }
+        ],
     },
     env: {
         API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:4000/api',
