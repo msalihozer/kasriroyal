@@ -6,11 +6,12 @@ import Image from 'next/image';
 import CommentSection from '@/components/global/CommentSection';
 import TourBookingWidget from '@/components/tours/TourBookingWidget';
 import TourGallerySlider from '@/components/tours/TourGallerySlider';
+import { getImageUrl } from '@/utils/image-url';
 
 async function getTour(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tours/${slug}`, {
-            next: { revalidate: 3600 }
+            next: { revalidate: 60 }
         });
         if (res.ok) {
             return await res.json();
@@ -91,11 +92,6 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
 
 
     // Safe URL resolver
-    const getFullUrl = (url?: string) => {
-        if (!url) return '';
-        if (url.startsWith('http')) return url;
-        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
-    };
 
     // Date formatting
     const formatDate = (dateString?: string) => {
@@ -114,7 +110,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
             <div className="relative h-[60vh] bg-gray-900 border-b-222">
                 {tour.gallery && tour.gallery.length > 0 ? (
                     <Image
-                        src={getFullUrl(tour.gallery[0]) || '/images/placeholder-tour.jpg'}
+                        src={getImageUrl(tour.gallery[0]) || '/images/placeholder-tour.jpg'}
                         alt={tour.title}
                         fill
                         sizes="100vw"
@@ -191,7 +187,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                                         {tour.airlines && tour.airlines.length > 0 ? (
                                             tour.airlines.map((airline: any) => (
                                                 <div key={airline.id} className="flex flex-col items-center">
-                                                    {airline.logoUrl && <img src={getFullUrl(airline.logoUrl)} className="h-4 md:h-6 object-contain mb-1" alt={airline.name} />}
+                                                    {airline.logoUrl && <img src={getImageUrl(airline.logoUrl)} className="h-4 md:h-6 object-contain mb-1" alt={airline.name} />}
                                                     <div className="font-black text-gray-900 text-[10px] md:text-xs leading-tight">{airline.name}</div>
                                                 </div>
                                             ))

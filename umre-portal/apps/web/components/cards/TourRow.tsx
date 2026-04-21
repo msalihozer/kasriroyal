@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Calendar, MapPin, ArrowRight, Clock, PlaneTakeoff, PlaneLanding, Info, Expand, X, Phone, MessageCircle, CheckCircle, BedDouble, Hotel } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getImageUrl } from '@/utils/image-url';
 
 interface TourRowProps {
     tour: any;
@@ -63,11 +64,6 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
         );
     };
 
-    const getFullUrl = (url?: string | null) => {
-        if (!url) return '';
-        if (url.startsWith('http')) return url;
-        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url.startsWith('/') ? '' : '/'}${url}`;
-    };
 
     return (
         <>
@@ -89,11 +85,28 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                             {tour.tourType?.name} &bull; {tour.durationDays} GÜN / {tour.durationNights} GECE
                         </div>
                     </div>
-                    {tour.airline && (
-                        <div className="shrink-0">
-                            <span className="text-xs md:text-sm font-bold text-blue-900">{tour.airline}</span>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-2">
+                        {tour.airlines && tour.airlines.length > 0 ? (
+                            tour.airlines.map((airline: any) => (
+                                <a 
+                                    key={airline.id}
+                                    href={airline.websiteUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="hover:scale-110 transition-transform"
+                                >
+                                    <img 
+                                        src={getImageUrl(airline.logoUrl)} 
+                                        className="h-4 md:h-6 object-contain bg-white rounded p-0.5 shadow-sm border border-gray-100" 
+                                        alt={airline.name} 
+                                        title={`${airline.name} - Web Sitesine Git`}
+                                    />
+                                </a>
+                            ))
+                        ) : (
+                            tour.airline && <span className="text-xs md:text-sm font-bold text-blue-900">{tour.airline}</span>
+                        )}
+                    </div>
                 </div>
 
                 <div className="p-3 md:p-4 grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
@@ -107,7 +120,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                             <div className="flex gap-2.5 mt-auto">
                                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-md bg-gray-100 overflow-hidden shrink-0 relative flex items-center justify-center border border-gray-100">
                                     {getLocationInfo(stays[0].locationId).imageUrl ? (
-                                        <img src={getFullUrl(getLocationInfo(stays[0].locationId).imageUrl)} alt={getLocationInfo(stays[0].locationId).name} className="w-full h-full object-cover" />
+                                        <img src={getImageUrl(getLocationInfo(stays[0].locationId).imageUrl)} alt={getLocationInfo(stays[0].locationId).name} className="w-full h-full object-cover" />
                                     ) : <MapPin className="text-gray-400" size={16} />}
                                 </div>
                                 <div className="min-w-0">
@@ -132,7 +145,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                             <div className="flex gap-2.5 mt-auto">
                                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-md bg-gray-100 overflow-hidden shrink-0 relative flex items-center justify-center border border-gray-100">
                                     {getLocationInfo(stays[1].locationId).imageUrl ? (
-                                        <img src={getFullUrl(getLocationInfo(stays[1].locationId).imageUrl)} alt={getLocationInfo(stays[1].locationId).name} className="w-full h-full object-cover" />
+                                        <img src={getImageUrl(getLocationInfo(stays[1].locationId).imageUrl)} alt={getLocationInfo(stays[1].locationId).name} className="w-full h-full object-cover" />
                                     ) : <MapPin className="text-gray-400" size={16} />}
                                 </div>
                                 <div className="min-w-0">
@@ -214,13 +227,41 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                         <div className="p-4 md:p-8 overflow-y-auto custom-scrollbar">
                             {/* 2. Flight / Travel Info */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-all">
-                                    <div className="text-gray-400 font-black text-[10px] mb-2 flex items-center justify-center gap-2 uppercase tracking-tighter"><PlaneTakeoff size={14} /> Gidiş Uçuş Bilgisi</div>
+                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-all relative overflow-hidden">
+                                    <div className="flex justify-center gap-2 mb-2">
+                                        {tour.airlines && tour.airlines.length > 0 ? (
+                                            tour.airlines.map((airline: any) => (
+                                                <img 
+                                                    key={airline.id}
+                                                    src={getImageUrl(airline.logoUrl)} 
+                                                    className="h-6 md:h-8 object-contain" 
+                                                    alt={airline.name} 
+                                                />
+                                            ))
+                                        ) : (
+                                            <PlaneTakeoff className="mx-auto text-primary-600/50 group-hover:text-primary-600 transition-colors" size={20} />
+                                        )}
+                                    </div>
+                                    <div className="text-gray-400 font-black text-[10px] mb-2 flex items-center justify-center gap-2 uppercase tracking-tighter">Gidiş Uçuş Bilgisi</div>
                                     <div className="font-black text-gray-800 text-sm md:text-base">{longDate(startObj)}</div>
                                     <div className="text-[10px] font-bold text-gray-400 mt-1 uppercase">{tour.departureLocation || 'İstanbul'} &bull; {getLocationInfo(stays[0]?.locationId)?.name || 'Medine'}</div>
                                 </div>
-                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-all">
-                                    <div className="text-gray-400 font-black text-[10px] mb-2 flex items-center justify-center gap-2 uppercase tracking-tighter"><PlaneLanding size={14} /> Dönüş Uçuş Bilgisi</div>
+                                <div className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 md:p-6 text-center group hover:border-primary-100 transition-all relative overflow-hidden">
+                                    <div className="flex justify-center gap-2 mb-2">
+                                        {tour.airlines && tour.airlines.length > 0 ? (
+                                            tour.airlines.map((airline: any) => (
+                                                <img 
+                                                    key={airline.id}
+                                                    src={getImageUrl(airline.logoUrl)} 
+                                                    className="h-6 md:h-8 object-contain" 
+                                                    alt={airline.name} 
+                                                />
+                                            ))
+                                        ) : (
+                                            <PlaneLanding className="mx-auto text-primary-600/50 group-hover:text-primary-600 transition-colors" size={20} />
+                                        )}
+                                    </div>
+                                    <div className="text-gray-400 font-black text-[10px] mb-2 flex items-center justify-center gap-2 uppercase tracking-tighter">Dönüş Uçuş Bilgisi</div>
                                     <div className="font-black text-gray-800 text-sm md:text-base">{longDate(endObj)}</div>
                                     <div className="text-[10px] font-bold text-gray-400 mt-1 uppercase">{tour.returnLocation || 'Cidde'} &bull; {tour.departureLocation || 'İstanbul'}</div>
                                 </div>
@@ -242,12 +283,12 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                             <div key={idx} className="flex gap-4 items-center bg-gray-50/30 border border-gray-100 p-3 rounded-2xl hover:border-primary-100 hover:bg-white transition-all group">
                                                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100 shadow-sm">
                                                     {hotel?.imageUrl ? (
-                                                        <img src={getFullUrl(hotel.imageUrl)} alt={hotel.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                        <img src={getImageUrl(hotel.imageUrl)} alt={hotel.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                                     ) : (
                                                         hotel?.gallery && Array.isArray(hotel.gallery) && hotel.gallery[0] ? (
-                                                            <img src={getFullUrl(hotel.gallery[0])} alt={hotel.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                            <img src={getImageUrl(hotel.gallery[0])} alt={hotel.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                                         ) : (
-                                                            loc.imageUrl ? <img src={getFullUrl(loc.imageUrl)} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center"><Hotel className="text-gray-400" size={20} /></div>
+                                                            loc.imageUrl ? <img src={getImageUrl(loc.imageUrl)} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center"><Hotel className="text-gray-400" size={20} /></div>
                                                         )
                                                     )}
                                                 </div>
