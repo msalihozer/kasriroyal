@@ -60,7 +60,7 @@ export default function TourCard({ tour }: TourCardProps) {
                                 >
                                     <img 
                                         src={getImageUrl(airline.logoUrl)} 
-                                        className="h-4 md:h-6 object-contain bg-white rounded p-0.5 shadow-sm border border-gray-100" 
+                                        className="h-8 md:h-14 object-contain bg-white rounded p-1 shadow-sm border border-gray-100" 
                                         alt={airline.name} 
                                         title={`${airline.name} - Web Sitesine Git`}
                                     />
@@ -189,7 +189,7 @@ export default function TourCard({ tour }: TourCardProps) {
                                                 <img 
                                                     key={airline.id}
                                                     src={getImageUrl(airline.logoUrl)} 
-                                                    className="h-6 md:h-8 object-contain" 
+                                                    className="h-14 md:h-20 object-contain mb-2" 
                                                     alt={airline.name} 
                                                 />
                                             ))
@@ -215,7 +215,7 @@ export default function TourCard({ tour }: TourCardProps) {
                                                 <img 
                                                     key={airline.id}
                                                     src={getImageUrl(airline.logoUrl)} 
-                                                    className="h-6 md:h-8 object-contain" 
+                                                    className="h-14 md:h-20 object-contain mb-2" 
                                                     alt={airline.name} 
                                                 />
                                             ))

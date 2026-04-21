@@ -97,7 +97,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                 >
                                     <img 
                                         src={getImageUrl(airline.logoUrl)} 
-                                        className="h-4 md:h-6 object-contain bg-white rounded p-0.5 shadow-sm border border-gray-100" 
+                                        className="h-8 md:h-14 object-contain bg-white rounded p-1 shadow-sm border border-gray-100" 
                                         alt={airline.name} 
                                         title={`${airline.name} - Web Sitesine Git`}
                                     />
@@ -234,7 +234,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                                 <img 
                                                     key={airline.id}
                                                     src={getImageUrl(airline.logoUrl)} 
-                                                    className="h-6 md:h-8 object-contain" 
+                                                    className="h-12 md:h-16 object-contain mb-2" 
                                                     alt={airline.name} 
                                                 />
                                             ))
@@ -253,7 +253,7 @@ export default function TourRow({ tour, locationsMap }: TourRowProps) {
                                                 <img 
                                                     key={airline.id}
                                                     src={getImageUrl(airline.logoUrl)} 
-                                                    className="h-6 md:h-8 object-contain" 
+                                                    className="h-12 md:h-16 object-contain mb-2" 
                                                     alt={airline.name} 
                                                 />
                                             ))
