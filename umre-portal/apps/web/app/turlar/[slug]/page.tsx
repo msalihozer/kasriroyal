@@ -191,7 +191,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
                                         {tour.airlines && tour.airlines.length > 0 ? (
                                             tour.airlines.map((airline: any) => (
                                                 <div key={airline.id} className="flex flex-col items-center">
-                                                    {airline.logoUrl && <img src={airline.logoUrl} className="h-4 md:h-6 object-contain mb-1" alt={airline.name} />}
+                                                    {airline.logoUrl && <img src={getFullUrl(airline.logoUrl)} className="h-4 md:h-6 object-contain mb-1" alt={airline.name} />}
                                                     <div className="font-black text-gray-900 text-[10px] md:text-xs leading-tight">{airline.name}</div>
                                                 </div>
                                             ))

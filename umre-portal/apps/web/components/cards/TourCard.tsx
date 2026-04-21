@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { PlaneTakeoff, PlaneLanding, Info, Expand, X, Tag, Hotel } from 'lucide-react';
+import { getImageUrl } from '@/utils/image-url';
 
 interface TourCardProps {
     tour: any;
@@ -52,7 +53,7 @@ export default function TourCard({ tour }: TourCardProps) {
                             tour.airlines.map((airline: any) => (
                                 <img 
                                     key={airline.id}
-                                    src={airline.logoUrl} 
+                                    src={getImageUrl(airline.logoUrl)} 
                                     className="h-3 md:h-5 object-contain" 
                                     alt={airline.name} 
                                     title={airline.name}
