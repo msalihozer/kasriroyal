@@ -3,6 +3,7 @@ import { useState, useRef, useCallback } from 'react';
 import { Upload, X, Image as ImageIcon, Plus, Maximize } from 'lucide-react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '../../utils/cropImage';
+import { getImageUrl } from '../../utils/image-url';
 
 interface GalleryUploadProps {
     value?: string[];
@@ -27,12 +28,6 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
         setCroppedAreaPixels(croppedAreaPixels);
     }, []);
 
-    // Helper to get full URL
-    const getFullUrl = (url: string) => {
-        if (!url) return '';
-        if (url.startsWith('http')) return url;
-        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
-    };
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
@@ -157,7 +152,7 @@ export default function GalleryUpload({ value = [], onChange, label = "Galeri Re
                 {value.map((url, index) => (
                     <div key={index} className="relative group aspect-square">
                         <img
-                            src={getFullUrl(url)}
+                            src={getImageUrl(url)}
                             alt={`Gallery ${index}`}
                             className="w-full h-full object-cover rounded-lg border"
                         />

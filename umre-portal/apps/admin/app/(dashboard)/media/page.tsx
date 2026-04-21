@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Trash2, Upload, Copy } from 'lucide-react';
 import ImageUpload from '../../../components/ui/ImageUpload';
+import { getImageUrl } from '../../../utils/image-url';
 
 export default function MediaPage() {
     const [media, setMedia] = useState([]);
@@ -48,7 +49,7 @@ export default function MediaPage() {
     };
 
     const copyToClipboard = (url: string) => {
-        const fullUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
+        const fullUrl = getImageUrl(url);
         navigator.clipboard.writeText(fullUrl);
         alert('URL Kopyalandı: ' + fullUrl);
     };
@@ -81,7 +82,7 @@ export default function MediaPage() {
                     <div key={item.id} className="group relative bg-white rounded-lg shadow overflow-hidden border hover:shadow-md transition-shadow">
                         <div className="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
                             {item.type === 'image' ? (
-                                <img src={`${process.env.NEXT_PUBLIC_API_URL || ''}${item.url}`} alt={item.altText} className="w-full h-full object-cover" />
+                                <img src={getImageUrl(item.url)} alt={item.altText} className="w-full h-full object-cover" />
                             ) : (
                                 <span className="text-gray-400 font-medium uppercase tracking-wider">{item.type}</span>
                             )}

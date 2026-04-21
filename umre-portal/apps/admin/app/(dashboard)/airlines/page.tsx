@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DataTable from '../../../components/ui/DataTable';
 import { Plus } from 'lucide-react';
+import { getImageUrl } from '../../../utils/image-url';
 
 export default function AirlinesPage() {
     const router = useRouter();
@@ -55,7 +56,7 @@ export default function AirlinesPage() {
         { 
             key: 'logoUrl', 
             label: 'Logo', 
-            render: (value: string) => value ? <img src={value} className="h-8 w-12 object-contain bg-white p-1 border rounded" /> : <div className="h-8 w-12 bg-gray-100 border rounded flex items-center justify-center text-[10px] text-gray-400">Yok</div>
+            render: (value: string) => value ? <img src={getImageUrl(value)} className="h-8 w-12 object-contain bg-white p-1 border rounded" /> : <div className="h-8 w-12 bg-gray-100 border rounded flex items-center justify-center text-[10px] text-gray-400">Yok</div>
         },
         { key: 'name', label: 'Şirket Adı', sortable: true },
         { key: 'code', label: 'Kısaltma', sortable: true },

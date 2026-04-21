@@ -5,6 +5,7 @@ import ImageUpload from '../../../../components/ui/ImageUpload';
 import GalleryUpload from '../../../../components/ui/GalleryUpload';
 import RichTextEditor from '../../../../components/ui/RichTextEditor';
 import { Plus, Trash, GripVertical } from 'lucide-react';
+import { getImageUrl } from '../../../../utils/image-url';
 
 export default function TourFormPage({ params }: { params: { id: string } }) {
     const router = useRouter();
@@ -318,7 +319,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                                             className="w-4 h-4 rounded text-blue-600"
                                         />
                                         <div className="flex items-center gap-2 overflow-hidden">
-                                            {airline.logoUrl && <img src={airline.logoUrl} className="h-4 w-6 object-contain shrink-0" alt="" />}
+                                            {airline.logoUrl && <img src={getImageUrl(airline.logoUrl)} className="h-4 w-6 object-contain shrink-0" alt="" />}
                                             <span className="text-xs font-medium truncate">{airline.name}</span>
                                         </div>
                                     </label>

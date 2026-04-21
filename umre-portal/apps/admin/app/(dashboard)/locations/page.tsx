@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import DataTable from '../../../components/ui/DataTable';
 import ImageUpload from '../../../components/ui/ImageUpload';
 import { Plus, Edit, Trash } from 'lucide-react';
+import { getImageUrl } from '../../../utils/image-url';
 
 export default function LocationsPage() {
     const router = useRouter();
@@ -13,11 +14,6 @@ export default function LocationsPage() {
     const [editingLocation, setEditingLocation] = useState<any>(null);
     const [formData, setFormData] = useState({ name: '', slug: '', imageUrl: '' });
 
-    const getFullImgUrl = (url: string) => {
-        if (!url) return '';
-        if (url.startsWith('http')) return url;
-        return `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
-    };
 
     useEffect(() => {
         fetchLocations();
@@ -105,7 +101,7 @@ export default function LocationsPage() {
         {
             key: 'imageUrl',
             label: 'Görsel',
-            render: (val: string) => val ? <img src={getFullImgUrl(val)} alt="Loc" className="w-10 h-10 object-cover rounded" /> : <div className="w-10 h-10 bg-gray-200 rounded"></div>
+            render: (val: string) => val ? <img src={getImageUrl(val)} alt="Loc" className="w-10 h-10 object-cover rounded" /> : <div className="w-10 h-10 bg-gray-200 rounded"></div>
         },
         { key: 'name', label: 'Lokasyon Adı', sortable: true },
         { key: 'slug', label: 'Slug', sortable: true },
