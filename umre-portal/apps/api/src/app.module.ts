@@ -39,14 +39,16 @@ import { IpBlockMiddleware } from './common/ip-block.middleware';
             { name: 'medium', ttl: 10000, limit: 60  },
             { name: 'long',   ttl: 60000, limit: 250 },
         ]),
-        ServeStaticModule.forRoot({
-            rootPath: join(process.cwd(), 'uploads'),
-            serveRoot: '/uploads',
-        }),
-        ServeStaticModule.forRoot({
-            rootPath: join(process.cwd(), 'apps/api/uploads'),
-            serveRoot: '/uploads',
-        }),
+        ServeStaticModule.forRoot(
+            {
+                rootPath: join(process.cwd(), 'uploads'),
+                serveRoot: '/uploads',
+            },
+            {
+                rootPath: join(process.cwd(), 'apps/api/uploads'),
+                serveRoot: '/uploads',
+            }
+        ),
         PrismaModule,
         AuthModule,
         ToursModule,

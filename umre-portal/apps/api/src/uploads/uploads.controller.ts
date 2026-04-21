@@ -1,8 +1,8 @@
 import { Controller, Post, Get, Delete, Param, Query, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { join, extname } from 'path';
 import { UploadsService } from './uploads.service';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 
@@ -27,7 +27,7 @@ export class UploadsController {
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
-            destination: './uploads',
+            destination: join(process.cwd(), 'uploads'),
             filename: (req, file, cb) => {
                 const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
                 cb(null, `${randomName}${extname(file.originalname)}`);
