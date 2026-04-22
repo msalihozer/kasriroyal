@@ -1,6 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -86,59 +87,74 @@ export class ToursService {
 
     // Admin methods
     async create(data: any) {
-        const { itinerary, vehicleId, categoryId, tourTypeId, airlineIds, vehicle, category, tourType, airlines, ...rest } = data;
+        // Obje içinden ilişkili ID'leri ve temizlenecek alanları çıkarıyoruz
+        const { itinerary, vehicleId, categoryId, tourTypeId, airlineIds, ...rest } = data;
+        
+        // rest içinden database'de olmayan fazlalık alanları siliyoruz (Prisma hatası almamak için)
+        const ignoredFields = ['vehicle', 'category', 'tourType', 'airlines'];
+        ignoredFields.forEach(field => delete (rest as any)[field]);
 
-        const tour = await this.prisma.tour.create({
-            data: {
-                ...rest,
-                vehicleId: vehicleId || null,
-                categoryId: categoryId || null,
-                tourTypeId: tourTypeId || null,
-                airlines: airlineIds ? {
-                    connect: airlineIds.map((id: string) => ({ id }))
-                } : undefined,
-                itinerary: itinerary ? {
-                    create: itinerary.map((item: any) => ({
-                        day: item.day,
-                        title: item.title,
-                        description: item.description,
-                        locationId: item.locationId || null,
-                        hotelId: item.hotelId || null
-                    }))
-                } : undefined
-            },
-            include: {
-                itinerary: true
+        try {
+            const tour = await this.prisma.tour.create({
+                data: {
+                    ...rest,
+                    vehicleId: vehicleId || null,
+                    categoryId: categoryId || null,
+                    tourTypeId: tourTypeId || null,
+                    airlines: Array.isArray(airlineIds) ? {
+                        connect: airlineIds.map((id: string) => ({ id }))
+                    } : undefined,
+                    itinerary: Array.isArray(itinerary) ? {
+                        create: itinerary.map((item: any) => ({
+                            day: item.day,
+                            title: item.title,
+                            description: item.description,
+                            locationId: item.locationId || null,
+                            hotelId: item.hotelId || null
+                        }))
+                    } : undefined
+                },
+                include: {
+                    itinerary: true
+                }
+            });
+
+            await this.clearTourCache();
+            return tour;
+        } catch (error: any) {
+            if (error?.code === 'P2002') {
+                throw new ConflictException('Bu slug (bağlantı adı) zaten kullanılıyor.');
             }
-        });
-
-        await this.clearTourCache();
-        return tour;
+            throw error;
+        }
     }
 
     async update(id: string, data: any) {
-        const { itinerary, vehicleId, categoryId, tourTypeId, airlineIds, vehicle, category, tourType, airlines, ...rest } = data;
+        const { itinerary, vehicleId, categoryId, tourTypeId, airlineIds, ...rest } = data;
+
+        // rest içinden database'de olmayan fazlalık alanları siliyoruz
+        const ignoredFields = ['vehicle', 'category', 'tourType', 'airlines'];
+        ignoredFields.forEach(field => delete (rest as any)[field]);
 
         // If itinerary is provided, we might want to delete existing and recreate, or update incrementally.
-        if (itinerary) {
+        if (Array.isArray(itinerary)) {
             await this.prisma.tourItinerary.deleteMany({ where: { tourId: id } });
         }
 
         const updateData: any = { ...rest };
 
         // Only explicitly set to null if empty string is passed (clearing standard dropdown).
-        // If undefined, it means the frontend didn't include it in a partial PATCH payload, so don't touch it.
         if (vehicleId !== undefined) updateData.vehicleId = vehicleId || null;
         if (categoryId !== undefined) updateData.categoryId = categoryId || null;
         if (tourTypeId !== undefined) updateData.tourTypeId = tourTypeId || null;
 
-        if (airlineIds !== undefined) {
+        if (Array.isArray(airlineIds)) {
             updateData.airlines = {
                 set: airlineIds.map((id: string) => ({ id }))
             };
         }
 
-        if (itinerary) {
+        if (Array.isArray(itinerary)) {
             updateData.itinerary = {
                 create: itinerary.map((item: any) => ({
                     day: item.day,
@@ -150,16 +166,23 @@ export class ToursService {
             };
         }
 
-        const tour = await this.prisma.tour.update({
-            where: { id },
-            data: updateData,
-            include: {
-                itinerary: true
-            }
-        });
+        try {
+            const tour = await this.prisma.tour.update({
+                where: { id },
+                data: updateData,
+                include: {
+                    itinerary: true
+                }
+            });
 
-        await this.clearTourCache();
-        return tour;
+            await this.clearTourCache();
+            return tour;
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                throw new ConflictException('Bu slug (bağlantı adı) başka bir tur tarafından kullanılıyor.');
+            }
+            throw error;
+        }
     }
 
     async remove(id: string) {
@@ -169,8 +192,11 @@ export class ToursService {
     }
 
     private async clearTourCache() {
-        const keys = await this.cacheManager.store.keys();
-        const tourKeys = keys.filter(key => key.startsWith('tour'));
-        await Promise.all(tourKeys.map(key => this.cacheManager.del(key)));
+        const store = this.cacheManager.store as any;
+        if (store.keys) {
+            const keys = await store.keys();
+            const tourKeys = keys.filter((key: string) => key.startsWith('tour'));
+            await Promise.all(tourKeys.map((key: string) => this.cacheManager.del(key)));
+        }
     }
 }

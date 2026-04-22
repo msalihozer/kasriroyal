@@ -66,6 +66,7 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
     const [hotels, setHotels] = useState<any[]>([]);
     const [allAirlines, setAllAirlines] = useState<any[]>([]);
     const [saving, setSaving] = useState(false);
+    const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
 
     useEffect(() => {
         fetchResources();
@@ -246,7 +247,8 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
             if (res.ok) {
                 router.push('/turlar');
             } else {
-                alert('Kaydetme başarısız');
+                const errorData = await res.json();
+                alert(errorData.message || 'Kaydetme başarısız');
             }
         } catch (err) {
             alert('Bir hata oluştu');
@@ -266,7 +268,20 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2">
                             <label className="block text-sm font-medium mb-1">Tur Başlığı</label>
-                            <input type="text" className="w-full border rounded p-2" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required />
+                            <input 
+                                type="text" 
+                                className="w-full border rounded p-2" 
+                                value={formData.title} 
+                                onChange={e => {
+                                    const newTitle = e.target.value;
+                                    setFormData(prev => ({ 
+                                        ...prev, 
+                                        title: newTitle,
+                                        slug: isSlugManuallyEdited ? prev.slug : sanitizeSlug(newTitle)
+                                    }));
+                                }} 
+                                required 
+                            />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1">Slug (Sadece İngilizce Karakterler)</label>
@@ -274,7 +289,10 @@ export default function TourFormPage({ params }: { params: { id: string } }) {
                                 type="text" 
                                 className="w-full border rounded p-2 bg-gray-50" 
                                 value={formData.slug} 
-                                onChange={e => setFormData({ ...formData, slug: sanitizeSlug(e.target.value) })} 
+                                onChange={e => {
+                                    setIsSlugManuallyEdited(true);
+                                    setFormData({ ...formData, slug: sanitizeSlug(e.target.value) });
+                                }} 
                                 placeholder="tur-ismi-ingilizce"
                                 required 
                             />
