@@ -76,16 +76,12 @@ export default function FeaturedTours({ data }: { data: { title?: string, items:
             const items = Array.from(container.children) as HTMLElement[];
             
             if (items[middleIndex]) {
-                // Ensure layout is calculated before scrolling
-                requestAnimationFrame(() => {
-                    const item = items[middleIndex];
-                    const itemRect = item.getBoundingClientRect();
-                    const containerRect = container.getBoundingClientRect();
-                    const scrollPos = container.scrollLeft + (itemRect.left - containerRect.left) - (containerRect.width / 2) + (itemRect.width / 2);
-                    
-                    container.scrollLeft = scrollPos;
+                // Use setTimeout to ensure the DOM is fully painted and stable
+                setTimeout(() => {
+                    // Native browser API to center the element horizontally
+                    items[middleIndex].scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
                     setActiveIndex(middleIndex);
-                });
+                }, 150);
             }
         }
     }, [data.items]);
