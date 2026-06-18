@@ -1,7 +1,8 @@
-
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { Calendar, MapPin, Plane, Clock, Info, CheckCircle, ArrowRight } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
 import Image from 'next/image';
 import CommentSection from '@/components/global/CommentSection';
 import TourBookingWidget from '@/components/tours/TourBookingWidget';
@@ -11,7 +12,7 @@ import { getImageUrl } from '@/utils/image-url';
 async function getTour(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/tours/${slug}`, {
-            next: { revalidate: 60 }
+            cache: 'no-store'
         });
         if (res.ok) {
             return await res.json();
