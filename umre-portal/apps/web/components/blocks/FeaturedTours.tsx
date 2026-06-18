@@ -68,10 +68,27 @@ export default function FeaturedTours({ data }: { data: { title?: string, items:
         return () => observer.disconnect();
     }, []);
 
-    // Initial check for active index
+    // Initial scroll to middle
     useEffect(() => {
-        handleScroll();
-    }, []);
+        if (scrollRef.current && data.items && data.items.length > 0) {
+            const container = scrollRef.current;
+            const middleIndex = Math.floor(data.items.length / 2);
+            const items = Array.from(container.children) as HTMLElement[];
+            
+            if (items[middleIndex]) {
+                // Ensure layout is calculated before scrolling
+                requestAnimationFrame(() => {
+                    const item = items[middleIndex];
+                    const itemRect = item.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+                    const scrollPos = container.scrollLeft + (itemRect.left - containerRect.left) - (containerRect.width / 2) + (itemRect.width / 2);
+                    
+                    container.scrollLeft = scrollPos;
+                    setActiveIndex(middleIndex);
+                });
+            }
+        }
+    }, [data.items]);
 
     return (
         <section className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden relative">
